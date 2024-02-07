@@ -5,4 +5,4 @@ Collaborators:
 
 Michael Kadoshnikov : MikeKadoshnikov
 
-Jacob Tanner : Jtann5
+Jacob Tanner : jtann5
