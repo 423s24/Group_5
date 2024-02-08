@@ -50,6 +50,12 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend'
+]
+
+LOGIN_URL = '/login/'
+
 ROOT_URLCONF = "HousingPortal.urls"
 
 TEMPLATES = [
