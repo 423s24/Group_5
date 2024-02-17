@@ -1,21 +1,28 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
 <head>
     <title>Housing Dashboard</title>
     <script src="https://unpkg.com/htmx.org@1.9.10" integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC" crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/dashboard.css' %}">
 </head>
 <body>
-    <h1>Main Page</h1>
-    <p>Find maintenance form here</p>
-    <a href="{% url 'maintenance' %}">Maintenance Form</a>
-
-    <p>Find application form here</p>
-    <a href="{% url 'application' %}">Application Form</a>
-
-    <h2>Dashboard</h2>
+    {% include 'header.html' %}
     <br>
-    <a href="{% url 'add_user_account' %}">Add User Account</a>
-
+    <h2>Dashboard</h2>
+    <div id="home">
+        <a href="{% url 'index' %}">Home</a>
+    </div>
+    <br>
+    <br>
+    <hr>
+    <br>
+    <br>
+    <div id="home">
+        <a href="{% url 'add_user_account' %}">Add User Account</a>
+    </div>
+    <br>
+    <br>
     {% include 'data/user.html' %}
 
 </body>
