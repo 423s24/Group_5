@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
+from .forms import UserAccountForm
 
 # Create your views here.
 
@@ -30,3 +31,21 @@ def user_login(request):
 
 def user_profile(request, username):
     return render(request, 'profile.html', {'user_profile' : user_profile})
+
+
+def add_user_account(request):
+    if request.method == 'POST':
+        form = UserAccountForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('success_view')
+    else:
+        form = UserAccountForm()
+
+    return render(request, 'add_user_account.html', {'form': form})
+
+
+def success_view(request):
+    return render(request, 'success.html')
+
+
