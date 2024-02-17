@@ -1,10 +1,12 @@
 from django.db import models
-
+from django.contrib.auth.models import AbstractUser, BaseUserManager, PermissionsMixin
 
 # Create your models here.
 
-class UserAccount(models.Model):
-    email = models.EmailField(primary_key=True)
+
+class UserAccount(AbstractUser):
+    username = models.CharField(max_length=50, editable=True, unique=True)
+    email = models.EmailField(primary_key=True, unique=True)
     password = models.CharField(max_length=100)
     admin = models.BooleanField(default=False)
     twoFactorKey = models.CharField(max_length=100)
@@ -13,6 +15,11 @@ class UserAccount(models.Model):
     userHousingApplications = models.ManyToManyField('HousingApplication', through='UserHousingApplication')
     maintenanceRequest = models.ForeignKey('MaintenanceRequest', on_delete=models.CASCADE, null=True)
     archived = models.BooleanField(default=False)
+
+    def save(self, *args, **kwargs):
+        if not self.username:
+            self.username = self.email
+        super(UserAccount, self).save(*args, **kwargs)
 
 
 class Tenant(models.Model):

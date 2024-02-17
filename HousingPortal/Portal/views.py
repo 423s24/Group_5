@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from .forms import UserAccountForm
+from django.contrib.auth.views import LoginView
 
 # Create your views here.
 
@@ -14,23 +15,9 @@ def application(request):
 def maintenance(request):
     return render(request, 'forms/maintenance/maintenance.html')
 
-def user_login(request):
-    if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        user = authenticate(request, username=username, password=password)
-
-        if user is not None:
-            login(request, user)
-            messages.success(request, 'Login Successful!')
-            return redirect('index')
-        else:
-            messages.error(request, 'Invalid username or password')
-
-    return render(request, 'login/login.html')
 
 def user_profile(request, username):
-    return render(request, 'profile.html', {'user_profile' : user_profile})
+    return render(request, 'profile.html', {'user_profile' : username})
 
 
 def add_user_account(request):
@@ -48,4 +35,26 @@ def add_user_account(request):
 def success_view(request):
     return render(request, 'success.html')
 
+
+class CustomLoginView(LoginView):
+    template_name = 'registration/login.html'
+    success_url = 'application/application.html'
+
+
+def login_view(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        user = authenticate(request, email=email, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect('success_view')
+        else:
+            messages.error(request, 'Invalid login credentials')
+    return render(request, 'login.html')
+
+
+def logout_view(request):
+    logout(request)
+    return redirect('index')
 

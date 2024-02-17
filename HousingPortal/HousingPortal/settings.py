@@ -54,7 +54,11 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend'
 ]
 
-LOGIN_URL = '/login/'
+AUTH_USER_MODEL = 'Portal.UserAccount'
+
+LOGIN_URL = 'login'
+LOGOUT_URL = 'logout'
+LOGIN_REDIRECT_URL = 'success_view'
 
 ROOT_URLCONF = "HousingPortal.urls"
 
