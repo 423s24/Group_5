@@ -4,11 +4,21 @@ from django.contrib import messages
 from .forms import UserAccountForm
 from .models import UserAccount
 from django.contrib.auth.views import LoginView
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 # Create your views here.
 
 def dashboard(request):
     users = UserAccount.objects.all()
+    per_page = 3
+    paginator = Paginator(users, per_page)
+    page = request.GET.get('page', 1)
+    try:
+        users = paginator.page(page)
+    except PageNotAnInteger:
+        users = paginator.page(1)
+    except EmptyPage:
+        users = paginator.page(paginator.num_pages)
     return render(request, 'dashboard.html', {'users': users})
 
 

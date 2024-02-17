@@ -1,30 +1,36 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
     <head>
         <title>Housing Dashboard</title>
         <script src="https://unpkg.com/htmx.org@1.9.10" integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC" crossorigin="anonymous"></script>
+        <link rel="stylesheet" type="text/css" href="{% static 'css/index.css' %}">
     </head>
     <body>
-
-        <h1>Main Page</h1>
-        <p>Find maintenance form here</p>
-        <a href="{% url 'maintenance' %}">Maintenance Form</a>
-
-        <p>Find application form here</p>
-        <a href="{% url 'application' %}">Application Form</a>
-
-        <h2>Dashboard</h2>
+        {% include 'header.html' %}
+        <h1>Housing Portal</h1>
         <br>
-        <a href="{% url 'add_user_account' %}">Add User Account</a>
-        <table>
-            <tr>
-                <th>Forms</th>
-                <th>Status</th>
-            </tr>
-            <tr>
-                <td>Example</td>
-                <td>Incomplete</td>
-            </tr>
-        </table>
+        <div id="housingapplication">
+            <a href="{% url 'application' %}">Housing Application</a>
+        </div>
+        <br>
+        <br>
+        <hr>
+        <br>
+        <br>
+        <div id="maintenanceform">
+            <a href="{% url 'maintenance' %}">Maintenance Form</a>
+        </div>
+
+        <br>
+        <br>
+        <hr>
+        <br>
+        <br>
+
+        <div id="adduser">
+            <a href="{% url 'add_user_account' %}">Add User Account</a>
+        </div>
+
     </body>
 </html>

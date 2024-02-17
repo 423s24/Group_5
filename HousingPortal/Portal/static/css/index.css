@@ -1,0 +1,48 @@
+/*
+ The CSS includes repetitive values as the direction
+  of the project design may shift and merging everything
+  together doesn't seem good for modifications
+ */
+
+html {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+#housingapplication a {
+    border: 2px solid black;
+    margin:auto;
+    padding: 10px;
+    text-decoration: none;
+    color: darkcyan;
+    border-radius: .5rem;
+}
+
+#housingapplication a:hover {
+    background-color: lightgray;
+}
+
+#maintenanceform a {
+    border: 2px solid black;
+    margin: auto;
+    padding: 10px;
+    text-decoration: none;
+    color: darkcyan;
+    border-radius: .5rem;
+}
+
+#maintenanceform a:hover {
+    background-color: lightgray;
+}
+
+#adduser a {
+    border: 2px solid black;
+    margin: auto;
+    padding: 10px;
+    text-decoration: none;
+    color: darkcyan;
+    border-radius: .5rem;
+}
+
+#adduser a:hover {
+    background-color: lightgray;
+}
