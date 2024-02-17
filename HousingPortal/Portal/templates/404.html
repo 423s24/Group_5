@@ -1,0 +1,23 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Error 404</title>
+    </head>
+    <body>
+        <div>
+            <h1>Error 404: This page doesn't exist</h1>
+            <h2>It's easy to get lost in the cosmos</h2>
+            <img src="{% static 'images/cat.jpeg' %}" alt="cat">
+            <br>
+            <br>
+
+            <a href="/">
+                <button>
+                    Take me back
+                </button>
+            </a>
+        </div>
+    </body>
+</html>
