@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Housing Dashboard</title>
+    <script src="https://unpkg.com/htmx.org@1.9.10" integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC" crossorigin="anonymous"></script>
+</head>
+<body>
+    <h1>Main Page</h1>
+    <p>Find maintenance form here</p>
+    <a href="{% url 'maintenance' %}">Maintenance Form</a>
+
+    <p>Find application form here</p>
+    <a href="{% url 'application' %}">Application Form</a>
+
+    <h2>Dashboard</h2>
+    <br>
+    <a href="{% url 'add_user_account' %}">Add User Account</a>
+    <table>
+        <tr>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Admin</th>
+            <th>Two-Factor Key</th>
+            <th>Manager</th>
+            <th>Tenant</th>
+            <th>Archived</th>
+        </tr>
+        {% for user in users %}
+        <tr>
+            <td>{{ user.username }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.admin }}</td>
+            <td>{{ user.twoFactorKey }}</td>
+            <td>{{ user.manager }}</td>
+            <td>{{ user.tenant }}</td>
+            <td>{{ user.archived }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

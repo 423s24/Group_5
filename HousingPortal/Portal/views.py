@@ -2,9 +2,15 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from .forms import UserAccountForm
+from .models import UserAccount
 from django.contrib.auth.views import LoginView
 
 # Create your views here.
+
+def dashboard(request):
+    users = UserAccount.objects.all()
+    return render(request, 'dashboard.html', {'users': users})
+
 
 def index(request):
     return render(request, 'index.html')
