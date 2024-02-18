@@ -1,7 +1,7 @@
 # Group_5 : HRDC Maintenance Website
 Group 5
 
-Collaborators:
+## Collaborators
 
 Michael Kadoshnikov : MikeKadoshnikov
 
