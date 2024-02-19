@@ -19,7 +19,7 @@
         <a href="/payment">Payment Portal</a>
         {% if user.is_authenticated %}
         <div id="account">
-            {{user.username}}
+            <a href="/profile">{{user.username}}</a>
             <a href="/dashboard">My Dashboard</a>
             <a href="/logout">Log out</a>
         </div>

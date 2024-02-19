@@ -81,6 +81,10 @@ def logout_view(request):
     logout(request)
     return redirect('/')
 
+@login_required(login_url="/login")
+def profile(request):
+    return render(request, 'profile.html')
+
 # Views for errors
 def handler_404(request, exception):
     return render(request, '404.html', status=404)
