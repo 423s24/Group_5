@@ -1,16 +1,20 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
-from .forms import UserAccountForm
+from .forms import RegisterForm, AuthForm
 from .models import UserAccount
 from django.contrib.auth.views import LoginView
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
+def home(request):
+    return render(request, 'index.html')
 
+@login_required(login_url="/login")
 def dashboard(request):
     users = UserAccount.objects.all()
-    per_page = 3
+    per_page = 10
     paginator = Paginator(users, per_page)
     page = request.GET.get('page', 1)
     try:
@@ -21,58 +25,50 @@ def dashboard(request):
         users = paginator.page(paginator.num_pages)
     return render(request, 'dashboard.html', {'users': users})
 
-
-def index(request):
-    return render(request, 'index.html')
-
+@login_required(login_url="/login")
 def application(request):
     return render(request, 'forms/application/application.html')
 
+@login_required(login_url="/login")
 def maintenance(request):
     return render(request, 'forms/maintenance/maintenance.html')
 
-
+@login_required(login_url="/login")
 def user_profile(request, username):
     return render(request, 'profile.html', {'user_profile' : username})
 
-
-def add_user_account(request):
+# Views for user accounts and authentication
+def signup_view(request):
     if request.method == 'POST':
-        form = UserAccountForm(request.POST)
+        form = RegisterForm(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect('success_view')
+            user = form.save()
+            login(request, user)
+            request.session.set_expiry(1800) # Set session expiry to 30 minutes
+            return redirect('/')
     else:
-        form = UserAccountForm()
-
-    return render(request, 'add_user_account.html', {'form': form})
-
-
-def success_view(request):
-    return render(request, 'success.html')
-
-
-class CustomLoginView(LoginView):
-    template_name = 'registration/login.html'
-    success_url = 'application/application.html'
-
+        form = RegisterForm()
+    
+    return render(request, 'registration/signup.html', {"form": form})
 
 def login_view(request):
     if request.method == 'POST':
-        email = request.POST.get('email')
+        form = AuthForm(request.POST)
+        username = request.POST.get('username')
         password = request.POST.get('password')
-        user = authenticate(request, email=email, password=password)
+        user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect('success_view')
-        else:
-            messages.error(request, 'Invalid login credentials')
-    return render(request, 'login.html')
-
+            request.session.set_expiry(1800) # Set session expiry to 30 minutes
+            return redirect('/')
+    else:
+        form = AuthForm(request)
+    return render(request, 'registration/login.html', {"form": form})
 
 def logout_view(request):
     logout(request)
-    return redirect('index')
+    return redirect('/')
 
+# Views for errors
 def handler_404(request, exception):
     return render(request, '404.html', status=404)

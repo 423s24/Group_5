@@ -1,11 +1,15 @@
 {% load static %}
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <link rel="stylesheet" type="text/css" href="{% static 'css/header.css' %}">
-    </head>
-    <body>
-        <img src="{% static 'images/hrdc-logo-dark.png' %}" alt="HRDC Logo">
-    </body>
-</html>
+<link rel="stylesheet" type="text/css" href="{% static 'css/header.css' %}">
+<div>
+    <a href="/"><img src="{% static 'images/hrdc-logo-dark.png' %}" alt="HRDC Logo"></a>
+    <a href="{% url 'application' %}">Housing Application</a>
+    <a href="{% url 'maintenance' %}">Maintenance Form</a>
+    <a href="/payment">Payment Portal</a>
+    {% if user.is_authenticated %}
+        <a href="{% url 'dashboard' %}">My Dashboard</a>
+        <p>Logged in as {{user.username}}</p>
+        <a href="/logout">Log out</a>
+    {% else %}
+        <a href="/login">Log in</a>
+    {% endif %}
+</div>

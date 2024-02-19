@@ -4,6 +4,7 @@
 <head>
     <title>Housing Dashboard</title>
     <script src="https://unpkg.com/htmx.org@1.9.10" integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC" crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/global.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/dashboard.css' %}">
 </head>
 <body>
@@ -11,7 +12,7 @@
     <br>
     <h2>Dashboard</h2>
     <div id="home">
-        <a href="{% url 'index' %}">Home</a>
+        <a href="{% url 'home' %}">Home</a>
     </div>
     <br>
     <br>
@@ -19,11 +20,11 @@
     <br>
     <br>
     <div id="home">
-        <a href="{% url 'add_user_account' %}">Add User Account</a>
+        <a href="{% url 'signup' %}">Add User Account</a>
     </div>
     <br>
     <br>
     {% include 'data/user.html' %}
-
+    {% include 'footer.html' %}
 </body>
 </html>

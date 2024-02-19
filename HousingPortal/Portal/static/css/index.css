@@ -4,10 +4,6 @@
   together doesn't seem good for modifications
  */
 
-html {
-    font-family: Arial, Helvetica, sans-serif;
-}
-
 #housingapplication a {
     border: 2px solid black;
     margin:auto;
