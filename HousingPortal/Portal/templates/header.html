@@ -6,8 +6,8 @@
     <a href="{% url 'maintenance' %}">Maintenance Form</a>
     <a href="/payment">Payment Portal</a>
     {% if user.is_authenticated %}
-        <a href="{% url 'dashboard' %}">My Dashboard</a>
-        <p>Logged in as {{user.username}}</p>
+        <a href="/dashboard">My Dashboard</a>
+        <p>{{user.username}}</p>
         <a href="/logout">Log out</a>
     {% else %}
         <a href="/login">Log in</a>

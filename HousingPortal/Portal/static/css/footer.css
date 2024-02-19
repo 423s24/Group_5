@@ -1,0 +1,19 @@
+#footer {
+    width: 100%;
+    height: 50px;
+    background-color: darkcyan;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+}
+
+#footer a {
+    text-decoration: none;
+    color:white;
+    padding: 10px;
+}
+
+#footer a:hover {
+    color: lightgray;
+}

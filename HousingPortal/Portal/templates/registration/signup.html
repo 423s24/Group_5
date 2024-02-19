@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,7 +7,7 @@
     <title>Login</title>
 </head>
 <body>
-
+  <a href="/"><img src="{% static 'images/hrdc-logo-dark.png' %}" alt="HRDC Logo"></a>
   <h2>Sign Up</h2>
   {% load crispy_forms_tags %}
   <form method="post">
