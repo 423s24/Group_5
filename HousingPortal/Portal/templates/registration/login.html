@@ -5,15 +5,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/global.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}">
 </head>
 <body>
-  <a href="/"><img src="{% static 'images/hrdc-logo-dark.png' %}" alt="HRDC Logo"></a>
-  <h2>Login</h2>
-  {% load crispy_forms_tags %}
-  <form method="post">
-    {% csrf_token %}{{form|crispy}}
-      <p>Don't have an account? Create one <a href="/signup">Here</a>!</p>
-      <button type="submit">Login</button>
-  </form>
+  <div id="window">
+    <a href="/"><img src="{% static 'images/hrdc-logo-dark.png' %}" alt="HRDC Logo"></a>
+    <h2>Login</h2>
+    {% load crispy_forms_tags %}
+    <form method="post">
+      {% csrf_token %}{{form|crispy}}
+        <p>Don't have an account? Create one <a href="/signup">Here</a>!</p>
+        <button type="submit">Login</button>
+    </form>
+  </div>
 </body>
 </html>

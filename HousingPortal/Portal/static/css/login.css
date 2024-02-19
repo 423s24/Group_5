@@ -1,0 +1,19 @@
+body {
+    background-color: darkcyan;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+#window {
+    width: 500px;
+    height: 400px;
+    padding: 20px;
+    background-color: white;
+}
+
+#window img {
+    width: 90%;
+    margin: auto;
+}
