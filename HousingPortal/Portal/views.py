@@ -72,7 +72,11 @@ def login_view(request):
             if user is not None:
                 login(request, user)
                 request.session.set_expiry(1800) # Set session expiry to 30 minutes
-                return redirect('/dashboard')
+                next_url = request.GET.get('next', None)
+                if next_url:
+                    return redirect(next_url)
+                else:
+                    return redirect('/dashboard')
         else:
             form = AuthForm(request)
         return render(request, 'registration/login.html', {"form": form})
