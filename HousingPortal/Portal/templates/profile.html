@@ -7,4 +7,5 @@
 <p>Email: {{user.email}}</p>
 <p>Superuser: {{user.is_superuser}}</p>
 <p>Date joined: {{user.date_joined}}</p>
+<a href="/delete/?user_id={{user.id}}">Delete Account</a>
 {% endblock %}

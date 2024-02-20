@@ -89,6 +89,21 @@ def logout_view(request):
 def profile(request):
     return render(request, 'profile.html')
 
+@login_required(login_url="/login")
+def delete_user(request):
+    user_id = request.GET.get('user_id', None)
+    user_to_delete = UserAccount.objects.get(pk=user_id)
+    if user_to_delete == None:
+        return redirect('/')
+    elif user_to_delete.id == request.user.id:
+        logout(request)
+        user_to_delete.delete()
+        return redirect('/')
+    elif request.user.is_superuser:
+        user_to_delete.delete()
+        return redirect('/dashboard')
+    return redirect('/')
+
 # Views for errors
 def handler_404(request, exception):
     return render(request, '404.html', status=404)

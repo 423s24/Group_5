@@ -7,6 +7,7 @@
         <th>Manager</th>
         <th>Tenant</th>
         <th>Archived</th>
+        <th>Delete Button</th>
     </tr>
     {% for user in users %}
     <tr>
@@ -17,6 +18,7 @@
         <td>{{ user.manager }}</td>
         <td>{{ user.tenant }}</td>
         <td>{{ user.archived }}</td>
+        <th><a href="/delete/?user_id={{user.id}}">Delete</a></th>
     </tr>
     {% endfor %}
 </table>
