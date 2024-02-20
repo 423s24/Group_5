@@ -5,21 +5,22 @@
 <a href="{% url 'home' %}">return home</a>
 
 <h1>Maintenance Form</h1>
-<form action="/action_page.php">
-  <label for="fname">First name:</label><br>
-  <input type="text" id="fname" value="{{user.first_name}}"><br><br>
+<form method="post">
+  {% csrf_token %}
+  <label for="first_name">First name:</label><br>
+  <input type="text" id="first_name" name="first_name" value="{{user.first_name}}"><br><br>
 
-  <label for="lname">Last name:</label><br>
-  <input type="text" id="lname" value="{{user.last_name}}"><br><br>
+  <label for="last_name">Last name:</label><br>
+  <input type="text" id="last_name" name="last_name" value="{{user.last_name}}"><br><br>
 
   <label for="address">Address:</label><br>
-  <input type="text" id="address"><br><br>
+  <input type="text" id="address" name="address"><br><br>
 
   <label for="request">Request:</label><br>
-  <input type="text" id="request"><br><br>
+  <input type="text" id="request" name="request"><br><br>
 
   <label for="phone">Phone:</label><br>
-  <input type="text" id="phone"><br><br>
+  <input type="text" id="phone" name="phone"><br><br>
 
   <input type="submit" value="Submit">
 </form> 

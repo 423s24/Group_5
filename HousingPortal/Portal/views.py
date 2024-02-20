@@ -2,7 +2,8 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from .forms import RegisterForm, AuthForm
-from .models import UserAccount
+#from .models import UserAccount
+from .models import *
 from django.contrib.auth.views import LoginView
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.decorators import login_required
@@ -17,6 +18,8 @@ def support(request):
 @login_required(login_url="/login")
 def dashboard(request):
     users = UserAccount.objects.all()
+    applications = HousingApplication.objects.all()
+    requests = MaintenanceRequest.objects.all()
     per_page = 10
     paginator = Paginator(users, per_page)
     page = request.GET.get('page', 1)
@@ -26,14 +29,30 @@ def dashboard(request):
         users = paginator.page(1)
     except EmptyPage:
         users = paginator.page(paginator.num_pages)
-    return render(request, 'dashboard.html', {'users': users})
+    return render(request, 'dashboard.html', {'users':users, 'applications':applications, 'requests':requests})
 
 @login_required(login_url="/login")
 def application(request):
+    if request.method == 'POST':
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+        unit = request.POST.get('unit')
+        phone = request.POST.get('phone')
+        application = HousingApplication.objects.create(first_name=first_name, last_name=last_name, unit_wanted=unit, phone=phone)
+        UserHousingApplication.objects.create(userId = request.user, housingApplicationId=application)
+        return redirect('/dashboard')
     return render(request, 'forms/application/application.html')
 
 @login_required(login_url="/login")
 def maintenance(request):
+    if request.method == 'POST':
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+        address = request.POST.get('address')
+        req = request.POST.get('request')
+        phone = request.POST.get('phone')
+        MaintenanceRequest.objects.create(userId=request.user, first_name=first_name, last_name=last_name, address=address, request=req, phone=phone)
+        return redirect('/dashboard')
     return render(request, 'forms/maintenance/maintenance.html')
 
 def payment(request):

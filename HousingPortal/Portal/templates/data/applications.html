@@ -1,0 +1,16 @@
+<table>
+    <tr>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Unit Wanted</th>
+        <th>Phone</th>
+    </tr>
+    {% for application in applications %}
+    <tr>
+        <td>{{application.first_name}}</td>
+        <td>{{application.last_name}}</td>
+        <td>{{application.unit_wanted}}</td>
+        <td>{{application.phone}}</td>
+    </tr>
+    {% endfor %}
+</table>

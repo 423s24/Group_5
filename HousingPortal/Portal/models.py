@@ -26,8 +26,7 @@ class UserAccount(AbstractUser):
     twoFactorKey = models.CharField(max_length=100)
     manager = models.OneToOneField('Manager', on_delete=models.SET_NULL, null=True, blank=True)
     tenant = models.OneToOneField('Tenant', on_delete=models.SET_NULL, null=True, blank=True)
-    userHousingApplications = models.ManyToManyField('HousingApplication', through='UserHousingApplication')
-    maintenanceRequest = models.ForeignKey('MaintenanceRequest', on_delete=models.CASCADE, null=True)
+    #userHousingApplications = models.ManyToManyField('HousingApplication', through='UserHousingApplication')
     archived = models.BooleanField(default=False)
 
 
@@ -45,7 +44,7 @@ class Manager(models.Model):
     firstName = models.CharField(max_length=100)
     lastName = models.CharField(max_length=100)
     archived = models.BooleanField(default=False)
-    managerBuilding = models.ManyToManyField('Building', through='ManagerBuilding')
+    #managerBuilding = models.ManyToManyField('Building', through='ManagerBuilding')
 
 
 class ManagerBuilding(models.Model):
@@ -59,17 +58,23 @@ class Building(models.Model):
     state = models.CharField(max_length=100)
     country = models.CharField(max_length=100)
     zipcode = models.CharField(max_length=100)
-    units = models.ManyToManyField('Unit')
+    #units = models.ManyToManyField('Unit')
 
 
 class Unit(models.Model):
     buildingId = models.ForeignKey('Building', on_delete=models.CASCADE)
     unitNumber = models.CharField(max_length=100)
-    maintenanceRequests = models.ManyToManyField('MaintenanceRequest')
 
 
 class MaintenanceRequest(models.Model):
+    unitId = models.ForeignKey('Unit', null=True, on_delete=models.CASCADE) # Take out null=True when Unit is working
+    userId = models.ForeignKey('UserAccount', on_delete=models.CASCADE)
     completed = models.BooleanField(default=False)
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
+    address = models.CharField(max_length=100)
+    request = models.CharField(max_length=100)
+    phone = models.CharField(max_length=100)
 
 
 class UserHousingApplication(models.Model):
@@ -78,4 +83,8 @@ class UserHousingApplication(models.Model):
 
 
 class HousingApplication(models.Model):
-    temporary = models.BooleanField(default=False)
+    accepted = models.BooleanField(default=False)
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
+    unit_wanted = models.CharField(max_length=100)
+    phone = models.CharField(max_length=100)
