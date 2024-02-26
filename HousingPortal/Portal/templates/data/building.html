@@ -1,0 +1,37 @@
+<table>
+    <tr>
+        <th>Building Name</th>
+        <th>Address</th>
+        <th>City</th>
+        <th>State</th>
+        <th>Country</th>
+        <th>Zipcode</th>
+    </tr>
+    {% for b in buildings %}
+    <tr>
+        <td>{{ b.buildingName }}</td>
+        <td>{{ b.address }}</td>
+        <td>{{ b.city }}</td>
+        <td>{{ b.state }}</td>
+        <td>{{ b.country }}</td>
+        <td>{{ b.zipcode }}</td>
+    </tr>
+    {% endfor %}
+</table>
+<div class="pagination">
+    <span class="step-links">
+        {% if buildings.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+            <a href="?page={{ buildings.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ buildings.number }} of {{ buildings.paginator.num_pages }}.
+        </span>
+
+        {% if users.has_next %}
+            <a href="?page={{ buildings.next_page_number }}">next</a>
+            <a href="?page={{ buildings.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+    </span>
+</div>

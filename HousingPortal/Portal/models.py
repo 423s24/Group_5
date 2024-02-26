@@ -53,6 +53,7 @@ class ManagerBuilding(models.Model):
 
 
 class Building(models.Model):
+    buildingName = models.CharField(max_length=100, default="")
     address = models.CharField(max_length=100)
     city = models.CharField(max_length=100)
     state = models.CharField(max_length=100)
