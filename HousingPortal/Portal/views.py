@@ -29,7 +29,7 @@ def dashboard(request):
         users = paginator.page(1)
     except EmptyPage:
         users = paginator.page(paginator.num_pages)
-    return render(request, 'dashboard.html', {'users':users, 'applications':applications, 'requests':requests})
+    return render(request, 'dashboard/dashboard.html', {'users':users, 'applications':applications, 'requests':requests})
 
 @login_required(login_url="/login")
 def application(request):
