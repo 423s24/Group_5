@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
-from .models import UserAccount
+from .models import UserAccount, Building
 from django.contrib.auth.models import User
 
 class RegisterForm(UserCreationForm):
@@ -14,3 +14,8 @@ class RegisterForm(UserCreationForm):
 
 class AuthForm(AuthenticationForm):
     pass
+
+class BuildingForm(forms.ModelForm):
+    class Meta:
+        model = Building
+        fields = ["buildingName", "address", "city", "state", "country", "zipcode"]

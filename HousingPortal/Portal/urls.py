@@ -15,7 +15,8 @@ urlpatterns = [
     path('login/', views.login_view, name='login'),
     path('logout/', views.logout_view, name='logout'),
     path('profile/', views.profile, name='profile'),
-    path('delete/', views.delete_user, name='delete')
+    path('delete/', views.delete_user, name='delete'),
+    path('createbuilding/', views.add_building, name='createbuilding')
     #path('success/', views.success_view, name='success_view'),
     #path('login/', LoginView.as_view(template_name='registration/login.html'), name='login'),
     #path('logout/', auth_views.LogoutView.as_view(), name='logout'),

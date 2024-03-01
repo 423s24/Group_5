@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
-from .forms import RegisterForm, AuthForm
+from .forms import RegisterForm, AuthForm, BuildingForm
 #from .models import UserAccount
 from .models import *
 from django.contrib.auth.views import LoginView
@@ -17,9 +17,11 @@ def support(request):
 
 @login_required(login_url="/login")
 def dashboard(request):
+    user = request.user
     users = UserAccount.objects.all()
     applications = HousingApplication.objects.all()
     requests = MaintenanceRequest.objects.all()
+    buildings = Building.objects.all()
     per_page = 10
     paginator = Paginator(users, per_page)
     page = request.GET.get('page', 1)
@@ -29,7 +31,12 @@ def dashboard(request):
         users = paginator.page(1)
     except EmptyPage:
         users = paginator.page(paginator.num_pages)
-    return render(request, 'dashboard/dashboard.html', {'users':users, 'applications':applications, 'requests':requests})
+    if user.is_superuser:
+        return render(request, 'dashboard/admin_dashboard.html', {'users': users, 'applications': applications, 'requests': requests, 'buildings': buildings})
+    elif user.is_staff:
+        pass
+    else:
+        return render(request, 'dashboard/dashboard.html', {'users':users, 'applications':applications, 'requests':requests})
 
 @login_required(login_url="/login")
 def application(request):
@@ -126,3 +133,14 @@ def delete_user(request):
 # Views for errors
 def handler_404(request, exception):
     return render(request, '404.html', status=404)
+
+
+def add_building(request):
+    form = BuildingForm()
+    if request.method == 'POST':
+        form = BuildingForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return dashboard(request)
+
+    return render(request, 'dashboard/forms/create_building.html', {'form': form})

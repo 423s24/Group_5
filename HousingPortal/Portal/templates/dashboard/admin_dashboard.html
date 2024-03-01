@@ -32,5 +32,12 @@
 {% include 'dashboard/data/requests.html' %}
 <br>
 <br>
+    <h2>Buildings</h2>
+    <div id="add_building_button">
+        <a href="{% url 'createbuilding' %}">Add Building</a>
+    </div>
+    {% include 'dashboard/data/building.html' %}
+    <br>
+    <br>
 {% endblock %}
 
