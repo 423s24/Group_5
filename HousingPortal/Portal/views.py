@@ -132,15 +132,21 @@ def delete_user(request):
 
 # Views for errors
 def handler_404(request, exception):
-    return render(request, '404.html', status=404)
+    return render(request, 'errors/404.html', status=404)
 
+def handler_403(request, exception):
+    return render(request, 'errors/403.html', status=403)
 
+@login_required(login_url="/login")
 def add_building(request):
-    form = BuildingForm()
-    if request.method == 'POST':
-        form = BuildingForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return dashboard(request)
-
-    return render(request, 'dashboard/forms/create_building.html', {'form': form})
+    user = request.user
+    if user.is_superuser:
+        form = BuildingForm()
+        if request.method == 'POST':
+            form = BuildingForm(request.POST)
+            if form.is_valid():
+                form.save()
+                return dashboard(request)
+        return render(request, 'dashboard/forms/create_building.html', {'form': form})
+    else:
+        return handler_403(request)
