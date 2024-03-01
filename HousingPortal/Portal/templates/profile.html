@@ -1,9 +1,10 @@
 {% extends 'base.html' %}
 {% block title %}User Profile{% endblock %}
 {% block content %}
-<h1>{{user.username}}'s Profile</h1>
+<h1>Your Profile</h1>
 <p>First Name: {{user.first_name}}</p>
 <p>Last Name: {{user.last_name}}</p>
+<p>Username: {{user.username}}</p>
 <p>Email: {{user.email}}</p>
 <p>Superuser: {{user.is_superuser}}</p>
 <p>Date joined: {{user.date_joined}}</p>

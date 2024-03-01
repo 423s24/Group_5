@@ -37,7 +37,7 @@ def dashboard(request):
     elif user.manager != None:
         pass
     else:
-        return render(request, 'dashboard/dashboard.html', {'users':users, 'applications':applications, 'requests':requests})
+        return render(request, 'dashboard/tenant_dashboard.html', {'users':users, 'applications':applications, 'requests':requests})
 
 @login_required(login_url="/login")
 def application(request):
