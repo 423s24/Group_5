@@ -24,3 +24,4 @@ urlpatterns = [
 ]
 
 handler404 = 'Portal.views.handler_404'
+handler403 = 'Portal.views.handler_403'

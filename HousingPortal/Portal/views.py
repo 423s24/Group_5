@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from .forms import RegisterForm, AuthForm, BuildingForm
+from django.http import HttpResponseForbidden, HttpResponseRedirect
 #from .models import UserAccount
 from .models import *
 from django.contrib.auth.views import LoginView
@@ -134,7 +135,7 @@ def delete_user(request):
 def handler_404(request, exception):
     return render(request, 'errors/404.html', status=404)
 
-def handler_403(request, exception):
+def handler_403(request, exception=None):
     return render(request, 'errors/403.html', status=403)
 
 @login_required(login_url="/login")
