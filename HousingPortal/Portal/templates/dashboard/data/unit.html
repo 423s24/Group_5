@@ -1,0 +1,35 @@
+<table>
+    <tr>
+        <th>Unit Number</th>
+        <th>Unit Name</th>
+        <th>Unit Floor</th>
+        <th>Unit Size</th>
+        <th>Unit Bedrooms</th>
+    </tr>
+    {% for u in units %}
+    <tr>
+        <td>{{ u.unitNumber }}</td>
+        <td>{{ u.unitName }}</td>
+        <td>{{ u.unitFloor }}</td>
+        <td>{{ u.unitSize }}</td>
+        <td>{{ u.unitBedrooms }}</td>
+    </tr>
+    {% endfor %}
+</table>
+<div class="pagination">
+    <span class="step-links">
+        {% if units.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+            <a href="?page={{ units.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ units.number }} of {{ units.paginator.num_pages }}.
+        </span>
+
+        {% if units.has_next %}
+            <a href="?page={{ units.next_page_number }}">next</a>
+            <a href="?page={{ units.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+    </span>
+</div>
