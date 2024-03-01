@@ -65,10 +65,10 @@ class Building(models.Model):
 class Unit(models.Model):
     buildingId = models.ForeignKey('Building', on_delete=models.CASCADE)
     unitNumber = models.CharField(max_length=100)
-    unitFloor = models.CharField(max_length=100)
-    unitSize = models.CharField(max_length=100)
-    unitName = models.CharField(max_length=100)
-    unitBedrooms = models.CharField(max_length=100)
+    unitFloor = models.CharField(max_length=100, default='')
+    unitSize = models.CharField(max_length=100, default='')
+    unitName = models.CharField(max_length=100, default='')
+    unitBedrooms = models.CharField(max_length=100, default='')
 
 
 class MaintenanceRequest(models.Model):
