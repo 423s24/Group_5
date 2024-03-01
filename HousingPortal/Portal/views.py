@@ -33,7 +33,7 @@ def dashboard(request):
         users = paginator.page(paginator.num_pages)
     if user.is_superuser:
         return render(request, 'dashboard/admin_dashboard.html', {'users': users, 'applications': applications, 'requests': requests, 'buildings': buildings})
-    elif user.is_staff:
+    elif user.manager != None:
         pass
     else:
         return render(request, 'dashboard/dashboard.html', {'users':users, 'applications':applications, 'requests':requests})
