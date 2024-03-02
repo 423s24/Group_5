@@ -3,24 +3,6 @@ from django.contrib.auth.models import AbstractUser, BaseUserManager, Permission
 
 # Create your models here.
 
-
-# class UserAccount(AbstractUser):
-#     username = models.CharField(max_length=50, editable=True, unique=True)
-#     email = models.EmailField(primary_key=True, unique=True)
-#     password = models.CharField(max_length=100)
-#     admin = models.BooleanField(default=False)
-#     twoFactorKey = models.CharField(max_length=100)
-#     manager = models.OneToOneField('Manager', on_delete=models.SET_NULL, null=True, blank=True)
-#     tenant = models.OneToOneField('Tenant', on_delete=models.SET_NULL, null=True, blank=True)
-#     userHousingApplications = models.ManyToManyField('HousingApplication', through='UserHousingApplication')
-#     maintenanceRequest = models.ForeignKey('MaintenanceRequest', on_delete=models.CASCADE, null=True)
-#     archived = models.BooleanField(default=False)
-
-#     def save(self, *args, **kwargs):
-#         if not self.username:
-#             self.username = self.email
-#         super(UserAccount, self).save(*args, **kwargs)
-
 class UserAccount(AbstractUser): 
     # AbstractUser has fields: id, password, last_login, is_superuser, username, first_name, last_name, email, is_staff, is_active, date_joined
     twoFactorKey = models.CharField(max_length=100)

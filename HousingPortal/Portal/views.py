@@ -18,7 +18,15 @@ def support(request):
 
 @login_required(login_url="/login")
 def dashboard(request):
-    user = request.user
+    if request.user.is_superuser:
+        return admin_dashboard(request)
+    elif request.user.manager != None:
+        return manager_dashboard(request)
+    else:
+        return tenant_dashboard(request)
+
+@login_required(login_url="/login")
+def admin_dashboard(request):
     users = UserAccount.objects.all()
     applications = HousingApplication.objects.all()
     requests = MaintenanceRequest.objects.all()
@@ -32,12 +40,38 @@ def dashboard(request):
         users = paginator.page(1)
     except EmptyPage:
         users = paginator.page(paginator.num_pages)
-    if user.is_superuser:
+    if request.user.is_superuser:
         return render(request, 'dashboard/admin_dashboard.html', {'users': users, 'applications': applications, 'requests': requests, 'buildings': buildings})
-    elif user.manager != None:
-        pass
     else:
+        return handler_403(request)
+
+@login_required(login_url="/login")
+def manager_dashboard(request):
+    users = UserAccount.objects.all()
+    applications = HousingApplication.objects.all()
+    requests = MaintenanceRequest.objects.all()
+    per_page = 10
+    paginator = Paginator(users, per_page)
+    page = request.GET.get('page', 1)
+    try:
+        users = paginator.page(page)
+    except PageNotAnInteger:
+        users = paginator.page(1)
+    except EmptyPage:
+        users = paginator.page(paginator.num_pages)
+
+    if request.user.manager != None:
         return render(request, 'dashboard/tenant_dashboard.html', {'users':users, 'applications':applications, 'requests':requests})
+    else:
+        return handler_403(request)
+
+@login_required(login_url="/login")
+def tenant_dashboard(request):
+    applications = HousingApplication.objects.all()
+    requests = MaintenanceRequest.objects.all()
+
+    return render(request, 'dashboard/tenant_dashboard.html', {'applications':applications, 'requests':requests})
+
 
 @login_required(login_url="/login")
 def application(request):
