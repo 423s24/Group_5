@@ -126,6 +126,18 @@ def request_info(request, request_id):
     else:
         return handler_403(request)
 
+def mark_completed(request, request_id):
+    maintenance_request = get_object_or_404(MaintenanceRequest, pk=request_id)
+    notes = request.POST.get('notes')
+    if request.method == 'POST' and request.user.is_superuser or request.user.manager != None:
+        maintenance_request.completed = True
+        maintenance_request.notes = notes
+        maintenance_request.save()
+        return redirect('request_info', request_id=request_id)
+    else:
+        return handler_403(request)
+
+
 # Views for user accounts and authentication
 def signup_view(request):
     if request.user.is_authenticated:

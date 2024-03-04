@@ -59,6 +59,7 @@ class MaintenanceRequest(models.Model):
     userId = models.ForeignKey('UserAccount', on_delete=models.CASCADE)
     entry_permission = models.BooleanField(default=False)
     completed = models.BooleanField(default=False)
+    notes = models.CharField(max_length=10000, default='')
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     # address seems arbitrary kept it in but don't think its necessary

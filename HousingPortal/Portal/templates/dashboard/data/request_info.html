@@ -16,5 +16,19 @@
 <p><strong>Building:</strong> {{ maintenance_request.building.buildingName }}</p>
 <p><strong>Entry Permission:</strong> {% if maintenance_request.entry_permission %}Yes{% else %}No{% endif %}</p>
 <p><strong>Completed:</strong> {% if maintenance_request.completed %}Yes{% else %}No{% endif %}</p>
+{% if maintenance_request.completed %}
+    <p><strong>Notes:</strong> {{ maintenance_request.notes }}</p>
+    {% endif %}
+
+    {% if request.user.is_superuser or request.user.manager %}
+        {% if not maintenance_request.completed %}
+            <form method="post" action="{% url 'mark_completed' request_id=maintenance_request.id %}">
+            {% csrf_token %}
+                <label for="notes">Maintenance Notes:</label><br>
+                <textarea id="notes" name="notes" rows="4" cols="50"></textarea><br>
+            <button type="submit">Mark as Completed</button>
+            </form>
+        {% endif %}
+    {% endif %}
 
 {% endblock %}
