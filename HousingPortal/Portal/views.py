@@ -260,20 +260,22 @@ def login_view(request):
         return redirect('/dashboard')
     else:
         if request.method == 'POST':
-            form = AuthForm(request.POST)
-            username = request.POST.get('username')
-            password = request.POST.get('password')
-            user = authenticate(request, username=username, password=password)
-            if user is not None:
-                login(request, user)
-                request.session.set_expiry(1800) # Set session expiry to 30 minutes
-                next_url = request.GET.get('next', None)
-                if next_url:
-                    return redirect(next_url)
-                else:
-                    return redirect('/dashboard')
+            form = AuthForm(request, request.POST)
+            if form.is_valid():
+                username = form.cleaned_data['username']
+                password = form.cleaned_data['password']
+                user = authenticate(request, username=username, password=password)
+                if user is not None:
+                    login(request, user)
+                    request.session.set_expiry(1800) # Set session expiry to 30 minutes
+                    next_url = request.GET.get('next', None)
+                    if next_url:
+                        return redirect(next_url)
+                    else:
+                        return redirect('/dashboard')
         else:
             form = AuthForm(request)
+            
         return render(request, 'registration/login.html', {"form": form})
 
 def logout_view(request):
