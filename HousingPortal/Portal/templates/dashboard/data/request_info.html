@@ -18,6 +18,7 @@
 <p><strong>Completed:</strong> {% if maintenance_request.completed %}Yes{% else %}No{% endif %}</p>
 {% if maintenance_request.completed %}
     <p><strong>Notes:</strong> {{ maintenance_request.notes }}</p>
+    <p><strong>Date Completed:</strong> {{ maintenance_request.dateCompleted }}</p>
     {% endif %}
 
     {% if request.user.is_superuser or request.user.manager %}

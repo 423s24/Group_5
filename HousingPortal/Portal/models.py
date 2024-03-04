@@ -67,6 +67,7 @@ class MaintenanceRequest(models.Model):
     unit = models.CharField(max_length=100, default='')
     request = models.CharField(max_length=100)
     phone = models.CharField(max_length=100)
+    dateCompleted = models.DateTimeField(null=True, blank=True)
 
 
 class UserHousingApplication(models.Model):

@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
+from django.utils import timezone
 from django.contrib import messages
 from .forms import RegisterForm, AuthForm, BuildingForm
 from django.http import HttpResponseForbidden, HttpResponseRedirect
@@ -132,6 +133,7 @@ def mark_completed(request, request_id):
     if request.method == 'POST' and request.user.is_superuser or request.user.manager != None:
         maintenance_request.completed = True
         maintenance_request.notes = notes
+        maintenance_request.dateCompleted = timezone.now()
         maintenance_request.save()
         return redirect('request_info', request_id=request_id)
     else:
