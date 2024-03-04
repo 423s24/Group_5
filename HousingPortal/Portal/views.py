@@ -15,7 +15,7 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from datetime import date
 
-def html_email(building,name,level,enter,relation):
+def html_email(building,address,unit,name,phone,enter,request):
     sender_email = "cs423robot@gmail.com" 
     recipient_email = "cs423robot@gmail.com"
     subject = "Maintenance Request"
@@ -27,16 +27,15 @@ def html_email(building,name,level,enter,relation):
     message['To'] = recipient_email
     message['Subject'] = subject
 
-
-    #message = "Building:  " + building + "\nDate:  " + today + "\nLevel of Emergency:  " + level + "\nCan we enter without your prescence:  " + enter + "\nWhat is the nature of your problem: " + relation  
-
     # write the text/plain part
     text = """\
     Hello, a new maintenance request has been made on """ + today + """
     Building: """ + building + """
+    Address: """ + address + """
+    Unit: """ + unit + """
     Resident Name: """ + name + """
-    Level of Emergency: """ + level + """
-    Nature of Request:""" + relation + """
+    Phone: """ + phone + """
+    Request:""" + request + """
     Can we enter without resident present: """ + enter 
 
     
@@ -47,9 +46,11 @@ def html_email(building,name,level,enter,relation):
         <p>Hello, a new maintenance request has been made on <strong>""" + today + """</strong><br></p>
         <p><a href=""" + dashboard + """>View Request Dashboard</a></p>
         <p> Building:  <strong>""" + building + """</strong><br>
+        Address:  <strong>""" + address + """</strong><br>
+        Unit:  <strong>""" + unit + """</strong><br>
         Resident Name:  <strong>""" + name + """</strong><br>
-        Level of Emergency:  <strong>""" + level + """</strong><br>
-        Nature of Request:  <strong>""" + relation + """</strong><br>
+        Phone:  <strong>""" + phone + """</strong><br>
+        Requst:  <strong>""" + request + """</strong><br>
         Can we enter without resident present:  <strong>""" + enter + """</strong>
 
         </p>
@@ -138,10 +139,8 @@ def application(request):
     if request.method == 'POST':
         first_name = request.POST.get('first_name')
         last_name = request.POST.get('last_name')
-        full_name = first_name + last_name
         unit = request.POST.get('unit')
         phone = request.POST.get('phone')
-        html_email(unit,full_name,"Urgent","No","Electrical")
         application = HousingApplication.objects.create(first_name=first_name, last_name=last_name, unit_wanted=unit, phone=phone)
         UserHousingApplication.objects.create(userId = request.user, housingApplicationId=application)
         return redirect('/dashboard')
@@ -153,6 +152,7 @@ def maintenance(request):
     if request.method == 'POST':
         first_name = request.POST.get('first_name')
         last_name = request.POST.get('last_name')
+        full_name = first_name + " " + last_name
         address = request.POST.get('address')
         unit = request.POST.get('unit')
         req = request.POST.get('request')
@@ -160,6 +160,8 @@ def maintenance(request):
         building_id = request.POST.get('building')
         building = Building.objects.get(id=building_id)
         entry_permission = request.POST.get('entry_permission') == '1'
+
+        html_email(building_id,address,unit,full_name,phone,entry_permission,request):
         MaintenanceRequest.objects.create(userId=request.user, first_name=first_name, last_name=last_name, address=address, unit=unit, request=req, phone=phone, building=building, entry_permission=entry_permission)
         return redirect('/dashboard')
     return render(request, 'forms/maintenance/maintenance.html', {'buildings': buildings})
