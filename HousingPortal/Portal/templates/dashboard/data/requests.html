@@ -5,6 +5,7 @@
         <th>Address</th>
         <th>Request</th>
         <th>Phone</th>
+        <th>Building</th>
     </tr>
     {% for request in requests %}
     <tr>
@@ -13,6 +14,7 @@
         <td>{{request.address}}</td>
         <td>{{request.request}}</td>
         <td>{{request.phone}}</td>
+        <td>{{ request.building.buildingName }}</td>
     </tr>
     {% endfor %}
 </table>

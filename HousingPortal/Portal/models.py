@@ -55,6 +55,7 @@ class Unit(models.Model):
 
 class MaintenanceRequest(models.Model):
     unitId = models.ForeignKey('Unit', null=True, on_delete=models.CASCADE) # Take out null=True when Unit is working
+    building = models.ForeignKey('Building', null=True, on_delete=models.SET_NULL)
     userId = models.ForeignKey('UserAccount', on_delete=models.CASCADE)
     completed = models.BooleanField(default=False)
     first_name = models.CharField(max_length=100)

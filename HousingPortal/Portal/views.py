@@ -87,15 +87,18 @@ def application(request):
 
 @login_required(login_url="/login")
 def maintenance(request):
+    buildings = Building.objects.all()
     if request.method == 'POST':
         first_name = request.POST.get('first_name')
         last_name = request.POST.get('last_name')
         address = request.POST.get('address')
         req = request.POST.get('request')
         phone = request.POST.get('phone')
-        MaintenanceRequest.objects.create(userId=request.user, first_name=first_name, last_name=last_name, address=address, request=req, phone=phone)
+        building_id = request.POST.get('building')
+        building = Building.objects.get(id=building_id)
+        MaintenanceRequest.objects.create(userId=request.user, first_name=first_name, last_name=last_name, address=address, request=req, phone=phone, building=building)
         return redirect('/dashboard')
-    return render(request, 'forms/maintenance/maintenance.html')
+    return render(request, 'forms/maintenance/maintenance.html', {'buildings': buildings})
 
 def payment(request):
     return render(request, 'payment.html')
