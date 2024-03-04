@@ -8,6 +8,11 @@
 <h1>Request #{{ maintenance_request.id }} Information</h1>
 
 <h2>Request Details:</h2>
+
+    {% if can_edit_request %}
+    <a href="{% url 'edit_request' request_id=maintenance_request.id %}"><button>Edit Request</button></a>
+    {% endif %}
+
 <p><strong>First Name:</strong> {{ maintenance_request.first_name }}</p>
 <p><strong>Last Name:</strong> {{ maintenance_request.last_name }}</p>
 <p><strong>Address:</strong> {{ maintenance_request.address }}</p>
@@ -26,7 +31,7 @@
             <form method="post" action="{% url 'mark_completed' request_id=maintenance_request.id %}">
             {% csrf_token %}
                 <label for="notes">Maintenance Notes:</label><br>
-                <textarea id="notes" name="notes" rows="4" cols="50"></textarea><br>
+                <textarea id="notes" name="notes" rows="4" cols="50">{{ maintenance_request.notes }}</textarea><br>
             <button type="submit">Mark as Completed</button>
             </form>
         {% endif %}

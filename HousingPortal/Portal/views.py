@@ -119,11 +119,40 @@ def building_info(request, building_id):
     else:
         return handler_403(request)
 
+
+@login_required(login_url="/login")
+def edit_request(request, request_id):
+    maintenance_request = get_object_or_404(MaintenanceRequest, pk=request_id)
+    buildings = Building.objects.all()
+
+    if request.method == 'POST':
+        maintenance_request.first_name = request.POST.get('first_name', maintenance_request.first_name)
+        maintenance_request.last_name = request.POST.get('last_name', maintenance_request.last_name)
+        maintenance_request.request = request.POST.get('request', maintenance_request.request)
+        maintenance_request.entry_permission = request.POST.get('entry_permission',
+                                                                maintenance_request.entry_permission)
+        maintenance_request.notes = request.POST.get('notes', maintenance_request.notes)
+
+        building_id = request.POST.get('building')
+        building = get_object_or_404(Building, pk=building_id)
+        maintenance_request.building = building
+
+        if request.user.is_superuser or request.user.manager:
+            maintenance_request.completed = request.POST.get('completed', maintenance_request.completed) == '1'
+
+        maintenance_request.save()
+        return redirect('request_info', request_id=maintenance_request.id)
+
+    return render(request, 'dashboard/data/edit_request.html',
+                  {'maintenance_request': maintenance_request, 'buildings': buildings})
+
+
 @login_required(login_url="/login")
 def request_info(request, request_id):
     maintenance_request = get_object_or_404(MaintenanceRequest, pk=request_id)
     if request.user.is_superuser or request.user.manager != None or request.user == maintenance_request.userId:
-        return render(request, 'dashboard/data/request_info.html', {'maintenance_request': maintenance_request})
+        can_edit_request = (request.user.is_superuser or request.user.manager or (request.user == maintenance_request.userId and not maintenance_request.completed))
+        return render(request, 'dashboard/data/request_info.html', {'maintenance_request': maintenance_request, 'can_edit_request': can_edit_request})
     else:
         return handler_403(request)
 

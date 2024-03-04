@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Edit Maintenance Request{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/dashboard.css' %}">
+{% endblock %}
+
+{% block content %}
+<h1>Edit Maintenance Request #{{ maintenance_request.id }}</h1>
+
+<form method="post" action="{% url 'edit_request' request_id=maintenance_request.id %}">
+  {% csrf_token %}
+
+  <label for="first_name">First name:</label><br>
+  <input type="text" id="first_name" name="first_name" value="{{ maintenance_request.first_name }}"><br><br>
+
+  <label for="last_name">Last name:</label><br>
+  <input type="text" id="last_name" name="last_name" value="{{ maintenance_request.last_name }}"><br><br>
+
+  <label for="address">Address:</label><br>
+  <input type="text" id="address" name="address" value="{{ maintenance_request.address }}"><br><br>
+
+  <label for="unit">Unit:</label><br>
+  <input type="text" id="unit" name="unit" value="{{ maintenance_request.unit }}"><br><br>
+
+  <label for="request">Request:</label><br>
+  <input type="text" id="request" name="request" value="{{ maintenance_request.request }}"><br><br>
+
+  <label for="phone">Phone:</label><br>
+  <input type="text" id="phone" name="phone" value="{{ maintenance_request.phone }}"><br><br>
+
+  <label for="entry_permission">Can Personnel Conducting Maintenance Enter if you are absent:</label>
+  <select id="entry_permission" name="entry_permission">
+    <option value="1" {% if maintenance_request.entry_permission %}selected{% endif %}>Yes</option>
+    <option value="0" {% if not maintenance_request.entry_permission %}selected{% endif %}>No</option>
+  </select><br><br>
+
+  <label for="building">Building:</label><br>
+  <select id="building" name="building">
+    {% for building in buildings %}
+      <option value="{{ building.id }}" {% if building.id == maintenance_request.building.id %}selected{% endif %}>
+        {{ building.buildingName }}
+      </option>
+    {% endfor %}
+  </select><br><br>
+
+  {% if request.user.is_superuser or request.user.manager %}
+    <label for="completed">Completed:</label><br>
+    <select id="completed" name="completed">
+      <option value="1" {% if maintenance_request.completed %}selected{% endif %}>Yes</option>
+      <option value="0" {% if not maintenance_request.completed %}selected{% endif %}>No</option>
+    </select><br><br>
+
+    <label for="notes">Maintenance Notes:</label><br>
+    <textarea id="notes" name="notes" rows="4" cols="50">{{ maintenance_request.notes }}</textarea><br><br>
+  {% endif %}
+
+  <input type="submit" value="Save Changes">
+</form>
+
+{% endblock %}
