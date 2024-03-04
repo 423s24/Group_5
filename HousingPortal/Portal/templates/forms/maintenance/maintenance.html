@@ -5,23 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Maintenance Form</title>
     <style>
-        /* Center the content vertically and horizontally */
+        
         body {
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
-            background-color: #f0f0f0; /* Example background color */
+            background-color: #f0f0f0; 
         }
 
-        /* Style the form */
+        
         .form-container {
             width: 400px;
             padding: 20px;
-            background-color: #ffffff; /* Example background color */
+            background-color: #ffffff; 
             border-radius: 10px;
-            box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1); /* Example box shadow */
+            box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1); 
         }
 
         .form-container h1 {
@@ -34,7 +34,7 @@
             width: 100%;
             padding: 10px;
             margin-bottom: 10px;
-            border: 1px solid #ccc; /* Example border color */
+            border: 1px solid #ccc; 
             border-radius: 5px;
             box-sizing: border-box;
         }
@@ -42,15 +42,15 @@
         .form-container button {
             width: 100%;
             padding: 10px;
-            background-color: #007bff; /* Example button color */
-            color: #ffffff; /* Example button text color */
+            background-color: #007bff; 
+            color: #ffffff; 
             border: none;
             border-radius: 5px;
             cursor: pointer;
         }
 
         .form-container button:hover {
-            background-color: #0056b3; /* Example button color on hover */
+            background-color: #0056b3; 
         }
     </style>
 </head>
@@ -61,9 +61,9 @@
             {% csrf_token %}
             <input type="text" name="first_name" placeholder="First Name" required>
             <input type="text" name="last_name" placeholder="Last Name" required>
-            <textarea name="address" placeholder="Address" rows="4" required></textarea>
+            <input name="address" placeholder="Address" rows="4" required></textarea>
             <input type="text" name="unit" placeholder="Unit" required>
-            <textarea name="request" placeholder="Maintenance Request" rows="4" required></textarea>
+            <input name="request" placeholder="Maintenance Request" rows="4" required></textarea>
             <input type="text" name="phone" placeholder="Phone" required>
             <select name="building" required>
                 {% for building in buildings %}
