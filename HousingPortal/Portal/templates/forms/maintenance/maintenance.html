@@ -29,8 +29,7 @@
             margin-bottom: 20px;
         }
 
-        .form-container input,
-        .form-container textarea {
+        .form-container input{
             width: 100%;
             padding: 10px;
             margin-bottom: 10px;
@@ -70,10 +69,11 @@
                     <option value="{{ building.id }}">{{ building.name }}</option>
                 {% endfor %}
             </select>
-            <label for="entry_permission">
-                <input type="checkbox" id="entry_permission" name="entry_permission" value="1">
-                Entry Permission
-            </label>
+            <label for="entry_permission">Can Personnel Conducting Maintenance Enter if you are absent: </label>
+    <select id="entry_permission" name="entry_permission">
+         <option value="1">Yes</option>
+        <option value="0">No</option>
+    </select> <br>
             <button type="submit">Submit</button>
         </form>
     </div>
