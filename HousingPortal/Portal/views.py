@@ -10,6 +10,65 @@ from django.contrib.auth.views import LoginView
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.decorators import login_required
 
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+from datetime import date
+
+def html_email(building,name,level,enter,relation):
+    sender_email = "cs423robot@gmail.com" 
+    recipient_email = "cs423robot@gmail.com"
+    subject = "Maintenance Request"
+    dashboard = "https://tanrtech.com/dashboard/"
+    today = str(date.today())
+    
+    message = MIMEMultipart("alternative")
+    message['From'] = sender_email
+    message['To'] = recipient_email
+    message['Subject'] = subject
+
+
+    #message = "Building:  " + building + "\nDate:  " + today + "\nLevel of Emergency:  " + level + "\nCan we enter without your prescence:  " + enter + "\nWhat is the nature of your problem: " + relation  
+
+    # write the text/plain part
+    text = """\
+    Hello, a new maintenance request has been made on """ + today + """
+    Building: """ + building + """
+    Resident Name: """ + name + """
+    Level of Emergency: """ + level + """
+    Nature of Request:""" + relation + """
+    Can we enter without resident present: """ + enter 
+
+    
+    # write the HTML part
+    html = """\
+    <html>
+      <body>
+        <p>Hello, a new maintenance request has been made on <strong>""" + today + """</strong><br></p>
+        <p><a href=""" + dashboard + """>View Request Dashboard</a></p>
+        <p> Building:  <strong>""" + building + """</strong><br>
+        Resident Name:  <strong>""" + name + """</strong><br>
+        Level of Emergency:  <strong>""" + level + """</strong><br>
+        Nature of Request:  <strong>""" + relation + """</strong><br>
+        Can we enter without resident present:  <strong>""" + enter + """</strong>
+
+        </p>
+      </body>
+    </html>
+    """
+
+    # convert both parts to MIMEText objects and add them to the MIMEMultipart message
+    part1 = MIMEText(text, "plain")
+    part2 = MIMEText(html, "html")
+    message.attach(part1)
+    message.attach(part2)       
+
+
+    with smtplib.SMTP('smtp.gmail.com', 587) as server:
+        server.starttls()
+        server.login(sender_email, "tjcm gvmf ilvq jnqy") 
+        server.sendmail(sender_email, recipient_email, message.as_string())
+
 # Create your views here.
 def home(request):
     return render(request, 'home.html')
@@ -100,6 +159,7 @@ def maintenance(request):
         building = Building.objects.get(id=building_id)
         entry_permission = request.POST.get('entry_permission') == '1'
         MaintenanceRequest.objects.create(userId=request.user, first_name=first_name, last_name=last_name, address=address, unit=unit, request=req, phone=phone, building=building, entry_permission=entry_permission)
+        html_email("102 Fake Street","John Doe","Urgent","No","Electrical")
         return redirect('/dashboard')
     return render(request, 'forms/maintenance/maintenance.html', {'buildings': buildings})
 
