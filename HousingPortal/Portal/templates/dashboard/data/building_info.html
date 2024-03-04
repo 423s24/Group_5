@@ -7,6 +7,14 @@
 {% block content %}
 <h1>{{ building.buildingName }} Information</h1>
 
+    <h2>Building Details:</h2>
+<p><strong>Building Name:</strong> {{ building.buildingName }}</p>
+<p><strong>Address:</strong> {{ building.address }}</p>
+<p><strong>City:</strong> {{ building.city }}</p>
+<p><strong>State:</strong> {{ building.state }}</p>
+<p><strong>Country:</strong> {{ building.country }}</p>
+<p><strong>Zipcode:</strong> {{ building.zipcode }}</p>
+
 <h2>Maintenance Requests:</h2>
 <table>
     <thead>
@@ -21,7 +29,7 @@
     </thead>
     <tbody>
         {% for request in maintenance_requests %}
-            <tr>
+            <tr onclick="window.location='{% url 'request_info' request_id=request.id %}'" style="cursor: pointer;">
                 <td>{{ request.id }}</td>
                 <td>{{ request.first_name }}</td>
                 <td>{{ request.last_name }}</td>

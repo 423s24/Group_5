@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Housing Dashboard{% endblock %}
+{% block head %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/dashboard.css' %}">
+{% endblock %}
+{% block content %}
+<h1>Request #{{ maintenance_request.id }} Information</h1>
+
+<h2>Request Details:</h2>
+<p><strong>First Name:</strong> {{ maintenance_request.first_name }}</p>
+<p><strong>Last Name:</strong> {{ maintenance_request.last_name }}</p>
+<p><strong>Address:</strong> {{ maintenance_request.address }}</p>
+<p><strong>Request:</strong> {{ maintenance_request.request }}</p>
+<p><strong>Phone:</strong> {{ maintenance_request.phone }}</p>
+<p><strong>Building:</strong> {{ maintenance_request.building.buildingName }}</p>
+<p><strong>Entry Permission:</strong> {% if maintenance_request.entry_permission %}Yes{% else %}No{% endif %}</p>
+<p><strong>Completed:</strong> {% if maintenance_request.completed %}Yes{% else %}No{% endif %}</p>
+
+{% endblock %}

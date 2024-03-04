@@ -118,6 +118,14 @@ def building_info(request, building_id):
     else:
         return handler_403(request)
 
+@login_required(login_url="/login")
+def request_info(request, request_id):
+    maintenance_request = get_object_or_404(MaintenanceRequest, pk=request_id)
+    if request.user.is_superuser or request.user.manager != None or request.user == maintenance_request.userId:
+        return render(request, 'dashboard/data/request_info.html', {'maintenance_request': maintenance_request})
+    else:
+        return handler_403(request)
+
 # Views for user accounts and authentication
 def signup_view(request):
     if request.user.is_authenticated:
