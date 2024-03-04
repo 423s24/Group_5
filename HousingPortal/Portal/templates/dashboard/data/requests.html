@@ -2,21 +2,21 @@
     <tr>
         <th>First Name</th>
         <th>Last Name</th>
-        <th>Address</th>
-        <th>Request</th>
-        <th>Phone</th>
         <th>Building</th>
-        <th>Access</th>
+        <th>Unit</th>
+        <th>Request</th>
+        <th>Access Permission</th>
+        <th>Completed</th>
     </tr>
     {% for request in requests %}
     <tr onclick="window.location='{% url 'request_info' request_id=request.id %}'" style="cursor: pointer;">
         <td>{{request.first_name}}</td>
         <td>{{request.last_name}}</td>
-        <td>{{request.address}}</td>
+        <td>{{request.building.buildingName}}</td>
+        <td>{{request.unit}}</td>
         <td>{{request.request}}</td>
-        <td>{{request.phone}}</td>
-        <td>{{ request.building.buildingName }}</td>
         <td>{{ request.entry_permission }}</td>
+        <td>{{ request.completed }}</td>
     </tr>
     {% endfor %}
 </table>
