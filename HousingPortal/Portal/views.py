@@ -138,8 +138,10 @@ def application(request):
     if request.method == 'POST':
         first_name = request.POST.get('first_name')
         last_name = request.POST.get('last_name')
+        full_name = first_name + last_name
         unit = request.POST.get('unit')
         phone = request.POST.get('phone')
+        html_email(unit,full_name,"Urgent","No","Electrical")
         application = HousingApplication.objects.create(first_name=first_name, last_name=last_name, unit_wanted=unit, phone=phone)
         UserHousingApplication.objects.create(userId = request.user, housingApplicationId=application)
         return redirect('/dashboard')
@@ -159,7 +161,6 @@ def maintenance(request):
         building = Building.objects.get(id=building_id)
         entry_permission = request.POST.get('entry_permission') == '1'
         MaintenanceRequest.objects.create(userId=request.user, first_name=first_name, last_name=last_name, address=address, unit=unit, request=req, phone=phone, building=building, entry_permission=entry_permission)
-        html_email("102 Fake Street","John Doe","Urgent","No","Electrical")
         return redirect('/dashboard')
     return render(request, 'forms/maintenance/maintenance.html', {'buildings': buildings})
 
