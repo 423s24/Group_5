@@ -3,13 +3,13 @@ from django.contrib.auth import authenticate, login, logout
 from django.utils import timezone
 from django.contrib import messages
 from .forms import RegisterForm, AuthForm, BuildingForm
-from django.http import HttpResponseForbidden, HttpResponseRedirect
+from django.http import HttpResponseForbidden, HttpResponseRedirect, JsonResponse
 #from .models import UserAccount
 from .models import *
 from django.contrib.auth.views import LoginView
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.decorators import login_required
-
+import json
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
@@ -198,9 +198,7 @@ def edit_request(request, request_id):
         maintenance_request.first_name = request.POST.get('first_name', maintenance_request.first_name)
         maintenance_request.last_name = request.POST.get('last_name', maintenance_request.last_name)
         maintenance_request.request = request.POST.get('request', maintenance_request.request)
-        maintenance_request.entry_permission = request.POST.get('entry_permission',
-                                                                maintenance_request.entry_permission)
-        maintenance_request.notes = request.POST.get('notes', maintenance_request.notes)
+        maintenance_request.entry_permission = request.POST.get('entry_permission', maintenance_request.entry_permission)
 
         building_id = request.POST.get('building')
         building = get_object_or_404(Building, pk=building_id)
@@ -216,6 +214,30 @@ def edit_request(request, request_id):
                   {'maintenance_request': maintenance_request, 'buildings': buildings})
 
 
+def edit_note(request, note_id):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        note_id = data.get('note_id')
+        new_note_text = data.get('note_text')
+        if new_note_text is None:
+            return JsonResponse({'success': False, 'error': 'no note text provided'})
+        note = get_object_or_404(MaintenanceNotes, pk=note_id)
+        note.notes = new_note_text
+        note.save()
+        return JsonResponse({'success': True})
+    else:
+        return handler_403(request)
+
+
+def delete_note(request, note_id):
+    if request.method == 'POST':
+        note_to_delete = get_object_or_404(MaintenanceNotes, id=note_id)
+        note_to_delete.delete()
+        return JsonResponse({'success': True})
+    else:
+        return handler_403(request)
+
+
 @login_required(login_url="/login")
 def request_info(request, request_id):
     maintenance_request = get_object_or_404(MaintenanceRequest, pk=request_id)
@@ -227,12 +249,25 @@ def request_info(request, request_id):
 
 def mark_completed(request, request_id):
     maintenance_request = get_object_or_404(MaintenanceRequest, pk=request_id)
-    notes = request.POST.get('notes')
     if request.method == 'POST' and request.user.is_superuser or request.user.manager != None:
         maintenance_request.completed = True
-        maintenance_request.notes = notes
         maintenance_request.dateCompleted = timezone.now()
         maintenance_request.save()
+        return redirect('request_info', request_id=request_id)
+    else:
+        return handler_403(request)
+
+def add_note(request, request_id):
+    maintenance_request = get_object_or_404(MaintenanceRequest, pk=request_id)
+    notes = request.POST.get('notes')
+    if request.method == 'POST' and request.user.is_superuser or request.user.manager != None:
+        new_note = MaintenanceNotes(
+            maintenanceRequestId = maintenance_request,
+            userId = request.user,
+            dateMade = timezone.now(),
+            notes = notes
+        )
+        new_note.save()
         return redirect('request_info', request_id=request_id)
     else:
         return handler_403(request)

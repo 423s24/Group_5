@@ -20,6 +20,9 @@ urlpatterns = [
     path('building/<int:building_id>', views.building_info, name='building_info'),
     path('request/<int:request_id>', views.request_info, name='request_info'),
     path('request/<int:request_id>/mark_completed', views.mark_completed, name='mark_completed'),
+    path('request/<int:request_id>/add_note', views.add_note, name='add_note'),
+    path('request/edit_note/<int:note_id>/', views.edit_note, name='edit_note'),
+    path('request/delete_note/<int:note_id>/', views.delete_note, name='delete_note'),
     path('request/<int:request_id>/edit_request', views.edit_request, name='edit_request')
     #path('success/', views.success_view, name='success_view'),
     #path('login/', LoginView.as_view(template_name='registration/login.html'), name='login'),

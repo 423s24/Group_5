@@ -53,8 +53,6 @@
       <option value="0" {% if not maintenance_request.completed %}selected{% endif %}>No</option>
     </select><br><br>
 
-    <label for="notes">Maintenance Notes:</label><br>
-    <textarea id="notes" name="notes" rows="4" cols="50">{{ maintenance_request.notes }}</textarea><br><br>
   {% endif %}
 
   <input type="submit" value="Save Changes">
