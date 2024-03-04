@@ -96,7 +96,8 @@ def maintenance(request):
         phone = request.POST.get('phone')
         building_id = request.POST.get('building')
         building = Building.objects.get(id=building_id)
-        MaintenanceRequest.objects.create(userId=request.user, first_name=first_name, last_name=last_name, address=address, request=req, phone=phone, building=building)
+        entry_permission = request.POST.get('entry_permission') == '1'
+        MaintenanceRequest.objects.create(userId=request.user, first_name=first_name, last_name=last_name, address=address, request=req, phone=phone, building=building, entry_permission=entry_permission)
         return redirect('/dashboard')
     return render(request, 'forms/maintenance/maintenance.html', {'buildings': buildings})
 

@@ -22,12 +22,18 @@
   <label for="phone">Phone:</label><br>
   <input type="text" id="phone" name="phone"><br><br>
 
+    <label for="entry_permission">Can Personnel Conducting Maintenance Enter if you are absent: </label>
+    <select id="entry_permission" name="entry_permission">
+         <option value="1">Yes</option>
+        <option value="0">No</option>
+    </select> <br>
+
     <label for="building">Building:</label>
     <select id="building" name="building">
         {% for building in buildings %}
             <option value="{{ building.id }}">{{ building.buildingName }}</option>
         {% endfor %}
-    </select>
+    </select> <br>
 
   <input type="submit" value="Submit">
 </form> 
