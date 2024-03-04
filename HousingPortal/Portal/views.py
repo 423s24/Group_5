@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from .forms import RegisterForm, AuthForm, BuildingForm
@@ -106,6 +106,15 @@ def payment(request):
 @login_required(login_url="/login")
 def user_profile(request, username):
     return render(request, 'profile.html', {'user_profile' : username})
+
+@login_required(login_url="/login")
+def building_info(request, building_id):
+    if request.user.is_superuser or request.user.manager != None:
+        building = get_object_or_404(Building, pk=building_id)
+        maintenance_requests = MaintenanceRequest.objects.filter(building=building)
+        return render(request, 'dashboard/data/building_info.html', {'building': building, 'maintenance_requests': maintenance_requests})
+    else:
+        return handler_403(request)
 
 # Views for user accounts and authentication
 def signup_view(request):

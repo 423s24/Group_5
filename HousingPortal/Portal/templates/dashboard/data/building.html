@@ -8,7 +8,7 @@
         <th>Zipcode</th>
     </tr>
     {% for b in buildings %}
-    <tr>
+    <tr onclick="window.location='{% url 'building_info' building_id=b.id %}'" style="cursor: pointer;">
         <td>{{ b.buildingName }}</td>
         <td>{{ b.address }}</td>
         <td>{{ b.city }}</td>
