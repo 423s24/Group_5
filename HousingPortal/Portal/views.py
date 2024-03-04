@@ -68,7 +68,7 @@ def manager_dashboard(request):
 @login_required(login_url="/login")
 def tenant_dashboard(request):
     applications = HousingApplication.objects.all()
-    requests = MaintenanceRequest.objects.all()
+    requests = MaintenanceRequest.objects.filter(userId=request.user.id)
 
     return render(request, 'dashboard/tenant_dashboard.html', {'applications':applications, 'requests':requests})
 
@@ -92,12 +92,13 @@ def maintenance(request):
         first_name = request.POST.get('first_name')
         last_name = request.POST.get('last_name')
         address = request.POST.get('address')
+        unit = request.POST.get('unit')
         req = request.POST.get('request')
         phone = request.POST.get('phone')
         building_id = request.POST.get('building')
         building = Building.objects.get(id=building_id)
         entry_permission = request.POST.get('entry_permission') == '1'
-        MaintenanceRequest.objects.create(userId=request.user, first_name=first_name, last_name=last_name, address=address, request=req, phone=phone, building=building, entry_permission=entry_permission)
+        MaintenanceRequest.objects.create(userId=request.user, first_name=first_name, last_name=last_name, address=address, unit=unit, request=req, phone=phone, building=building, entry_permission=entry_permission)
         return redirect('/dashboard')
     return render(request, 'forms/maintenance/maintenance.html', {'buildings': buildings})
 

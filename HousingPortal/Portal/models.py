@@ -61,7 +61,9 @@ class MaintenanceRequest(models.Model):
     completed = models.BooleanField(default=False)
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
+    # address seems arbitrary kept it in but don't think its necessary
     address = models.CharField(max_length=100)
+    unit = models.CharField(max_length=100, default='')
     request = models.CharField(max_length=100)
     phone = models.CharField(max_length=100)
 
