@@ -9,7 +9,7 @@
         <th>Access</th>
     </tr>
     {% for request in requests %}
-    <tr>
+    <tr onclick="window.location='{% url 'request_info' request_id=request.id %}'" style="cursor: pointer;">
         <td>{{request.first_name}}</td>
         <td>{{request.last_name}}</td>
         <td>{{request.address}}</td>
