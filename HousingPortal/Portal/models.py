@@ -70,12 +70,13 @@ class MaintenanceRequest(models.Model):
     dateCompleted = models.DateTimeField(null=True, blank=True)
 
 
-class UserHousingApplication(models.Model):
-    userId = models.ForeignKey('UserAccount', on_delete=models.CASCADE)
-    housingApplicationId = models.ForeignKey('HousingApplication', on_delete=models.CASCADE)
+# class UserHousingApplication(models.Model):
+#     userId = models.ForeignKey('UserAccount', on_delete=models.CASCADE)
+#     housingApplicationId = models.ForeignKey('HousingApplication', on_delete=models.CASCADE)
 
 
 class HousingApplication(models.Model):
+    userId = models.ForeignKey('UserAccount', on_delete=models.CASCADE)
     accepted = models.BooleanField(default=False)
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
