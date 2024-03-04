@@ -1,5 +1,14 @@
-<table>
-    <tr>
+<style>
+    .hoverable-table {
+        border-collapse: collapse;
+    }
+
+    .hoverable-table tr:not(.header-row):hover {
+        background-color: #bdbbbb;
+    }
+</style>
+<table class="hoverable-table">
+    <tr class="header-row">
         <th>Building Name</th>
         <th>Address</th>
         <th>City</th>

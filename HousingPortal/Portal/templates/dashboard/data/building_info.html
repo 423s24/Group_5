@@ -5,6 +5,15 @@
 <link rel="stylesheet" type="text/css" href="{% static 'css/dashboard.css' %}">
 {% endblock %}
 {% block content %}
+    <style>
+    .hoverable-table {
+        border-collapse: collapse;
+    }
+
+    .hoverable-table tr:not(.header-row):hover {
+        background-color: #bdbbbb;
+    }
+</style>
 <h1>{{ building.buildingName }} Information</h1>
 
     <h2>Building Details:</h2>
@@ -16,9 +25,9 @@
 <p><strong>Zipcode:</strong> {{ building.zipcode }}</p>
 
 <h2>Maintenance Requests:</h2>
-<table>
+<table class="hoverable-table">
     <thead>
-        <tr>
+        <tr class="header-row">
             <th>Request ID</th>
             <th>First Name</th>
             <th>Last Name</th>
