@@ -56,7 +56,7 @@ def html_email(building,address,unit,name,phone,entry,request):
         Resident Name:  <strong>""" + name + """</strong><br>
         Phone:  <strong>""" + phone + """</strong><br>
         Request:  <strong>""" + request + """</strong><br>
-        Can we enter without resident present:  <strong>""" + enter + """</strong>
+        Can we enter without a resident present:  <strong>""" + enter + """</strong>
 
         </p>
       </body>
