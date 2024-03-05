@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Maintenance Form</title>
     <style>
+        html {
+            font-family: Arial, Helvetica, sans-serif;
+        }
         
         body {
             display: flex;
@@ -69,8 +72,8 @@
         <h1>Maintenance Form</h1>
         <form method="POST">
             {% csrf_token %}
-            <input type="text" name="first_name" placeholder="First Name" required>
-            <input type="text" name="last_name" placeholder="Last Name" required>
+            <input type="text" name="first_name" placeholder="First Name" value="{{user.first_name}}" required>
+            <input type="text" name="last_name" placeholder="Last Name" value="{{user.last_name}}" required>
             <input name="address" placeholder="Address" rows="4" required></textarea>
             <input type="text" name="unit" placeholder="Unit" required>
             <input name="request" placeholder="Maintenance Request" rows="4" required></textarea>

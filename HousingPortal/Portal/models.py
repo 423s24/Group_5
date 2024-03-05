@@ -59,7 +59,6 @@ class MaintenanceRequest(models.Model):
     userId = models.ForeignKey('UserAccount', on_delete=models.CASCADE)
     entry_permission = models.BooleanField(default=False)
     completed = models.BooleanField(default=False)
-    notes = models.CharField(max_length=10000, default='')
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     # address seems arbitrary kept it in but don't think its necessary
@@ -69,13 +68,19 @@ class MaintenanceRequest(models.Model):
     phone = models.CharField(max_length=100)
     dateCompleted = models.DateTimeField(null=True, blank=True)
 
-
-class UserHousingApplication(models.Model):
+class MaintenanceNotes(models.Model):
+    maintenanceRequestId = models.ForeignKey('MaintenanceRequest', on_delete=models.CASCADE, related_name='maintenance_notes')
     userId = models.ForeignKey('UserAccount', on_delete=models.CASCADE)
-    housingApplicationId = models.ForeignKey('HousingApplication', on_delete=models.CASCADE)
+    dateMade = models.DateTimeField(null=True, blank=True)
+    notes = models.CharField(max_length=10000, default='')
+
+# class UserHousingApplication(models.Model):
+#     userId = models.ForeignKey('UserAccount', on_delete=models.CASCADE)
+#     housingApplicationId = models.ForeignKey('HousingApplication', on_delete=models.CASCADE)
 
 
 class HousingApplication(models.Model):
+    userId = models.ForeignKey('UserAccount', on_delete=models.CASCADE)
     accepted = models.BooleanField(default=False)
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
