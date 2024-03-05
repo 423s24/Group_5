@@ -9,7 +9,9 @@ from .models import *
 from django.contrib.auth.views import LoginView
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
 import json
+
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
@@ -168,8 +170,8 @@ def maintenance(request):
         entry_permission = request.POST.get('entry_permission') == '1'
 
         html_email(building_id,address,unit,full_name,phone,entry_permission,req)
-        MaintenanceRequest.objects.create(userId=request.user, first_name=first_name, last_name=last_name, address=address, unit=unit, request=req, phone=phone, building=building, entry_permission=entry_permission)
-        return redirect('/dashboard')
+        maintenanceRequest = MaintenanceRequest.objects.create(userId=request.user, first_name=first_name, last_name=last_name, address=address, unit=unit, request=req, phone=phone, building=building, entry_permission=entry_permission)
+        return redirect('/request/' + str(maintenanceRequest.id))
     return render(request, 'forms/maintenance/maintenance.html', {'buildings': buildings})
 
 def payment(request):
@@ -319,6 +321,30 @@ def logout_view(request):
 
 @login_required(login_url="/login")
 def profile(request):
+    if request.method == 'POST':
+        # Process the submitted data
+        data = json.loads(request.body)
+        updated_first_name = data.get('first_name')
+        updated_last_name = data.get('last_name')
+        updated_username = data.get('username')
+        updated_email = data.get('email')
+        # Retrieve other fields as needed
+
+        # Perform any necessary validation and update the user's profile
+        # For example, you might use Django's authentication system to get the current user
+        # and update their profile information
+        
+        # Example assuming you have a custom User model with a profile:
+        user = request.user  # Assuming the user is authenticated
+        user.first_name = updated_first_name
+        user.last_name = updated_last_name
+        user.username = updated_username
+        user.email = updated_email
+        user.save()
+
+        # Return a JSON response indicating success
+        return JsonResponse({'message': 'Profile updated successfully'})
+    
     return render(request, 'profile.html')
 
 @login_required(login_url="/login")
@@ -335,6 +361,11 @@ def delete_user(request):
         user_to_delete.delete()
         return redirect('/dashboard')
     return redirect('/')
+
+@login_required(login_url="/login")
+def delete(request):
+    if request.method == 'POST':
+        pass
 
 # Views for errors
 def handler_404(request, exception):
