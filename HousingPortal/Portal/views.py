@@ -17,10 +17,10 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from datetime import date
 
-def html_email(building,address,unit,name,phone,entry,request):
+def html_email(building,address,unit,name,phone,entry,request,recipient,subject):
     sender_email = "cs423robot@gmail.com" 
-    recipient_email = "cs423robot@gmail.com"
-    subject = "Maintenance Request"
+    recipient_email = recipient
+    #subject = "Maintenance Request"
     dashboard = "https://tanrtech.com/dashboard/"
     today = str(date.today())
     
@@ -168,10 +168,11 @@ def maintenance(request):
         building_id = request.POST.get('building')
         building = Building.objects.get(id=building_id)
         entry_permission = request.POST.get('entry_permission') == '1'
-
-        html_email(building_id,address,unit,full_name,phone,entry_permission,req)
+        html_email(building_id,address,unit,full_name,phone,entry_permission,req,"cs423robot@gmail.com","Maintenance Request")
+        html_email(building_id,address,unit,full_name,phone,entry_permission,req,request.user.email,"Maintenance Request Confirmation")
         maintenanceRequest = MaintenanceRequest.objects.create(userId=request.user, first_name=first_name, last_name=last_name, address=address, unit=unit, request=req, phone=phone, building=building, entry_permission=entry_permission)
         return redirect('/request/' + str(maintenanceRequest.id))
+
     return render(request, 'forms/maintenance/maintenance.html', {'buildings': buildings})
 
 def payment(request):
