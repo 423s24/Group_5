@@ -17,14 +17,14 @@ from datetime import date
 
 def html_email(building,address,unit,name,phone,entry,request,recipient):
     sender_email = "cs423robot@gmail.com" 
-    #recipient_email = "cs423robot@gmail.com"
+    recipient_email = recipient
     subject = "Maintenance Request"
     dashboard = "https://tanrtech.com/dashboard/"
     today = str(date.today())
     
     message = MIMEMultipart("alternative")
     message['From'] = sender_email
-    message['To'] = recipient
+    message['To'] = recipient_email
     message['Subject'] = subject
 
     if(entry):
