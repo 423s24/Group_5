@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/global.css' %}">
+
+{% endblock %}
+{% block content %}
+    <div>
+        <div id="search-bar">
+            <form method="GET" action="" hx-get="." hx-trigger="keyup" hx-target="#request-table">
+                <input type="text" name="search_query" placeholder="Search..." hx-target="#request-table">
+            </form>
+        </div>
+        <div id="request-table">{{ table|safe }}</div>
+    </div>
+{% endblock %}

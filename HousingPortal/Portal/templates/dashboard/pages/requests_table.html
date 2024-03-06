@@ -1,0 +1,28 @@
+<table class="hoverable-table">
+<thead>
+    <tr>
+        <th>Request ID</th>
+        <th>Name</th>
+        <th>Title</th>
+        <th>Status</th>
+        <th>Building</th>
+        <th>Unit</th>
+        <th>Access Permission</th>
+        <th>Completed</th>
+    </tr>
+</thead>
+<tbody>
+    {% for request in requests %}
+    <tr onclick="window.location='{% url 'request_info' request_id=request.id %}'" style="cursor: pointer;">
+        <td>{{ request.id }}</td>
+        <td>{{request.first_name}} {{ request.last_name }}</td>
+        <td>{{ request.title }}</td>
+        <td>{{ request.status }}</td>
+        <td>{{request.building.buildingName}}</td>
+        <td>{{request.unit}}</td>
+        <td>{{ request.entry_permission }}</td>
+        <td>{{ request.completed }}</td>
+    </tr>
+    {% endfor %}
+</tbody>
+</table>

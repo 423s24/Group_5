@@ -1,15 +1,17 @@
+from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.utils import timezone
 from django.contrib import messages
 from .forms import RegisterForm, AuthForm, BuildingForm
-from django.http import HttpResponseForbidden, HttpResponseRedirect, JsonResponse
+from django.http import HttpResponseForbidden, HttpResponseRedirect, JsonResponse, HttpResponse
 #from .models import UserAccount
 from .models import *
 from django.contrib.auth.views import LoginView
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
+from django.template.loader import render_to_string
 import json
 
 import smtplib
@@ -92,6 +94,33 @@ def dashboard(request):
         return manager_dashboard(request)
     else:
         return tenant_dashboard(request)
+
+@login_required(login_url="/login")
+def maintenance_requests(request):
+    if request.user.is_superuser or (request.user.manager != None):
+        search_query = request.GET.get('search_query')
+        if search_query:
+            requests = MaintenanceRequest.objects.filter(
+                Q(id__icontains=search_query) |
+                Q(first_name__icontains=search_query) |
+                Q(last_name__icontains=search_query) |
+                Q(title__icontains=search_query) |
+                Q(status__icontains=search_query) |
+                Q(building__buildingName__icontains=search_query) |
+                Q(unit__icontains=search_query) |
+                Q(entry_permission__icontains=search_query) |
+                Q(completed__icontains=search_query)
+            )
+        else:
+            requests = MaintenanceRequest.objects.all()
+
+        html = render_to_string('dashboard/pages/requests_table.html', {'requests': requests})
+        if request.headers.get('HX-Request'):
+            return HttpResponse(html)
+        else:
+            return render(request, 'dashboard/pages/maintenance_requests.html', {"table": html})
+    else:
+        return handler_403(request)
 
 @login_required(login_url="/login")
 def admin_dashboard(request):
