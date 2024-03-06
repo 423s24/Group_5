@@ -249,6 +249,37 @@ def request_info(request, request_id):
         return render(request, 'dashboard/data/request_info.html', {'maintenance_request': maintenance_request, 'can_edit_request': can_edit_request})
     else:
         return handler_403(request)
+    
+@login_required(login_url="/login")
+def view_user(request, user_id):
+    u = get_object_or_404(UserAccount, pk=user_id)
+    if request.user.is_superuser:
+        if request.method == 'POST':
+            # Process the submitted data
+            data = json.loads(request.body)
+            updated_first_name = data.get('first_name')
+            updated_last_name = data.get('last_name')
+            updated_username = data.get('username')
+            updated_email = data.get('email')
+            # Retrieve other fields as needed
+
+            # Perform any necessary validation and update the user's profile
+            # For example, you might use Django's authentication system to get the current user
+            # and update their profile information
+            
+            # Example assuming you have a custom User model with a profile:
+            u.first_name = updated_first_name
+            u.last_name = updated_last_name
+            u.username = updated_username
+            u.email = updated_email
+            u.save()
+
+            # Return a JSON response indicating success
+            return JsonResponse({'message': 'Profile updated successfully'})
+            
+        return render(request, 'dashboard/pages/view_user.html', {'u': u})
+    else:
+        return handler_403(request)
 
 def mark_completed(request, request_id):
     maintenance_request = get_object_or_404(MaintenanceRequest, pk=request_id)

@@ -7,22 +7,16 @@
         <th>Manager</th>
         <th>Tenant</th>
         <th>Archived</th>
-        {% if user.is_superuser %}
-        <th>Delete Button</th>
-        {% endif %}
     </tr>
     {% for u in users %}
     <tr>
-        <td>{{ u.username }}</td>
+        <td><a href="/user/{{ u.id }}">{{ u.username }}</a></td>
         <td>{{ u.email }}</td>
         <td>{{u.first_name}} {{u.last_name}}</td>
         <td>{{ u.is_superuser }}</td>
         <td>{{ u.manager }}</td>
         <td>{{ u.tenant }}</td>
         <td>{{ u.archived }}</td>
-        {% if user.is_superuser %}
-        <th><a href="/delete/?user_id={{user.id}}">Delete</a></th>
-        {% endif %}
     </tr>
     {% endfor %}
 </table>
