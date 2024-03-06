@@ -59,6 +59,7 @@ class MaintenanceRequest(models.Model):
     userId = models.ForeignKey('UserAccount', on_delete=models.CASCADE)
     entry_permission = models.BooleanField(default=False)
     completed = models.BooleanField(default=False)
+    title = models.CharField(max_length=100, default='')
     status = models.CharField(max_length=100, default='Open')
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
