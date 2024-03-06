@@ -245,7 +245,7 @@ def delete_note(request, note_id):
 def request_info(request, request_id):
     maintenance_request = get_object_or_404(MaintenanceRequest, pk=request_id)
     if request.user.is_superuser or request.user.manager != None or request.user == maintenance_request.userId:
-        can_edit_request = (request.user.is_superuser or request.user.manager or (request.user == maintenance_request.userId and not maintenance_request.completed))
+        can_edit_request = (request.user.is_superuser or request.user.manager)
         return render(request, 'dashboard/data/request_info.html', {'maintenance_request': maintenance_request, 'can_edit_request': can_edit_request})
     else:
         return handler_403(request)
