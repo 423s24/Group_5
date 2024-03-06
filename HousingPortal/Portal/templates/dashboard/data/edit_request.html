@@ -55,7 +55,7 @@
         <option value="Completed">Completed</option>
         <option value="Closed">Closed</option>
         <option value="Cancelled">Cancelled</option>
-    </select>
+    </select><br><br>
 
   {% if request.user.is_superuser or request.user.manager %}
     <label for="completed">Completed:</label><br>
