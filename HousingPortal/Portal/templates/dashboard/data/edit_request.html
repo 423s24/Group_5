@@ -48,13 +48,13 @@
 
     <label for="status">Status:</label><br>
     <select id="status" name="status">
-        <option value="New">New</option>
-        <option value="In Progress">In Progress</option>
-        <option value="Pending">Pending</option>
-        <option value="Resolved">Resolved</option>
-        <option value="Completed">Completed</option>
-        <option value="Closed">Closed</option>
-        <option value="Cancelled">Cancelled</option>
+        <option value="New" {% if maintenance_request.status == "New" %}selected{% endif %}>New</option>
+        <option value="In Progress" {% if maintenance_request.status == "In Progress" %}selected{% endif %}>In Progress</option>
+        <option value="Pending" {% if maintenance_request.status == "Pending" %}selected{% endif %}>Pending</option>
+        <option value="Resolved" {% if maintenance_request.status == "Resolved" %}selected{% endif %}>Resolved</option>
+        <option value="Completed" {% if maintenance_request.status == "Completed" %}selected{% endif %}>Completed</option>
+        <option value="Closed" {% if maintenance_request.status == "Closed" %}selected{% endif %}>Closed</option>
+        <option value="Cancelled" {% if maintenance_request.status == "Cancelled" %}selected{% endif %}>Cancelled</option>
     </select><br><br>
 
   {% if request.user.is_superuser or request.user.manager %}
