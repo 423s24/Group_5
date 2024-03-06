@@ -66,7 +66,7 @@ class MaintenanceRequest(models.Model):
     # address seems arbitrary kept it in but don't think its necessary
     address = models.CharField(max_length=100)
     unit = models.CharField(max_length=100, default='')
-    request = models.CharField(max_length=100)
+    request = models.CharField(max_length=10000)
     phone = models.CharField(max_length=100)
     dateCompleted = models.DateTimeField(null=True, blank=True)
 
