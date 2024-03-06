@@ -426,7 +426,27 @@ def delete_user(request):
 @login_required(login_url="/login")
 def delete(request):
     if request.method == 'POST':
-        pass
+        data = json.loads(request.body)
+        type = data.get('type')
+        id_num = data.get('id')
+
+        if type == "UserAccount":
+            if request.user.is_superuser or request.user.id == id_num:
+                try:
+                    u = UserAccount.objects.get(pk=id_num)
+                    u.delete()
+                    return JsonResponse({'success': True})
+                except UserAccount.DoesNotExist:
+                    return JsonResponse({'success': False})
+                
+        elif type == "MaintenanceRequest":
+            if request.user.is_superuser:
+                try:
+                    request = MaintenanceRequest.objects.get(pk=id_num)
+                    request.delete()
+                    return JsonResponse({'success': True})
+                except UserAccount.DoesNotExist:
+                    return JsonResponse({'success': False})
 
 # Views for errors
 def handler_404(request, exception):

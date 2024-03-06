@@ -1,10 +1,37 @@
-document.getElementById('delete-button').addEventListener('click', function(event) {
+function deleteUser(id_str) {
+    id = parseInt(id_str);
+
+    var data = {
+        type: 'UserAccount',
+        id: id
+    };
+
     var confirmed = window.confirm('Are you sure you want to delete this account?');
-    if (!confirmed) {
-        // Prevent the default link action (following the link)
-        event.preventDefault();
+    if (confirmed) {
+        fetch('/delete/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken') // Get CSRF token from cookie
+            },
+            credentials: 'same-origin', // Include cookies in the request
+            body: JSON.stringify(data) // Convert data to JSON format
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            // Handle successful response
+            console.log('Delete success');
+            //window.history.back();
+            window.location.replace("/dashboard");
+        })
+        .catch(error => {
+            // Handle errors
+            console.error('Error submitting deleting:', error);
+        });
     }
-});
+}
 
 document.getElementById('cancel-button').addEventListener('click', function() {
     location.reload();
