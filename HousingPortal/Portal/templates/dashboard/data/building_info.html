@@ -17,12 +17,36 @@
 <h1>{{ building.buildingName }} Information</h1>
 
     <h2>Building Details:</h2>
-<p><strong>Building Name:</strong> {{ building.buildingName }}</p>
-<p><strong>Address:</strong> {{ building.address }}</p>
-<p><strong>City:</strong> {{ building.city }}</p>
-<p><strong>State:</strong> {{ building.state }}</p>
-<p><strong>Country:</strong> {{ building.country }}</p>
-<p><strong>Zipcode:</strong> {{ building.zipcode }}</p>
+    <table class="data-table">
+        <thead>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Building Name:</td>
+                <td>{{ building.buildingName }}</td>
+            </tr>
+            <tr>
+                <td>Address:</td>
+                <td>{{ building.address }}</td>
+            </tr>
+            <tr>
+                <td>City:</td>
+                <td>{{ building.city }}</td>
+            </tr>
+            <tr>
+                <td>State:</td>
+                <td>{{ building.state }}</td>
+            </tr>
+            <tr>
+                <td>Country:</td>
+                <td>{{ building.country }}</td>
+            </tr>
+            <tr>
+                <td>Zipcode:</td>
+                <td>{{ building.zipcode }}</td>
+            </tr>
+        </tbody>
+    </table>
 
 <h2>Maintenance Requests:</h2>
 <table class="hoverable-table">
