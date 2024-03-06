@@ -59,6 +59,7 @@ class MaintenanceRequest(models.Model):
     userId = models.ForeignKey('UserAccount', on_delete=models.CASCADE)
     entry_permission = models.BooleanField(default=False)
     completed = models.BooleanField(default=False)
+    status = models.CharField(max_length=100, default='Open')
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     # address seems arbitrary kept it in but don't think its necessary
@@ -73,6 +74,7 @@ class MaintenanceNotes(models.Model):
     userId = models.ForeignKey('UserAccount', on_delete=models.CASCADE)
     dateMade = models.DateTimeField(null=True, blank=True)
     notes = models.CharField(max_length=10000, default='')
+    tenantViewable = models.BooleanField(default=False)
 
 # class UserHousingApplication(models.Model):
 #     userId = models.ForeignKey('UserAccount', on_delete=models.CASCADE)
