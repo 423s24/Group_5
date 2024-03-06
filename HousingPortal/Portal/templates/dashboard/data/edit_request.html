@@ -46,6 +46,17 @@
     {% endfor %}
   </select><br><br>
 
+    <label for="status">Status:</label><br>
+    <select id="status" name="status">
+        <option value="New">New</option>
+        <option value="In Progress">In Progress</option>
+        <option value="Pending">Pending</option>
+        <option value="Resolved">Resolved</option>
+        <option value="Completed">Completed</option>
+        <option value="Closed">Closed</option>
+        <option value="Cancelled">Cancelled</option>
+    </select>
+
   {% if request.user.is_superuser or request.user.manager %}
     <label for="completed">Completed:</label><br>
     <select id="completed" name="completed">

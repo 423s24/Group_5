@@ -70,6 +70,7 @@ function deleteNote(noteId) {
 <p><strong>Phone:</strong> {{ maintenance_request.phone }}</p>
 <p><strong>Building:</strong> {{ maintenance_request.building.buildingName }}</p>
 <p><strong>Entry Permission:</strong> {% if maintenance_request.entry_permission %}Yes{% else %}No{% endif %}</p>
+    <p><strong>Status:</strong>{{ maintenance_request.status }}</p>
 <p><strong>Completed:</strong> {% if maintenance_request.completed %}Yes{% else %}No{% endif %}</p>
 {% if maintenance_request.completed %}
     <p><strong>Date Completed:</strong> {{ maintenance_request.dateCompleted }}</p>

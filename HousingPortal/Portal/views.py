@@ -202,7 +202,7 @@ def edit_request(request, request_id):
         maintenance_request.last_name = request.POST.get('last_name', maintenance_request.last_name)
         maintenance_request.request = request.POST.get('request', maintenance_request.request)
         maintenance_request.entry_permission = request.POST.get('entry_permission', maintenance_request.entry_permission)
-
+        maintenance_request.status = request.POST.get('status', maintenance_request.status)
         building_id = request.POST.get('building')
         building = get_object_or_404(Building, pk=building_id)
         maintenance_request.building = building
