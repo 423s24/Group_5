@@ -3,6 +3,7 @@
 {% block title %}Housing Dashboard{% endblock %}
 {% block head %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/dashboard.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/request.css' %}">
 <script>
 function editNote(noteId) {
     let noteText = document.getElementById('note_' + noteId).innerText;
@@ -62,23 +63,51 @@ function deleteNote(noteId) {
     {% if can_edit_request %}
     <a href="{% url 'edit_request' request_id=maintenance_request.id %}"><button>Edit Request</button></a>
     {% endif %}
-
-<p><strong>First Name:</strong> {{ maintenance_request.first_name }}</p>
-<p><strong>Last Name:</strong> {{ maintenance_request.last_name }}</p>
-<p><strong>Address:</strong> {{ maintenance_request.address }}</p>
-<p><strong>Request:</strong> {{ maintenance_request.request }}</p>
-<p><strong>Phone:</strong> {{ maintenance_request.phone }}</p>
-<p><strong>Building:</strong> {{ maintenance_request.building.buildingName }}</p>
-<p><strong>Entry Permission:</strong> {% if maintenance_request.entry_permission %}Yes{% else %}No{% endif %}</p>
-    <p><strong>Status:</strong>{{ maintenance_request.status }}</p>
-<p><strong>Completed:</strong> {% if maintenance_request.completed %}Yes{% else %}No{% endif %}</p>
-{% if maintenance_request.completed %}
-    <p><strong>Date Completed:</strong> {{ maintenance_request.dateCompleted }}</p>
-    <p><strong>Notes:</strong> {{ maintenance_request.notes }}</p>
-    {% endif %}
+    <table class="data-table">
+        <thead>
+            <th>Temp</th>
+            <th>Temp2</th>
+        </thead>`
+    <tbody>
+        <tr>
+            <td>Name</td>
+            <td>{{ maintenance_request.first_name }} {{ maintenance_request.last_name }}</td>
+        </tr>
+        <tr>
+            <td>Phone</td>
+            <td>{{ maintenance_request.phone }}</td>
+        </tr>
+        <tr>
+            <td>Request</td>
+            <td>{{ maintenance_request.request }}</td>
+        </tr>
+        <tr>
+            <td>Building Name</td>
+            <td>{{ maintenance_request.building.buildingName }}</td>
+        </tr>
+        <tr>
+            <td>Entry Permission</td>
+            <td>{% if maintenance_request.entry_permission %}Yes{% else %}No{% endif %}</td>
+        </tr>
+        <tr>
+            <td>Status</td>
+            <td>{{ maintenance_request.status }}</td>
+        </tr>
+        <tr>
+            <td>Completed</td>
+            <td>{% if maintenance_request.completed %}Yes{% else %}No{% endif %}</td>
+        </tr>
+        <tr>
+            <td>Date Completed</td>
+            <td>{{ maintenance_request.dateCompleted }}</td>
+        </tr>
+    </tbody>
+    </table>
+    <br>
+    <br>
 
     {% if request.user.is_superuser or request.user.manager %}
-
+        <h3>Maintenance Notes:</h3>
         <table class="hoverable-table">
             <thead>
                 <tr class="header-row">
@@ -96,8 +125,8 @@ function deleteNote(noteId) {
                             <td>{{ notes.userId }}</td>
                             <td id="note_{{ notes.id }}">{{notes.notes}}</td>
                             <td>{{notes.dateMade}}</td>
-                            <td><button onclick="editNote('{{ notes.id }}')">Edit</button></td>
-                            <td><button onclick="deleteNote('{{ notes.id }}')">Delete</button></td>
+                            <td><button class="table-button" onclick="editNote('{{ notes.id }}')">Edit</button></td>
+                            <td><button class="table-button" onclick="deleteNote('{{ notes.id }}')">Delete</button></td>
                         </tr>
                     {% endfor %}
                 {% else %}
@@ -107,6 +136,8 @@ function deleteNote(noteId) {
                 {% endif %}
             </tbody>
         </table>
+        <br>
+        <br>
         <form method="post" action="{% url 'add_note' request_id=maintenance_request.id %}">
             {% csrf_token %}
             <label for="notes">Maintenance Notes:</label><br>

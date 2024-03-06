@@ -1,0 +1,68 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    color: #333;
+}
+
+h1, h2 {
+    color: #444;
+}
+
+p {
+    line-height: 1.6;
+}
+
+a {
+    color: darkcyan;
+    text-decoration: none;
+}
+
+button {
+    background-color: darkcyan;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    margin: 10px 0;
+    cursor: pointer;
+}
+
+.table-button {
+    display: block;
+    width: 90%;
+    background-color: darkcyan;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    margin: auto;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #48D1CC;
+}
+
+/* Table styles */
+.hoverable-table, .data-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.hoverable-table thead, .data-table thead {
+    background-color: darkcyan;
+    color: #fff;
+}
+
+.hoverable-table th, .hoverable-table td, .data-table th, .data-table td {
+    padding: 10px;
+    border: 1px solid #ccc;
+}
+
+textarea {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    resize: vertical;
+}
