@@ -1,24 +1,28 @@
-<table>
-    <tr>
-        <th>Username</th>
-        <th>Email</th>
-        <th>Name</th>
-        <th>Superuser</th>
-        <th>Manager</th>
-        <th>Tenant</th>
-        <th>Archived</th>
-    </tr>
-    {% for u in users %}
-    <tr>
-        <td><a href="/user/{{ u.id }}">{{ u.username }}</a></td>
-        <td>{{ u.email }}</td>
-        <td>{{u.first_name}} {{u.last_name}}</td>
-        <td>{{ u.is_superuser }}</td>
-        <td>{{ u.manager }}</td>
-        <td>{{ u.tenant }}</td>
-        <td>{{ u.archived }}</td>
-    </tr>
-    {% endfor %}
+<table class="data-table">
+    <thead>
+        <tr>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Name</th>
+            <th>Superuser</th>
+            <th>Manager</th>
+            <th>Tenant</th>
+            <th>Archived</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for u in users %}
+        <tr>
+            <td><a href="/user/{{ u.id }}">{{ u.username }}</a></td>
+            <td>{{ u.email }}</td>
+            <td>{{u.first_name}} {{u.last_name}}</td>
+            <td>{{ u.is_superuser }}</td>
+            <td>{{ u.manager }}</td>
+            <td>{{ u.tenant }}</td>
+            <td>{{ u.archived }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
 </table>
 <div class="pagination">
     <span class="step-links">

@@ -1,31 +1,26 @@
-<style>
-    .hoverable-table {
-        border-collapse: collapse;
-    }
-
-    .hoverable-table tr:not(.header-row):hover {
-        background-color: #bdbbbb;
-    }
-</style>
 <table class="hoverable-table">
-    <tr class="header-row">
-        <th>Building Name</th>
-        <th>Address</th>
-        <th>City</th>
-        <th>State</th>
-        <th>Country</th>
-        <th>Zipcode</th>
-    </tr>
-    {% for b in buildings %}
-    <tr onclick="window.location='{% url 'building_info' building_id=b.id %}'" style="cursor: pointer;">
-        <td>{{ b.buildingName }}</td>
-        <td>{{ b.address }}</td>
-        <td>{{ b.city }}</td>
-        <td>{{ b.state }}</td>
-        <td>{{ b.country }}</td>
-        <td>{{ b.zipcode }}</td>
-    </tr>
-    {% endfor %}
+    <thead>
+        <tr class="header-row">
+            <th>Building Name</th>
+            <th>Address</th>
+            <th>City</th>
+            <th>State</th>
+            <th>Country</th>
+            <th>Zipcode</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for b in buildings %}
+        <tr onclick="window.location='{% url 'building_info' building_id=b.id %}'" style="cursor: pointer;">
+            <td>{{ b.buildingName }}</td>
+            <td>{{ b.address }}</td>
+            <td>{{ b.city }}</td>
+            <td>{{ b.state }}</td>
+            <td>{{ b.country }}</td>
+            <td>{{ b.zipcode }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
 </table>
 <div class="pagination">
     <span class="step-links">
