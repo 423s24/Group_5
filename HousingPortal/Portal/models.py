@@ -1,6 +1,12 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager, PermissionsMixin
 
+ACCOUNT_TYPES = [
+    ('admin', 'admin'),
+    ('manager', 'manager'),
+    ('teneant', 'tenant')
+]
+
 # Create your models here.
 
 class UserAccount(AbstractUser): 
@@ -11,7 +17,39 @@ class UserAccount(AbstractUser):
     #userHousingApplications = models.ManyToManyField('HousingApplication', through='UserHousingApplication')
     archived = models.BooleanField(default=False)
 
-
+    @property
+    def account_type(self):
+        if (self.is_superuser):
+            return 'admin'
+        elif (self.manager != None):
+            return 'manager'
+        else:
+            return 'tenant'
+        
+    def setAccountType(self, account_type):
+        if account_type not in dict(ACCOUNT_TYPES):
+            raise ValueError
+        if self.account_type == account_type:
+            return
+        
+        if account_type == 'admin':
+            if self.manager != None:
+                Manager.objects.get(pk=self.manager.id).delete()
+            self.is_superuser = True
+            self.save()
+        elif account_type == 'manager':
+            if self.is_superuser:
+                self.is_superuser = False
+            manager = Manager()
+            manager.save()
+            self.manager = manager
+            self.save()
+        elif account_type == 'tenant':
+            if self.is_superuser:
+                self.is_superuser = False
+            elif self.manager != None:
+                Manager.objects.get(pk=self.manager.id).delete()
+            self.save()
 
 class Tenant(models.Model):
     firstName = models.CharField(max_length=100)
@@ -21,18 +59,15 @@ class Tenant(models.Model):
     impairments = models.CharField(max_length=100)
     archived = models.BooleanField(default=False)
 
-
 class Manager(models.Model):
     firstName = models.CharField(max_length=100)
     lastName = models.CharField(max_length=100)
     archived = models.BooleanField(default=False)
     #managerBuilding = models.ManyToManyField('Building', through='ManagerBuilding')
 
-
 class ManagerBuilding(models.Model):
     managerId = models.ForeignKey('Manager', on_delete=models.CASCADE)
     buildingId = models.ForeignKey('Building', on_delete=models.CASCADE)
-
 
 class Building(models.Model):
     buildingName = models.CharField(max_length=100, default="")
@@ -43,7 +78,6 @@ class Building(models.Model):
     zipcode = models.CharField(max_length=100)
     #units = models.ManyToManyField('Unit')
 
-
 class Unit(models.Model):
     buildingId = models.ForeignKey('Building', on_delete=models.CASCADE)
     unitNumber = models.CharField(max_length=100)
@@ -51,7 +85,6 @@ class Unit(models.Model):
     unitSize = models.CharField(max_length=100, default='')
     unitName = models.CharField(max_length=100, default='')
     unitBedrooms = models.CharField(max_length=100, default='')
-
 
 class MaintenanceRequest(models.Model):
     unitId = models.ForeignKey('Unit', null=True, on_delete=models.CASCADE) # Take out null=True when Unit is working
@@ -76,11 +109,6 @@ class MaintenanceNotes(models.Model):
     dateMade = models.DateTimeField(null=True, blank=True)
     notes = models.CharField(max_length=10000, default='')
     tenantViewable = models.BooleanField(default=False)
-
-# class UserHousingApplication(models.Model):
-#     userId = models.ForeignKey('UserAccount', on_delete=models.CASCADE)
-#     housingApplicationId = models.ForeignKey('HousingApplication', on_delete=models.CASCADE)
-
 
 class HousingApplication(models.Model):
     userId = models.ForeignKey('UserAccount', on_delete=models.CASCADE)

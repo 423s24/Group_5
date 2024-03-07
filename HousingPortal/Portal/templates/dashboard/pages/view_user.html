@@ -11,7 +11,7 @@
     <p>Last Name: <span id="last-name">{{u.last_name}}</span></p>
     <p>Username: <span id="username">{{u.username}}</span></p>
     <p>Email: <span id="email">{{u.email}}</span></p>
-    <p>Superuser: <span id="superuser">{{u.is_superuser}}</span></p>
+    <p>Account Type: <span id="account-type">{{u.account_type}}</span></p>
     <p>Date joined: <span id="date-joined">{{u.date_joined}}</span></p>
     <button id="edit-button">Edit</button>
     <br>
@@ -31,7 +31,15 @@
     <br>
     <label for="edit-email">Email:</label>
     <input type="email" id="edit-email"><br>
-    <p>Superuser: <span id="superuser">{{u.is_superuser}}</span></p>
+    <br>
+    <label for="edit-account-type">Account Type:</label>
+    <select id="edit-account-type">
+      <option value="admin">admin</option>
+      <option value="manager">manager</option>
+      <option value="tenant">tenant</option>
+    </select>
+    <br>
+    <p>Account Type: <span id="account-type">{{u.account_typea}}</span></p>
     <p>Date joined: <span id="date-joined">{{u.date_joined}}</span></p>
     <button id="cancel-button">Cancel</button>
     <button id="save-button">Save</button>

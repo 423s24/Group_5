@@ -7,32 +7,33 @@ document.getElementById('delete-button').addEventListener('click', function(even
 });
 
 document.getElementById('cancel-button').addEventListener('click', function() {
-    location.reload();
+    document.getElementById('edit-form').style.display = 'none';
+    document.getElementById('profile-info').style.display = 'block';
 });
 
 document.getElementById('edit-button').addEventListener('click', function() {
-  // Hide profile info, show edit form
-  document.getElementById('profile-info').style.display = 'none';
-  document.getElementById('edit-form').style.display = 'block';
-  
-  // Populate edit fields with current info
-  document.getElementById('edit-first-name').value = document.getElementById('first-name').innerText;
-  document.getElementById('edit-last-name').value = document.getElementById('last-name').innerText;
-  document.getElementById('edit-username').value = document.getElementById('username').innerText;
-  document.getElementById('edit-email').value = document.getElementById('email').innerText;
+    // Hide profile info, show edit form
+    document.getElementById('profile-info').style.display = 'none';
+    document.getElementById('edit-form').style.display = 'block';
+    
+    // Populate edit fields with current info
+    document.getElementById('edit-first-name').value = document.getElementById('first-name').innerText;
+    document.getElementById('edit-last-name').value = document.getElementById('last-name').innerText;
+    document.getElementById('edit-username').value = document.getElementById('username').innerText;
+    document.getElementById('edit-email').value = document.getElementById('email').innerText;
 });
 
 document.getElementById('save-button').addEventListener('click', function() {
-  // Update profile info with edited values
-  document.getElementById('first-name').innerText = document.getElementById('edit-first-name').value;
-  document.getElementById('last-name').innerText = document.getElementById('edit-last-name').value;
-  document.getElementById('username').innerText = document.getElementById('edit-username').value;
-  document.getElementById('email').innerText = document.getElementById('edit-email').value;
-  
-  // Hide edit form, show profile info
-  submitProfileChanges();
-  document.getElementById('edit-form').style.display = 'none';
-  document.getElementById('profile-info').style.display = 'block';
+    // Update profile info with edited values
+    document.getElementById('first-name').innerText = document.getElementById('edit-first-name').value;
+    document.getElementById('last-name').innerText = document.getElementById('edit-last-name').value;
+    document.getElementById('username').innerText = document.getElementById('edit-username').value;
+    document.getElementById('email').innerText = document.getElementById('edit-email').value;
+    
+    // Hide edit form, show profile info
+    submitProfileChanges();
+    document.getElementById('edit-form').style.display = 'none';
+    document.getElementById('profile-info').style.display = 'block';
 });
 
 // Function to submit profile changes

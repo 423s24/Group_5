@@ -4,21 +4,17 @@
             <th>Username</th>
             <th>Email</th>
             <th>Name</th>
-            <th>Superuser</th>
-            <th>Manager</th>
-            <th>Tenant</th>
+            <th>Account Type</th>
             <th>Archived</th>
         </tr>
     </thead>
     <tbody>
         {% for u in users %}
         <tr>
-            <td><a href="/user/{{ u.id }}">{{ u.username }}</a></td>
+            <td><a href="/dashboard/users/{{ u.id }}">{{ u.username }}</a></td>
             <td>{{ u.email }}</td>
             <td>{{u.first_name}} {{u.last_name}}</td>
-            <td>{{ u.is_superuser }}</td>
-            <td>{{ u.manager }}</td>
-            <td>{{ u.tenant }}</td>
+            <td>{{ u.account_type }}</td>
             <td>{{ u.archived }}</td>
         </tr>
         {% endfor %}
