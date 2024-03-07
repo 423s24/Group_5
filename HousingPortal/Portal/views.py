@@ -54,13 +54,37 @@ def html_email(building,address,unit,name,phone,entry,request,recipient,subject)
       <body>
         <p>Hello, a new maintenance request has been made on <strong>""" + today + """</strong><br></p>
         <p><a href=""" + dashboard + """>View Request Dashboard</a></p>
-        <p> Building:  <strong>""" + building + """</strong><br>
-        Address:  <strong>""" + address + """</strong><br>
-        Unit:  <strong>""" + unit + """</strong><br>
-        Resident Name:  <strong>""" + name + """</strong><br>
-        Phone:  <strong>""" + phone + """</strong><br>
-        Request:  <strong>""" + request + """</strong><br>
-        Can we enter without a resident present:  <strong>""" + enter + """</strong>
+        <table>
+  <tr>
+    <td>Building:</td>
+    <td><strong>""" + building + """</strong></td>
+  </tr>
+  <tr>
+    <td>Address:</td>
+    <td><strong>""" + address + """</strong></td>
+  </tr>
+  <tr>
+    <td>Unit:</td>
+    <td><strong>""" + unit + """</strong></td>
+  </tr>
+  <tr>
+    <td>Resident Name:</td>
+    <td><strong>""" + name + """</strong></td>
+  </tr>
+  <tr>
+    <td>Phone:</td>
+    <td><strong>""" + phone + """</strong></td>
+  </tr>
+  <tr>
+    <td>Request:</td>
+    <td><strong>""" + request + """</strong></td>
+  </tr>
+  <tr>
+    <td>Can we enter without a resident present:</td>
+    <td><strong>""" + enter + """</strong></td>
+  </tr>
+</table>
+
 
         </p>
       </body>
