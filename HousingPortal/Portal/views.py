@@ -106,6 +106,8 @@ def html_email(building,address,unit,name,phone,entry,request,recipient,subject)
 
 # Create your views here.
 def home(request):
+    if request.user.is_authenticated:
+        return redirect('/dashboard')
     return render(request, 'home.html')
 
 def support(request):
@@ -119,34 +121,7 @@ def dashboard(request):
         return manager_dashboard(request)
     else:
         return tenant_dashboard(request)
-
-@login_required(login_url="/login")
-def maintenance_requests(request):
-    if request.user.is_superuser or (request.user.manager != None):
-        search_query = request.GET.get('search_query')
-        if search_query:
-            requests = MaintenanceRequest.objects.filter(
-                Q(id__icontains=search_query) |
-                Q(first_name__icontains=search_query) |
-                Q(last_name__icontains=search_query) |
-                Q(title__icontains=search_query) |
-                Q(status__icontains=search_query) |
-                Q(building__buildingName__icontains=search_query) |
-                Q(unit__icontains=search_query) |
-                Q(entry_permission__icontains=search_query) |
-                Q(completed__icontains=search_query)
-            )
-        else:
-            requests = MaintenanceRequest.objects.all()
-
-        html = render_to_string('dashboard/pages/requests_table.html', {'requests': requests})
-        if request.headers.get('HX-Request'):
-            return HttpResponse(html)
-        else:
-            return render(request, 'dashboard/pages/maintenance_requests.html', {"table": html})
-    else:
-        return handler_403(request)
-
+    
 @login_required(login_url="/login")
 def admin_dashboard(request):
     users = UserAccount.objects.all()
@@ -184,7 +159,7 @@ def manager_dashboard(request):
         users = paginator.page(paginator.num_pages)
 
     if request.user.manager != None:
-        return render(request, 'dashboard/tenant_dashboard.html', {'users':users, 'applications':applications, 'requests':requests})
+        return render(request, 'dashboard/manager_dashboard.html', {'users':users, 'applications':applications, 'requests':requests})
     else:
         return handler_403(request)
 
@@ -194,7 +169,37 @@ def tenant_dashboard(request):
     requests = MaintenanceRequest.objects.filter(userId=request.user.id)
 
     return render(request, 'dashboard/tenant_dashboard.html', {'applications':applications, 'requests':requests})
+    
+@login_required(login_url="/login")
+def users(request):
+    return redirect('/dashboard')
 
+@login_required(login_url="/login")
+def maintenance_requests(request):
+    if request.user.is_superuser or (request.user.manager != None):
+        search_query = request.GET.get('search_query')
+        if search_query:
+            requests = MaintenanceRequest.objects.filter(
+                Q(id__icontains=search_query) |
+                Q(first_name__icontains=search_query) |
+                Q(last_name__icontains=search_query) |
+                Q(title__icontains=search_query) |
+                Q(status__icontains=search_query) |
+                Q(building__buildingName__icontains=search_query) |
+                Q(unit__icontains=search_query) |
+                Q(entry_permission__icontains=search_query) |
+                Q(completed__icontains=search_query)
+            )
+        else:
+            requests = MaintenanceRequest.objects.all()
+
+        html = render_to_string('dashboard/pages/requests_table.html', {'requests': requests})
+        if request.headers.get('HX-Request'):
+            return HttpResponse(html)
+        else:
+            return render(request, 'dashboard/pages/maintenance_requests.html', {"table": html})
+    else:
+        return handler_403(request)
 
 @login_required(login_url="/login")
 def application(request):
@@ -316,6 +321,7 @@ def view_user(request, user_id):
             updated_last_name = data.get('last_name')
             updated_username = data.get('username')
             updated_email = data.get('email')
+            account_type = data.get('account_type')
             # Retrieve other fields as needed
 
             # Perform any necessary validation and update the user's profile
@@ -327,6 +333,7 @@ def view_user(request, user_id):
             u.last_name = updated_last_name
             u.username = updated_username
             u.email = updated_email
+            u.setAccountType(account_type)
             u.save()
 
             # Return a JSON response indicating success
@@ -471,8 +478,18 @@ def delete(request):
                     request = MaintenanceRequest.objects.get(pk=id_num)
                     request.delete()
                     return JsonResponse({'success': True})
-                except UserAccount.DoesNotExist:
+                except MaintenanceRequest.DoesNotExist:
                     return JsonResponse({'success': False})
+                
+        elif type == "Building":
+            if request.user.is_superuser:
+                try:
+                    building = Building.objects.get(pk=id_num)
+                    building.delete()
+                    return JsonResponse({'success': True})
+                except Building.DoesNotExist:
+                    return JsonResponse({'success': False})
+                
 
 # Views for errors
 def handler_404(request, exception):
