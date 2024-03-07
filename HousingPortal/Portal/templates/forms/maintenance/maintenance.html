@@ -32,15 +32,13 @@
             margin-bottom: 20px;
         }
 
-        .form-container input,
-        .form-container textarea{
+        .form-container input{
             width: 100%;
             padding: 10px;
             margin-bottom: 10px;
             border: 1px solid #ccc; 
             border-radius: 5px;
             box-sizing: border-box;
-            font-family: Arial, Helvetica, sans-serif;
         }
 
         .form-container button {
@@ -76,9 +74,10 @@
             {% csrf_token %}
             <input type="text" name="first_name" placeholder="First Name" value="{{user.first_name}}" required>
             <input type="text" name="last_name" placeholder="Last Name" value="{{user.last_name}}" required>
-            <input type="text" name="phone" placeholder="Phone" required>
-            <input type="text" name="address" placeholder="Address" required>
+            <input name="address" placeholder="Address" rows="4" required></textarea>
             <input type="text" name="unit" placeholder="Unit" required>
+            <input name="request" placeholder="Maintenance Request" rows="4" required></textarea>
+            <input type="text" name="phone" placeholder="Phone" required>
             <label for="building">Building:</label>
             <select id="building" name="building">
                 {% for building in buildings %}
@@ -90,8 +89,6 @@
                 <option value="1">Yes</option>
                 <option value="0">No</option>
             </select> <br>
-            <input type="text" name="title" placeholder="Title" required>
-            <textarea name="request" placeholder="Maintenance Request" rows="4" required></textarea>
             <button type="submit">Submit</button>
         </form>
     </div>
