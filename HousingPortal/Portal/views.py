@@ -192,6 +192,7 @@ def maintenance(request):
         full_name = first_name + " " + last_name
         address = request.POST.get('address')
         unit = request.POST.get('unit')
+        title = request.POST.get('title')
         req = request.POST.get('request')
         phone = request.POST.get('phone')
         building_id = request.POST.get('building')
