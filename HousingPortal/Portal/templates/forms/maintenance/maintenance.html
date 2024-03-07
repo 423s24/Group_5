@@ -74,9 +74,9 @@
             {% csrf_token %}
             <input type="text" name="first_name" placeholder="First Name" value="{{user.first_name}}" required>
             <input type="text" name="last_name" placeholder="Last Name" value="{{user.last_name}}" required>
-            <input name="address" placeholder="Address" rows="4" required></textarea>
+            <input type="address" placeholder="Address" rows="4" required>
             <input type="text" name="unit" placeholder="Unit" required>
-            <input name="request" placeholder="Maintenance Request" rows="4" required></textarea>
+            <textarea name="request" placeholder="Maintenance Request" rows="4" required></textarea>
             <input type="text" name="phone" placeholder="Phone" required>
             <label for="building">Building:</label>
             <select id="building" name="building">
