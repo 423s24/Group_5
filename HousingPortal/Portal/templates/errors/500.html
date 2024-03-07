@@ -3,16 +3,14 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>Error 404</title>
+        <title>Error 500</title>
         <link rel="stylesheet" type="text/css" href="{% static 'css/errors.css' %}">
     </head>
     <body>
         <div>
-            <h1>Error 404: This page doesn't exist</h1>
-            <h2>It's easy to get lost in the cosmos</h2>
-            <img src="{% static 'images/errors/404.jpeg' %}" alt="cat">
-            <br>
-            <br>
+            <h1>Error 500: Server Error</h1>
+            <img src="{% static 'images/errors/500.jpeg' %}" alt="error 500 cat">
+            <p>We are having some issues. Please check back later.</p>
 
             <a href="/">
                 <button>
