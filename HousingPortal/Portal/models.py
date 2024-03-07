@@ -52,16 +52,12 @@ class UserAccount(AbstractUser):
             self.save()
 
 class Tenant(models.Model):
-    firstName = models.CharField(max_length=100)
-    lastName = models.CharField(max_length=100)
     unitId = models.IntegerField()
     dob = models.DateField()
     impairments = models.CharField(max_length=100)
     archived = models.BooleanField(default=False)
 
 class Manager(models.Model):
-    firstName = models.CharField(max_length=100)
-    lastName = models.CharField(max_length=100)
     archived = models.BooleanField(default=False)
     #managerBuilding = models.ManyToManyField('Building', through='ManagerBuilding')
 
