@@ -51,43 +51,56 @@ def html_email(building,address,unit,name,phone,entry,request,recipient,subject)
     # write the HTML part
     html = """\
     <html>
-      <body>
-        <p>Hello, a new maintenance request has been made on <strong>""" + today + """</strong><br></p>
-        <p><a href=""" + dashboard + """>View Request Dashboard</a></p>
-        <table>
+    <style>
+  table {
+    border-collapse: collapse;
+  }
+  td {
+    padding: 10px;
+  }
+  .spacer {
+    width: 20px; /* Adjust the width as needed for the spacing between columns */
+  }
+</style>
+
+<table>
   <tr>
     <td>Building:</td>
     <td><strong>""" + building + """</strong></td>
+    <td class="spacer"></td>
   </tr>
   <tr>
     <td>Address:</td>
     <td><strong>""" + address + """</strong></td>
+    <td class="spacer"></td>
   </tr>
   <tr>
     <td>Unit:</td>
     <td><strong>""" + unit + """</strong></td>
+    <td class="spacer"></td>
   </tr>
   <tr>
     <td>Resident Name:</td>
     <td><strong>""" + name + """</strong></td>
+    <td class="spacer"></td>
   </tr>
   <tr>
     <td>Phone:</td>
     <td><strong>""" + phone + """</strong></td>
+    <td class="spacer"></td>
   </tr>
   <tr>
     <td>Request:</td>
     <td><strong>""" + request + """</strong></td>
+    <td class="spacer"></td>
   </tr>
   <tr>
     <td>Can we enter without a resident present:</td>
     <td><strong>""" + enter + """</strong></td>
+    <td class="spacer"></td>
   </tr>
 </table>
 
-
-        </p>
-      </body>
     </html>
     """
 
