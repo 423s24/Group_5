@@ -55,50 +55,38 @@ def html_email(building,address,unit,name,phone,entry,request,recipient,subject)
   table {
     border-collapse: collapse;
   }
-  td {
-    padding: 10px;
-  }
-  .spacer {
-    width: 20px; /* Adjust the width as needed for the spacing between columns */
-  }
 </style>
 
 <table>
   <tr>
     <td>Building:</td>
     <td><strong>""" + building + """</strong></td>
-    <td class="spacer"></td>
   </tr>
   <tr>
     <td>Address:</td>
     <td><strong>""" + address + """</strong></td>
-    <td class="spacer"></td>
   </tr>
   <tr>
     <td>Unit:</td>
     <td><strong>""" + unit + """</strong></td>
-    <td class="spacer"></td>
   </tr>
   <tr>
     <td>Resident Name:</td>
     <td><strong>""" + name + """</strong></td>
-    <td class="spacer"></td>
   </tr>
   <tr>
     <td>Phone:</td>
     <td><strong>""" + phone + """</strong></td>
-    <td class="spacer"></td>
+  </tr>
+  <tr>
+    <td width:50px>Can we enter without<br> a resident present:</td>
+    <td><strong>""" + enter + """</strong></td>
   </tr>
   <tr>
     <td>Request:</td>
     <td><strong>""" + request + """</strong></td>
-    <td class="spacer"></td>
   </tr>
-  <tr>
-    <td>Can we enter without a resident present:</td>
-    <td><strong>""" + enter + """</strong></td>
-    <td class="spacer"></td>
-  </tr>
+  
 </table>
 
     </html>
