@@ -1,9 +1,6 @@
 # Group_5 : HRDC Maintenance Website
 
-https://tanrtech.com
-
 https://423s24.github.io/Group_5/
-
 
 Scrum Artifacts:
 
