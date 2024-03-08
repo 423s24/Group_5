@@ -2,9 +2,26 @@
 {% block title %}Support{% endblock %}
 {% block content %}
 <h1>Welcome to Support page</h1>
-<p>Here is some support crap</p>
 <h1>Frequently Asked Questions</h1>
 <div class="faq">
+    <p class="question clickable" id="show-answer-1">What is HTML?</p>
+    <p class="answer hidden" id="answer-1">HTML stands for HyperText Markup Language. It is the standard markup language for creating web pages.</p>
+
+    <p class="question clickable" id="show-answer-2">What is CSS?</p>
+    <p class="answer hidden" id="answer-2">CSS stands for Cascading Style Sheets. It is used for styling HTML elements and controlling their appearance.</p>
+
+    <p class="question clickable" id="show-answer-3">What is JavaScript?</p>
+    <p class="answer hidden" id="answer-3">JavaScript is a programming language commonly used for creating interactive effects within web browsers. </p>
+
+    <p class="question clickable" id="show-answer-4">What is the difference between HTML, CSS, and JavaScript?</p>
+    <p class="answer hidden" id="answer-4">HTML is used for structuring content on a web page, CSS is used for styling the content, and JavaScript is used for adding interactivity and dynamic behavior to the page. </p>
+    
+    <p class="question clickable" id="show-answer-5"> Is HTML case-sensitive?</p>
+    <p class="answer hidden" id="answer-5">HTML is not case-sensitive. However, it's a best practice to use lowercase for HTML elements and attributes </p>
+
+    <!--
+        
+    
     <div class="faq-item">
         <div class="faq-question">Question 1: What is HTML?</div>
         <div class="faq-answer">
@@ -74,5 +91,33 @@
             HTML is not case-sensitive. However, it's a best practice to use lowercase for HTML elements and attributes.
         </div>
     </div>
+    -->
 </div>
+
+<style>
+    .hidden {
+        display: none; 
+}
+    .question {
+      color: blue; 
+      cursor: pointer;
+    }
+    .question:hover {
+      text-decoration: underline; 
+    }
+  </style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var clickableQuestions = document.querySelectorAll('.question');
+    
+        clickableQuestions.forEach(function(clickable) {
+            clickable.addEventListener('click', function() {
+                var answerId = this.id.replace('show-', '');
+                var answerParagraph = document.getElementById(answerId);
+                answerParagraph.style.display = 'block'; 
+            });
+        });
+    });
+    </script>
 {% endblock %}
