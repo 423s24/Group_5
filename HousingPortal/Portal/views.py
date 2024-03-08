@@ -207,7 +207,8 @@ def application(request):
         last_name = request.POST.get('last_name')
         unit = request.POST.get('unit')
         phone = request.POST.get('phone')
-        application = HousingApplication.objects.create(userId=request.use, first_name=first_name, last_name=last_name, unit_wanted=unit, phone=phone)
+        application = HousingApplication.objects.create(userId=request.user, first_name=first_name, last_name=last_name, unit_wanted=unit, phone=phone)
+        application.save()
         return redirect('/dashboard')
     return render(request, 'forms/application/application.html')
 
@@ -232,9 +233,6 @@ def maintenance(request):
         return redirect('/request/' + str(maintenanceRequest.id))
 
     return render(request, 'forms/maintenance/maintenance.html', {'buildings': buildings})
-
-def payment(request):
-    return render(request, 'payment.html')
 
 @login_required(login_url="/login")
 def user_profile(request, username):
