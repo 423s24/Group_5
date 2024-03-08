@@ -5,16 +5,16 @@
 <h2>Frequently Asked Questions</h2>
 <div class="faq">
     <div class="faq-item">
-        <div class="faq-question">What is this website?</div>
-        <div class="faq-answer">
+        <div class="question clickable" id="show-answer-1">What is this website?</div>
+        <div class="answer hidden" id="answer-1">
             This is a website meant to handle multiple functions for housing with HRDC. These mainly include submitting an 
             application for housing and submitting maintainence requests for your current lodging.
         </div>
     </div>
 
     <div class="faq-item">
-        <div class="faq-question">How do I submit a housing application?</div>
-        <div class="faq-answer">
+        <div class="question clickable" id="show-answer-2">How do I submit a housing application?</div>
+        <div class="answer hidden" id="answer-2">
             In the bar across the top of the screen, there is a link labeled "Housing". Clicking on this will take you to an 
             application form. Your first and last names will be automatically filled, so you can then enter your desired unit 
             and phone number to apply. After clicking Submit, you should receive an email confirming your information.
@@ -22,8 +22,8 @@
     </div>
 
     <div class="faq-item">
-        <div class="faq-question">How do I submit a maintainence request?</div>
-        <div class="faq-answer">
+        <div class="question clickable" id="show-answer-3">How do I submit a maintainence request?</div>
+        <div class="answer hidden" id="answer-3">
             In the bar across the top of the screen, there is a link labeled "Maintainence". Clicking on this will take you to an 
             maintainence request form. Your first and last names will be automatically filled, so you can then enter your address, 
             unit, your request, phone number, building name, and whether or not Personal Conducting Maintainence may enter your 
@@ -32,16 +32,16 @@
     </div>
 
     <div class="faq-item">
-        <div class="faq-question">What is the information on the main page?</div>
-        <div class="faq-answer">
+        <div class="question clickable" id="show-answer-4">What is the information on the main page?</div>
+        <div class="answer hidden" id="answer-4">
             The main page shows a dashboard with your information. For a regular user without any special permissions, you'll be 
             able to see a list of your own housing applications and a list of your own maintainence requests.
         </div>
     </div>
 
     <div class="faq-item">
-        <div class="faq-question">I found an issue with the site. How can I contact you and report it?</div>
-        <div class="faq-answer">
+        <div class="question clickable" id="show-answer-5">I found an issue with the site. How can I contact you and report it?</div>
+        <div class="answer hidden" id="answer-5">
             If you think you found a bug, glitch, issue, or think something about the site needs to be changed, feel 
             free to go to the issues page on the site's Github <a href="https://github.com/423s24/Group_5/issues">here</a> to open an issue. We'll try our best to address 
             it as soon as possible!
@@ -49,8 +49,8 @@
     </div>
 
     <div class="faq-item">
-        <div class="faq-question">I'm still confused and need a little bit more help.</div>
-        <div class="faq-answer">
+        <div class="question clickable" id="show-answer-6">I'm still confused and need a little bit more help.</div>
+        <div class="answer hidden" id="answer-6">
             That's okay, we have more detailed info on our user documentation page. The link to it can be 
             found <a href="https://423s24.github.io/Group_5/userdocumentation.html">here</a>.
         </div>
@@ -61,10 +61,11 @@
 <style>
     .hidden {
         display: none; 
-}
+    }
     .question {
       color: blue; 
       cursor: pointer;
+      padding-top: 10px;
     }
     .question:hover {
       text-decoration: underline; 
