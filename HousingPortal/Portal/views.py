@@ -5,7 +5,6 @@ from django.utils import timezone
 from django.contrib import messages
 from .forms import RegisterForm, AuthForm, BuildingForm
 from django.http import HttpResponseForbidden, HttpResponseRedirect, JsonResponse, HttpResponse
-#from .models import UserAccount
 from .models import *
 from django.contrib.auth.views import LoginView
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -208,8 +207,8 @@ def application(request):
         last_name = request.POST.get('last_name')
         unit = request.POST.get('unit')
         phone = request.POST.get('phone')
-        application = HousingApplication.objects.create(userId=request.use, first_name=first_name, last_name=last_name, unit_wanted=unit, phone=phone)
-        #UserHousingApplication.objects.create(userId = request.user, housingApplicationId=application)
+        application = HousingApplication.objects.create(userId=request.user, first_name=first_name, last_name=last_name, unit_wanted=unit, phone=phone)
+        application.save()
         return redirect('/dashboard')
     return render(request, 'forms/application/application.html')
 
@@ -230,13 +229,10 @@ def maintenance(request):
         entry_permission = request.POST.get('entry_permission') == '1'
         html_email(building_id,address,unit,full_name,phone,entry_permission,req,"cs423robot@gmail.com","Maintenance Request")
         html_email(building_id,address,unit,full_name,phone,entry_permission,req,request.user.email,"Maintenance Request Confirmation")
-        maintenanceRequest = MaintenanceRequest.objects.create(userId=request.user, first_name=first_name, last_name=last_name, address=address, unit=unit, request=req, phone=phone, building=building, entry_permission=entry_permission)
+        maintenanceRequest = MaintenanceRequest.objects.create(userId=request.user, first_name=first_name, last_name=last_name, address=address, unit=unit, request=req, phone=phone, building=building, entry_permission=entry_permission, title=title)
         return redirect('/request/' + str(maintenanceRequest.id))
 
     return render(request, 'forms/maintenance/maintenance.html', {'buildings': buildings})
-
-def payment(request):
-    return render(request, 'payment.html')
 
 @login_required(login_url="/login")
 def user_profile(request, username):
@@ -315,20 +311,13 @@ def view_user(request, user_id):
     u = get_object_or_404(UserAccount, pk=user_id)
     if request.user.is_superuser:
         if request.method == 'POST':
-            # Process the submitted data
             data = json.loads(request.body)
             updated_first_name = data.get('first_name')
             updated_last_name = data.get('last_name')
             updated_username = data.get('username')
             updated_email = data.get('email')
             account_type = data.get('account_type')
-            # Retrieve other fields as needed
 
-            # Perform any necessary validation and update the user's profile
-            # For example, you might use Django's authentication system to get the current user
-            # and update their profile information
-            
-            # Example assuming you have a custom User model with a profile:
             u.first_name = updated_first_name
             u.last_name = updated_last_name
             u.username = updated_username
@@ -336,7 +325,6 @@ def view_user(request, user_id):
             u.setAccountType(account_type)
             u.save()
 
-            # Return a JSON response indicating success
             return JsonResponse({'message': 'Profile updated successfully'})
             
         return render(request, 'dashboard/pages/view_user.html', {'u': u})
@@ -368,8 +356,41 @@ def add_note(request, request_id):
     else:
         return handler_403(request)
 
+@login_required(login_url="/login")
+def add_building(request):
+    user = request.user
+    if user.is_superuser:
+        form = BuildingForm()
+        if request.method == 'POST':
+            form = BuildingForm(request.POST)
+            if form.is_valid():
+                form.save()
+                return dashboard(request)
+        return render(request, 'dashboard/forms/create_building.html', {'form': form})
+    else:
+        return handler_403(request)
+    
+@login_required(login_url="/login")
+def profile(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        updated_first_name = data.get('first_name')
+        updated_last_name = data.get('last_name')
+        updated_username = data.get('username')
+        updated_email = data.get('email')
 
-# Views for user accounts and authentication
+        user = request.user
+        user.first_name = updated_first_name
+        user.last_name = updated_last_name
+        user.username = updated_username
+        user.email = updated_email
+        user.save()
+
+        return JsonResponse({'message': 'Profile updated successfully'})
+    
+    return render(request, 'profile.html')
+
+# Views for user account authentication
 def signup_view(request):
     if request.user.is_authenticated:
         return redirect('/dashboard')
@@ -379,7 +400,7 @@ def signup_view(request):
             if form.is_valid():
                 user = form.save()
                 login(request, user)
-                request.session.set_expiry(1800) # Set session expiry to 30 minutes
+                request.session.set_expiry(0) # Set session to expire when brower is closed
                 return redirect('/')
         else:
             form = RegisterForm()
@@ -398,7 +419,7 @@ def login_view(request):
                 user = authenticate(request, username=username, password=password)
                 if user is not None:
                     login(request, user)
-                    request.session.set_expiry(1800) # Set session expiry to 30 minutes
+                    request.session.set_expiry(0) # Set session to expire when brower is closed
                     next_url = request.GET.get('next', None)
                     if next_url:
                         return redirect(next_url)
@@ -413,49 +434,8 @@ def logout_view(request):
     logout(request)
     return redirect('/')
 
-@login_required(login_url="/login")
-def profile(request):
-    if request.method == 'POST':
-        # Process the submitted data
-        data = json.loads(request.body)
-        updated_first_name = data.get('first_name')
-        updated_last_name = data.get('last_name')
-        updated_username = data.get('username')
-        updated_email = data.get('email')
-        # Retrieve other fields as needed
 
-        # Perform any necessary validation and update the user's profile
-        # For example, you might use Django's authentication system to get the current user
-        # and update their profile information
-        
-        # Example assuming you have a custom User model with a profile:
-        user = request.user  # Assuming the user is authenticated
-        user.first_name = updated_first_name
-        user.last_name = updated_last_name
-        user.username = updated_username
-        user.email = updated_email
-        user.save()
-
-        # Return a JSON response indicating success
-        return JsonResponse({'message': 'Profile updated successfully'})
-    
-    return render(request, 'profile.html')
-
-@login_required(login_url="/login")
-def delete_user(request):
-    user_id = request.GET.get('user_id', None)
-    user_to_delete = UserAccount.objects.get(pk=user_id)
-    if user_to_delete == None:
-        return redirect('/')
-    elif user_to_delete.id == request.user.id:
-        logout(request)
-        user_to_delete.delete()
-        return redirect('/')
-    elif request.user.is_superuser:
-        user_to_delete.delete()
-        return redirect('/dashboard')
-    return redirect('/')
-
+# Views for handling deleting
 @login_required(login_url="/login")
 def delete(request):
     if request.method == 'POST':
@@ -492,22 +472,8 @@ def delete(request):
                 
 
 # Views for errors
-def handler_404(request, exception):
-    return render(request, 'errors/404.html', status=404)
-
 def handler_403(request, exception=None):
     return render(request, 'errors/403.html', status=403)
 
-@login_required(login_url="/login")
-def add_building(request):
-    user = request.user
-    if user.is_superuser:
-        form = BuildingForm()
-        if request.method == 'POST':
-            form = BuildingForm(request.POST)
-            if form.is_valid():
-                form.save()
-                return dashboard(request)
-        return render(request, 'dashboard/forms/create_building.html', {'form': form})
-    else:
-        return handler_403(request)
+def handler_404(request, exception):
+    return render(request, 'errors/404.html', status=404)

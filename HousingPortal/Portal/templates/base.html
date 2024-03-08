@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}HRDC Housing Portal{% endblock %}</title>
-    <link rel="icon" type="image/png" href="{% static 'images/hrdc-favicon.png' %}">
+    <link rel="icon" type="image/png" href="{% static 'images/logos/hrdc-favicon.png' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/global.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/header.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/footer.css' %}">
@@ -16,7 +16,7 @@
 </head>
 <body>
     <div id="topnav">
-        <a href="/"><img src="{% static 'images/hrdc-logo-light.png' %}" alt="HRDC Logo"></a>
+        <a href="/"><img src="{% static 'images/logos/hrdc-logo-light.png' %}" alt="HRDC Logo"></a>
         <a href="{% url 'application' %}">Housing</a>
         <a href="{% url 'maintenance' %}">Maintenance</a>
         {% if user.is_authenticated %}

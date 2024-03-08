@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load tz %}
 {% block title %}User Profile{% endblock %}
 {% block head %}
     <script src="{% static 'js/profile.js' %}" defer></script>
@@ -12,11 +13,11 @@
     <p>Username: <span id="username">{{user.username}}</span></p>
     <p>Email: <span id="email">{{user.email}}</span></p>
     <p>Account Type: <span id="account-type">{{user.account_type}}</span></p>
-    <p>Date joined: <span id="date-joined">{{user.date_joined}}</span></p>
+    <p>Date joined: <span id="date-joined">{{user.date_joined}}{{user.date_joined|localtime}}</span></p>
     <button id="edit-button">Edit</button>
     <br>
     <br>
-    <a href="/delete/?user_id={{user.id}}" id="delete-button">Delete Account</a>
+    <button onclick="deleteUser('{{user.id}}')">Delete User</button>
   </div>
 <div id="edit-form" style="display:none;">
     <h1>Edit Profile</h1>
