@@ -4,7 +4,7 @@ from django.contrib.auth.models import AbstractUser, BaseUserManager, Permission
 ACCOUNT_TYPES = [
     ('admin', 'admin'),
     ('manager', 'manager'),
-    ('teneant', 'tenant')
+    ('tenant', 'tenant'),
 ]
 
 # Create your models here.
@@ -35,6 +35,7 @@ class UserAccount(AbstractUser):
         if account_type == 'admin':
             if self.manager != None:
                 Manager.objects.get(pk=self.manager.id).delete()
+                self.manager = None
             self.is_superuser = True
             self.save()
         elif account_type == 'manager':
@@ -49,6 +50,7 @@ class UserAccount(AbstractUser):
                 self.is_superuser = False
             elif self.manager != None:
                 Manager.objects.get(pk=self.manager.id).delete()
+                self.manager = None
             self.save()
 
 class Tenant(models.Model):
