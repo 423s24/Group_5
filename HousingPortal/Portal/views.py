@@ -207,7 +207,7 @@ def application(request):
         last_name = request.POST.get('last_name')
         unit = request.POST.get('unit')
         phone = request.POST.get('phone')
-        application = HousingApplication.objects.create(userId=request.user, first_name=first_name, last_name=last_name, unit_wanted=unit, phone=phone)
+        application = HousingApplication.objects.create(userId=request.use, first_name=first_name, last_name=last_name, unit_wanted=unit, phone=phone)
         application.save()
         return redirect('/dashboard')
     return render(request, 'forms/application/application.html')
@@ -477,3 +477,6 @@ def handler_403(request, exception=None):
 
 def handler_404(request, exception):
     return render(request, 'errors/404.html', status=404)
+
+def handler_500(request):
+    return render(request, 'errors/500.html', status=500)
