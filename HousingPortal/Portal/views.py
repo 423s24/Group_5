@@ -268,7 +268,13 @@ def edit_request(request, request_id):
         maintenance_request.building = building
 
         if request.user.is_superuser or request.user.manager:
-            maintenance_request.completed = request.POST.get('completed', maintenance_request.completed) == '1'
+            temp_value = request.POST.get('completed', maintenance_request.completed) == '1'
+            if not maintenance_request.completed:
+                maintenance_request.dateCompleted = timezone.now()
+            elif (not temp_value) and (maintenance_request.dateCompleted is not None):
+                maintenance_request.dateCompleted = None
+            maintenance_request.completed = temp_value
+
         maintenance_request.save()
         return redirect('request_info', request_id=maintenance_request.id)
 
