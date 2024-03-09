@@ -342,7 +342,7 @@ def mark_completed(request, request_id):
         maintenance_request.dateCompleted = timezone.now()
         maintenance_request.save()
         # return redirect('request_info', request_id=request_id)
-        return render(request, 'request_info', {'maintenance_request': maintenance_request})
+        return redirect('request_info', request_id=request_id)
     else:
         return handler_403(request)
 
