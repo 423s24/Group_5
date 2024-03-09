@@ -1,4 +1,4 @@
-<table class="hoverable-table">
+<table class="table table-hover">
 <thead>
     <tr>
         <th>Request ID</th>
@@ -17,12 +17,16 @@
         <td>{{ request.id }}</td>
         <td>{{request.first_name}} {{ request.last_name }}</td>
         <td>{{ request.title }}</td>
-        <td>{{ request.status }}</td>
+        <td class="status-cell"><span class="status-badge {{ request.status|lower|cut:' ' }}">{{ request.status }}</span></td>
         <td>{{request.building.buildingName}}</td>
         <td>{{request.unit}}</td>
         <td>{{ request.entry_permission }}</td>
         <td>{{ request.completed }}</td>
     </tr>
+        {% empty %}
+        <tr>
+            <td colspan="8" style="text-align:center;">No results found!</td>
+        </tr>
     {% endfor %}
 </tbody>
 </table>

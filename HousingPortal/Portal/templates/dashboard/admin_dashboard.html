@@ -6,6 +6,7 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/global.css' %}">
 {% endblock %}
 {% block content %}
+    <div class="container">
 <br>
 <h2>Dashboard</h2>
 <div id="home">
@@ -30,10 +31,6 @@
 {% include 'dashboard/data/user.html' %}
 <br>
 <br>
-<h2>Housing Applications</h2>
-{% include 'dashboard/data/applications.html' %}
-<br>
-<br>
 <h2>Maintenance Requests</h2>
 {% include 'dashboard/data/requests.html' %}
 <br>
@@ -42,8 +39,10 @@
     <div id="home">
         <a href="{% url 'createbuilding' %}">Add Building</a>
     </div>
+        <br>
     {% include 'dashboard/data/building.html' %}
     <br>
     <br>
+    </div>
 {% endblock %}
 

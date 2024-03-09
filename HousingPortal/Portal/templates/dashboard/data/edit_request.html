@@ -9,62 +9,85 @@
 {% endblock %}
 
 {% block content %}
-<h1>Edit Maintenance Request #{{ maintenance_request.id }}</h1>
+    <div class="container">
+        <br>
+        <h1>Edit Maintenance Request #{{ maintenance_request.id }}</h1>
 
-<form method="post" action="{% url 'edit_request' request_id=maintenance_request.id %}">
-  {% csrf_token %}
+        <form method="post" action="{% url 'edit_request' request_id=maintenance_request.id %}">
+          {% csrf_token %}
 
-    <table class="data-table">
-        <thead>
-            <th><label for="first_name">First name:</label></th>
-            <th><label for="last_name">Last name:</label></th>
-            <th><label for="address">Address:</label><br></th>
-            <th><label for="unit">Unit:</label></th>
-            <th><label for="request">Request:</label></th>
-            <th><label for="phone">Phone:</label></th>
-            <th><label for="entry_permission">Can Personnel Conducting Maintenance Enter if you are absent:</label></th>
-            <th><label for="building">Building:</label></th>
-            <th><label for="status">Status:</label></th>
-            <th><label for="completed">Completed:</label></th>
-        </thead>
-        <tbody>
-            <tr>
-                <td><input type="text" id="first_name" name="first_name" value="{{ maintenance_request.first_name }}"></td>
-                <td><input type="text" id="last_name" name="last_name" value="{{ maintenance_request.last_name }}"></td>
-                <td><input type="text" id="address" name="address" value="{{ maintenance_request.address }}"></td>
-                <td><input type="text" id="unit" name="unit" value="{{ maintenance_request.unit }}"></td>
-                <td><input type="text" id="request" name="request" value="{{ maintenance_request.request }}"></td>
-                <td><input type="text" id="phone" name="phone" value="{{ maintenance_request.phone }}"></td>
-                <td><select id="entry_permission" name="entry_permission">
-                    <option value="1" {% if maintenance_request.entry_permission %}selected{% endif %}>Yes</option>
-                    <option value="0" {% if not maintenance_request.entry_permission %}selected{% endif %}>No</option>
-                  </select></td>
-                <td><select id="building" name="building">
-                    {% for building in buildings %}
-                      <option value="{{ building.id }}" {% if building.id == maintenance_request.building.id %}selected{% endif %}>
-                        {{ building.buildingName }}
-                      </option>
-                    {% endfor %}
-                  </select></td>
-                <td><select id="status" name="status">
-                    <option value="New" {% if maintenance_request.status == "New" %}selected{% endif %}>New</option>
-                    <option value="In Progress" {% if maintenance_request.status == "In Progress" %}selected{% endif %}>In Progress</option>
-                    <option value="Pending" {% if maintenance_request.status == "Pending" %}selected{% endif %}>Pending</option>
-                    <option value="Resolved" {% if maintenance_request.status == "Resolved" %}selected{% endif %}>Resolved</option>
-                    <option value="Completed" {% if maintenance_request.status == "Completed" %}selected{% endif %}>Completed</option>
-                    <option value="Closed" {% if maintenance_request.status == "Closed" %}selected{% endif %}>Closed</option>
-                    <option value="Cancelled" {% if maintenance_request.status == "Cancelled" %}selected{% endif %}>Cancelled</option>
-                </select></td>
-                <td><select id="completed" name="completed">
-                  <option value="1" {% if maintenance_request.completed %}selected{% endif %}>Yes</option>
-                  <option value="0" {% if not maintenance_request.completed %}selected{% endif %}>No</option>
-                </select></td>
-            </tr>
-        </tbody>
-    </table>
-    <br>
-    <br>
-  <input type="submit" value="Save Changes">
-</form>
-
+            <table class="table">
+                <thead>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><label for="first_name">First name:</label></td>
+                        <td><input type="text" id="first_name" name="first_name" value="{{ maintenance_request.first_name }}"></td>
+                    </tr>
+                    <tr>
+                        <td><label for="last_name">Last name:</label></td>
+                        <td><input type="text" id="last_name" name="last_name" value="{{ maintenance_request.last_name }}"></td>
+                    </tr>
+                    <tr>
+                        <td><label for="address">Address:</label></td>
+                        <td><input type="text" id="address" name="address" value="{{ maintenance_request.address }}"></td>
+                    </tr>
+                    <tr>
+                        <td><label for="unit">Unit:</label></td>
+                        <td><input type="text" id="unit" name="unit" value="{{ maintenance_request.unit }}"></td>
+                    </tr>
+                    <tr>
+                        <td><label for="title">Title:</label></td>
+                        <td><input type="text" id="title" name="title" value="{{ maintenance_request.title }}"></td>
+                    </tr>
+                    <tr>
+                        <td><label for="request">Request:</label></td>
+                        <td><input type="text" id="request" name="request" value="{{ maintenance_request.request }}"></td>
+                    </tr>
+                    <tr>
+                        <td><label for="phone">Phone:</label></td>
+                        <td><input type="text" id="phone" name="phone" value="{{ maintenance_request.phone }}"></td>
+                    </tr>
+                    <tr>
+                        <td><label for="entry_permission">Can Personnel Conducting Maintenance Enter if you are absent:</label></td>
+                        <td><select id="entry_permission" name="entry_permission">
+                            <option value="1" {% if maintenance_request.entry_permission %}selected{% endif %}>Yes</option>
+                            <option value="0" {% if not maintenance_request.entry_permission %}selected{% endif %}>No</option>
+                          </select></td>
+                    </tr>
+                    <tr>
+                        <td><label for="building">Building:</label></td>
+                        <td><select id="building" name="building">
+                            {% for building in buildings %}
+                              <option value="{{ building.id }}" {% if building.id == maintenance_request.building.id %}selected{% endif %}>
+                                {{ building.buildingName }}
+                              </option>
+                            {% endfor %}
+                          </select></td>
+                    </tr>
+                    <tr>
+                        <td><label for="status">Status:</label></td>
+                        <td><select id="status" name="status">
+                            <option value="New" {% if maintenance_request.status == "New" %}selected{% endif %}>New</option>
+                            <option value="In Progress" {% if maintenance_request.status == "In Progress" %}selected{% endif %}>In Progress</option>
+                            <option value="Pending" {% if maintenance_request.status == "Pending" %}selected{% endif %}>Pending</option>
+                            <option value="Resolved" {% if maintenance_request.status == "Resolved" %}selected{% endif %}>Resolved</option>
+                            <option value="Completed" {% if maintenance_request.status == "Completed" %}selected{% endif %}>Completed</option>
+                            <option value="Closed" {% if maintenance_request.status == "Closed" %}selected{% endif %}>Closed</option>
+                            <option value="Cancelled" {% if maintenance_request.status == "Cancelled" %}selected{% endif %}>Cancelled</option>
+                        </select></td>
+                    </tr>
+                    <tr>
+                        <td><label for="completed">Completed:</label></td>
+                        <td><select id="completed" name="completed">
+                          <option value="1" {% if maintenance_request.completed %}selected{% endif %}>Yes</option>
+                          <option value="0" {% if not maintenance_request.completed %}selected{% endif %}>No</option>
+                        </select></td>
+                    </tr>
+                </tbody>
+            </table>
+            <br>
+          <input type="submit" value="Save Changes">
+        </form>
+    </div>
 {% endblock %}

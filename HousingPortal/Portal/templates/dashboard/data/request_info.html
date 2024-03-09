@@ -4,66 +4,19 @@
 {% block head %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/dashboard.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/request.css' %}">
-<script>
-function editNote(noteId) {
-    let noteText = document.getElementById('note_' + noteId).innerText;
-    let newNoteText = prompt("Edit note", noteText);
-    if (newNoteText == null || newNoteText == "") {
-        alert("You must enter a note!");
-    } else {
-        fetch('/request/edit_note/' + noteId + '/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': '{{ csrf_token }}'
-            },
-            body: JSON.stringify({
-                'note_id': noteId,
-                'note_text': newNoteText,
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                document.getElementById('note_' + noteId).innerText = newNoteText;
-            } else {
-                alert("There was an error editing the note.");
-            }
-        });
-    }
-}
-
-function deleteNote(noteId) {
-    if (confirm("Are you sure you want to delete this note?")) {
-        fetch('/request/delete_note/' + noteId + '/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': '{{ csrf_token }}',
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                window.location.reload();
-            } else {
-                alert("There was an error deleting the note.");
-            }
-        });
-    }
-}
-
-</script>
+<script src="{% static 'js/request.js' %}" defer></script>
 {% endblock %}
 {% block content %}
+    <div class="container">
+    <br>
 <h1>Request #{{ maintenance_request.id }} Information</h1>
 
-<h2>Request Details:</h2>
+<h3>Request Details:</h3>
 
     {% if can_edit_request %}
     <a href="{% url 'edit_request' request_id=maintenance_request.id %}"><button>Edit Request</button></a>
     {% endif %}
-    <table class="data-table">
+    <table class="table">
         <thead>
         </thead>`
     <tbody>
@@ -88,6 +41,10 @@ function deleteNote(noteId) {
             <td>{{ maintenance_request.building.buildingName }}</td>
         </tr>
         <tr>
+            <td>Unit</td>
+            <td>{{ maintenance_request.unit }}</td>
+        </tr>
+        <tr>
             <td>Entry Permission</td>
             <td>{% if maintenance_request.entry_permission %}Yes{% else %}No{% endif %}</td>
         </tr>
@@ -110,42 +67,45 @@ function deleteNote(noteId) {
 
     {% if request.user.is_superuser or request.user.manager %}
         <h3>Maintenance Notes:</h3>
-        <table class="hoverable-table">
-            <thead>
-                <tr class="header-row">
-                    <th>User</th>
-                    <th>Notes</th>
-                    <th>Date Made</th>
-                    <th>Edit</th>
-                    <th>Delete</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% if maintenance_request.maintenance_notes.all %}
-                    {% for notes in maintenance_request.maintenance_notes.all %}
-                        <tr>
-                            <td>{{ notes.userId }}</td>
-                            <td id="note_{{ notes.id }}">{{notes.notes}}</td>
-                            <td>{{notes.dateMade}}</td>
-                            <td><button class="table-button" onclick="editNote('{{ notes.id }}')">Edit</button></td>
-                            <td><button class="table-button" onclick="deleteNote('{{ notes.id }}')">Delete</button></td>
-                        </tr>
-                    {% endfor %}
-                {% else %}
-                    <tr>
-                        <td colspan="5">No maintenance notes available.</td>
+        <div id="notesTable">
+            <table class="table">
+                <thead>
+                    <tr class="header-row">
+                        <th>User</th>
+                        <th>Notes</th>
+                        <th>Date Made</th>
+                        <th></th>
+                        <th></th>
                     </tr>
-                {% endif %}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    {% if maintenance_request.maintenance_notes.all %}
+                        {% for notes in maintenance_request.maintenance_notes.all %}
+                            <tr>
+                                <td>{{ notes.userId }}</td>
+                                <td id="note_{{ notes.id }}">{{notes.notes}}</td>
+                                <td>{{notes.dateMade}}</td>
+                                <td><button class="table-button" onclick="editNote('{{ notes.id }}')">Edit</button></td>
+                                <td><button class="table-button" onclick="deleteNote('{{ notes.id }}')">Delete</button></td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="5">No maintenance notes available.</td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
         <br>
         <br>
         <form method="post" action="{% url 'add_note' request_id=maintenance_request.id %}">
             {% csrf_token %}
             <label for="notes">Maintenance Notes:</label><br>
-                <textarea id="notes" name="notes" rows="4" cols="50"></textarea><br>
-                <button type="submit">Add Note</button>
+            <textarea id="notes" name="notes" rows="4" cols="50"></textarea><br>
+            <button type="submit">Add Note</button>
         </form>
+
 
         {% if not maintenance_request.completed %}
             <form method="post" action="{% url 'mark_completed' request_id=maintenance_request.id %}">
@@ -154,5 +114,29 @@ function deleteNote(noteId) {
             </form>
         {% endif %}
     {% endif %}
+</div>
+    <div id="editNoteModal" class="modal">
+    <div class="modal-content">
+        <span class="close">×</span>
+        <p>Edit note</p>
+        <textarea id="noteText"></textarea>
+        <div id="modal-buttons">
+            <button id="cancelNote">Cancel</button>
+            <button id="saveNote">Save</button>
+        </div>
+    </div>
+</div>
+
+<div id="deleteNoteModal" class="modal">
+    <div class="modal-content">
+        <p>Are you sure you want to delete this note?</p>
+        <div id="modal-buttons">
+            <button id="cancelDelete">Cancel</button>
+            <button id="confirmDelete">Delete Note</button>
+        </div>
+    </div>
+</div>
+
+
 
 {% endblock %}

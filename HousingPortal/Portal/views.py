@@ -11,6 +11,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.template.loader import render_to_string
+from django.template.response import TemplateResponse
 import json
 
 import smtplib
@@ -252,12 +253,15 @@ def building_info(request, building_id):
 def edit_request(request, request_id):
     maintenance_request = get_object_or_404(MaintenanceRequest, pk=request_id)
     buildings = Building.objects.all()
-
     if request.method == 'POST':
         maintenance_request.first_name = request.POST.get('first_name', maintenance_request.first_name)
         maintenance_request.last_name = request.POST.get('last_name', maintenance_request.last_name)
+        maintenance_request.unit = request.POST.get('unit', maintenance_request)
+        maintenance_request.title = request.POST.get('title', maintenance_request.title)
         maintenance_request.request = request.POST.get('request', maintenance_request.request)
         maintenance_request.entry_permission = request.POST.get('entry_permission', maintenance_request.entry_permission)
+        maintenance_request.phone = request.POST.get('phone', maintenance_request.phone)
+        maintenance_request.entry_permission = request.POST.get('entry_permission', maintenance_request)
         maintenance_request.status = request.POST.get('status', maintenance_request.status)
         building_id = request.POST.get('building')
         building = get_object_or_404(Building, pk=building_id)
@@ -265,7 +269,6 @@ def edit_request(request, request_id):
 
         if request.user.is_superuser or request.user.manager:
             maintenance_request.completed = request.POST.get('completed', maintenance_request.completed) == '1'
-
         maintenance_request.save()
         return redirect('request_info', request_id=maintenance_request.id)
 
@@ -274,16 +277,17 @@ def edit_request(request, request_id):
 
 
 def edit_note(request, note_id):
-    if request.method == 'POST':
-        data = json.loads(request.body)
-        note_id = data.get('note_id')
-        new_note_text = data.get('note_text')
-        if new_note_text is None:
-            return JsonResponse({'success': False, 'error': 'no note text provided'})
-        note = get_object_or_404(MaintenanceNotes, pk=note_id)
-        note.notes = new_note_text
-        note.save()
-        return JsonResponse({'success': True})
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            data = json.loads(request.body)
+            note_id = data.get('note_id')
+            new_note_text = data.get('note_text')
+            if new_note_text is None:
+                return JsonResponse({'success': False, 'error': 'no note text provided'})
+            note = get_object_or_404(MaintenanceNotes, pk=note_id)
+            note.notes = new_note_text
+            note.save()
+            return JsonResponse({'success': True})
     else:
         return handler_403(request)
 
@@ -337,7 +341,8 @@ def mark_completed(request, request_id):
         maintenance_request.completed = True
         maintenance_request.dateCompleted = timezone.now()
         maintenance_request.save()
-        return redirect('request_info', request_id=request_id)
+        # return redirect('request_info', request_id=request_id)
+        return render(request, 'request_info', {'maintenance_request': maintenance_request})
     else:
         return handler_403(request)
 

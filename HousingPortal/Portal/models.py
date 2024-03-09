@@ -91,7 +91,7 @@ class MaintenanceRequest(models.Model):
     entry_permission = models.BooleanField(default=False)
     completed = models.BooleanField(default=False)
     title = models.CharField(max_length=100, default='')
-    status = models.CharField(max_length=100, default='Open')
+    status = models.CharField(max_length=100, default='New')
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     # address seems arbitrary kept it in but don't think its necessary
