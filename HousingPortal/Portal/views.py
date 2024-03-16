@@ -125,7 +125,6 @@ def dashboard(request):
 @login_required(login_url="/login")
 def admin_dashboard(request):
     users = UserAccount.objects.all()
-    applications = HousingApplication.objects.all()
     requests = MaintenanceRequest.objects.all()
     buildings = Building.objects.all()
     per_page = 10
@@ -139,14 +138,13 @@ def admin_dashboard(request):
         users = paginator.page(paginator.num_pages)
     
     if request.user.is_superuser:
-        return render(request, 'dashboard/admin_dashboard.html', {'users': users, 'applications': applications, 'requests': requests, 'buildings': buildings})
+        return render(request, 'dashboard/admin_dashboard.html', {'users': users, 'requests': requests, 'buildings': buildings})
     else:
         return handler_403(request)
 
 @login_required(login_url="/login")
 def manager_dashboard(request):
     users = UserAccount.objects.all()
-    applications = HousingApplication.objects.all()
     requests = MaintenanceRequest.objects.all()
     per_page = 10
     paginator = Paginator(users, per_page)
@@ -159,16 +157,15 @@ def manager_dashboard(request):
         users = paginator.page(paginator.num_pages)
 
     if request.user.manager != None:
-        return render(request, 'dashboard/manager_dashboard.html', {'users':users, 'applications':applications, 'requests':requests})
+        return render(request, 'dashboard/manager_dashboard.html', {'users':users, 'requests':requests})
     else:
         return handler_403(request)
 
 @login_required(login_url="/login")
 def tenant_dashboard(request):
-    applications = HousingApplication.objects.filter(userId=request.user.id)
     requests = MaintenanceRequest.objects.filter(userId=request.user.id)
 
-    return render(request, 'dashboard/tenant_dashboard.html', {'applications':applications, 'requests':requests})
+    return render(request, 'dashboard/tenant_dashboard.html', {'requests':requests})
     
 @login_required(login_url="/login")
 def users(request):
@@ -200,18 +197,6 @@ def maintenance_requests(request):
             return render(request, 'dashboard/pages/maintenance_requests.html', {"table": html})
     else:
         return handler_403(request)
-
-@login_required(login_url="/login")
-def application(request):
-    if request.method == 'POST':
-        first_name = request.POST.get('first_name')
-        last_name = request.POST.get('last_name')
-        unit = request.POST.get('unit')
-        phone = request.POST.get('phone')
-        application = HousingApplication.objects.create(userId=request.use, first_name=first_name, last_name=last_name, unit_wanted=unit, phone=phone)
-        application.save()
-        return redirect('/dashboard')
-    return render(request, 'forms/application/application.html')
 
 @login_required(login_url="/login")
 def maintenance(request):

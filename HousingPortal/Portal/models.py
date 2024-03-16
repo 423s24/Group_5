@@ -7,14 +7,17 @@ ACCOUNT_TYPES = [
     ('tenant', 'tenant'),
 ]
 
+STATUS = [
+    ('new', 'new'),
+    ('pending', 'pending'),
+]
+
 # Create your models here.
 
 class UserAccount(AbstractUser): 
     # AbstractUser has fields: id, password, last_login, is_superuser, username, first_name, last_name, email, is_staff, is_active, date_joined
-    twoFactorKey = models.CharField(max_length=100)
     manager = models.OneToOneField('Manager', on_delete=models.SET_NULL, null=True, blank=True)
     tenant = models.OneToOneField('Tenant', on_delete=models.SET_NULL, null=True, blank=True)
-    #userHousingApplications = models.ManyToManyField('HousingApplication', through='UserHousingApplication')
     archived = models.BooleanField(default=False)
 
     @property
@@ -54,7 +57,6 @@ class UserAccount(AbstractUser):
             self.save()
 
 class Tenant(models.Model):
-    unitId = models.IntegerField()
     dob = models.DateField()
     impairments = models.CharField(max_length=100)
     archived = models.BooleanField(default=False)
@@ -76,16 +78,7 @@ class Building(models.Model):
     zipcode = models.CharField(max_length=100)
     #units = models.ManyToManyField('Unit')
 
-class Unit(models.Model):
-    buildingId = models.ForeignKey('Building', on_delete=models.CASCADE)
-    unitNumber = models.CharField(max_length=100)
-    unitFloor = models.CharField(max_length=100, default='')
-    unitSize = models.CharField(max_length=100, default='')
-    unitName = models.CharField(max_length=100, default='')
-    unitBedrooms = models.CharField(max_length=100, default='')
-
 class MaintenanceRequest(models.Model):
-    unitId = models.ForeignKey('Unit', null=True, on_delete=models.CASCADE) # Take out null=True when Unit is working
     building = models.ForeignKey('Building', null=True, on_delete=models.SET_NULL)
     userId = models.ForeignKey('UserAccount', on_delete=models.CASCADE)
     entry_permission = models.BooleanField(default=False)
@@ -107,11 +100,3 @@ class MaintenanceNotes(models.Model):
     dateMade = models.DateTimeField(null=True, blank=True)
     notes = models.CharField(max_length=10000, default='')
     tenantViewable = models.BooleanField(default=False)
-
-class HousingApplication(models.Model):
-    userId = models.ForeignKey('UserAccount', on_delete=models.CASCADE)
-    accepted = models.BooleanField(default=False)
-    first_name = models.CharField(max_length=100)
-    last_name = models.CharField(max_length=100)
-    unit_wanted = models.CharField(max_length=100)
-    phone = models.CharField(max_length=100)
