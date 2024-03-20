@@ -81,7 +81,6 @@ class MaintenanceRequest(models.Model):
     building = models.ForeignKey('Building', null=True, on_delete=models.SET_NULL)
     userId = models.ForeignKey('UserAccount', on_delete=models.CASCADE)
     entry_permission = models.BooleanField(default=False)
-    completed = models.BooleanField(default=False)
     title = models.CharField(max_length=100, default='')
     status = models.CharField(max_length=100, default='New')
     first_name = models.CharField(max_length=100)
@@ -91,6 +90,7 @@ class MaintenanceRequest(models.Model):
     unit = models.CharField(max_length=100, default='')
     request = models.CharField(max_length=10000)
     phone = models.CharField(max_length=100)
+    date_submitted = models.DateTimeField(null=True, blank=True)
     dateCompleted = models.DateTimeField(null=True, blank=True)
 
 class MaintenanceNotes(models.Model):

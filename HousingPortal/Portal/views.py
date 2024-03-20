@@ -253,12 +253,8 @@ def edit_request(request, request_id):
         maintenance_request.building = building
 
         if request.user.is_superuser or request.user.manager:
-            temp_value = request.POST.get('completed', maintenance_request.completed) == '1'
-            if not maintenance_request.completed:
-                maintenance_request.dateCompleted = timezone.now()
-            elif (not temp_value) and (maintenance_request.dateCompleted is not None):
+            if (maintenance_request.dateCompleted is not None):
                 maintenance_request.dateCompleted = None
-            maintenance_request.completed = temp_value
 
         maintenance_request.save()
         return redirect('request_info', request_id=maintenance_request.id)
@@ -323,17 +319,6 @@ def view_user(request, username):
             return JsonResponse({'message': 'Profile updated successfully'})
             
         return render(request, 'dashboard/pages/view_user.html', {'u': u})
-    else:
-        return handler_403(request)
-
-def mark_completed(request, request_id):
-    maintenance_request = get_object_or_404(MaintenanceRequest, pk=request_id)
-    if request.method == 'POST' and request.user.is_superuser or request.user.manager != None:
-        maintenance_request.completed = True
-        maintenance_request.dateCompleted = timezone.now()
-        maintenance_request.save()
-        # return redirect('request_info', request_id=request_id)
-        return redirect('request_info', request_id=request_id)
     else:
         return handler_403(request)
 

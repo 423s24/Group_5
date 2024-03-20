@@ -78,13 +78,6 @@
                         </select></td>
                     </tr>
                     <tr>
-                        <td><label for="completed">Completed:</label></td>
-                        <td><select id="completed" name="completed">
-                          <option value="1" {% if maintenance_request.completed %}selected{% endif %}>Yes</option>
-                          <option value="0" {% if not maintenance_request.completed %}selected{% endif %}>No</option>
-                        </select></td>
-                    </tr>
-                    <tr>
                         <td>Date Completed:</td>
                         <td>{{ maintenance_request.dateCompleted }}</td>
                     </tr>

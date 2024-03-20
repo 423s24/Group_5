@@ -43,7 +43,7 @@ button {
     padding: 10px 20px;
     margin: 10px 0;
     cursor: pointer;
-    border-radius: 12px;
+    border-radius: 5px;
     border: solid 2px;
 }
 
@@ -111,7 +111,7 @@ textarea {
 
 .table {
     margin: auto;
-    border-radius: 10px;
+    border-radius: 5px;
     overflow: hidden;
 }
 
