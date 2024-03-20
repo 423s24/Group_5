@@ -302,8 +302,8 @@ def request_info(request, request_id):
         return handler_403(request)
     
 @login_required(login_url="/login")
-def view_user(request, user_id):
-    u = get_object_or_404(UserAccount, pk=user_id)
+def view_user(request, username):
+    u = get_object_or_404(UserAccount, username=username)
     if request.user.is_superuser:
         if request.method == 'POST':
             data = json.loads(request.body)

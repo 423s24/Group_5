@@ -76,7 +76,6 @@ class Building(models.Model):
     state = models.CharField(max_length=100)
     country = models.CharField(max_length=100)
     zipcode = models.CharField(max_length=100)
-    #units = models.ManyToManyField('Unit')
 
 class MaintenanceRequest(models.Model):
     building = models.ForeignKey('Building', null=True, on_delete=models.SET_NULL)
