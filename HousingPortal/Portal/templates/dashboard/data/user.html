@@ -1,4 +1,4 @@
-<table class="table">
+<table class="table table-hover">
     <thead>
         <tr>
             <th>Username</th>
@@ -10,8 +10,8 @@
     </thead>
     <tbody>
         {% for u in users %}
-        <tr>
-            <td><a href="/dashboard/users/{{ u.username }}">{{ u.username }}</a></td>
+        <tr onclick="window.location='/dashboard/users/{{u.username}}'" style="cursor: pointer;">
+            <td>{{ u.username }}</td>
             <td>{{ u.email }}</td>
             <td>{{u.first_name}} {{u.last_name}}</td>
             <td>{{ u.account_type }}</td>
