@@ -78,24 +78,24 @@ class Building(models.Model):
     zipcode = models.CharField(max_length=100)
 
 class MaintenanceRequest(models.Model):
-    building = models.ForeignKey('Building', null=True, on_delete=models.SET_NULL)
     userId = models.ForeignKey('UserAccount', on_delete=models.CASCADE)
-    entry_permission = models.BooleanField(default=False)
-    title = models.CharField(max_length=100, default='')
-    status = models.CharField(max_length=100, default='New')
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
+    phone = models.CharField(max_length=100)
+    unit = models.CharField(max_length=100, default='')
+    building = models.ForeignKey('Building', null=True, on_delete=models.SET_NULL)
     # address seems arbitrary kept it in but don't think its necessary
     address = models.CharField(max_length=100)
-    unit = models.CharField(max_length=100, default='')
-    request = models.CharField(max_length=10000)
-    phone = models.CharField(max_length=100)
     date_submitted = models.DateTimeField(null=True, blank=True)
     dateCompleted = models.DateTimeField(null=True, blank=True)
+    status = models.CharField(max_length=100, default='New')
+    title = models.CharField(max_length=100, default='')
+    request = models.CharField(max_length=10000)
+    entry_permission = models.BooleanField(default=False)
 
 class MaintenanceNotes(models.Model):
     maintenanceRequestId = models.ForeignKey('MaintenanceRequest', on_delete=models.CASCADE, related_name='maintenance_notes')
     userId = models.ForeignKey('UserAccount', on_delete=models.CASCADE)
     dateMade = models.DateTimeField(null=True, blank=True)
-    notes = models.CharField(max_length=10000, default='')
     tenantViewable = models.BooleanField(default=False)
+    notes = models.CharField(max_length=10000, default='')
