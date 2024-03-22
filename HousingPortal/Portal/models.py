@@ -17,7 +17,6 @@ STATUS = [
 class UserAccount(AbstractUser): 
     # AbstractUser has fields: id, password, last_login, is_superuser, username, first_name, last_name, email, is_staff, is_active, date_joined
     manager = models.OneToOneField('Manager', on_delete=models.SET_NULL, null=True, blank=True)
-    tenant = models.OneToOneField('Tenant', on_delete=models.SET_NULL, null=True, blank=True)
     archived = models.BooleanField(default=False)
 
     @property
@@ -55,11 +54,6 @@ class UserAccount(AbstractUser):
                 Manager.objects.get(pk=self.manager.id).delete()
                 self.manager = None
             self.save()
-
-class Tenant(models.Model):
-    dob = models.DateField()
-    impairments = models.CharField(max_length=100)
-    archived = models.BooleanField(default=False)
 
 class Manager(models.Model):
     archived = models.BooleanField(default=False)
