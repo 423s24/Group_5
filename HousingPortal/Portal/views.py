@@ -184,8 +184,7 @@ def maintenance_requests(request):
                 Q(status__icontains=search_query) |
                 Q(building__buildingName__icontains=search_query) |
                 Q(unit__icontains=search_query) |
-                Q(entry_permission__icontains=search_query) |
-                Q(completed__icontains=search_query)
+                Q(entry_permission__icontains=search_query)
             )
         else:
             requests = MaintenanceRequest.objects.all()

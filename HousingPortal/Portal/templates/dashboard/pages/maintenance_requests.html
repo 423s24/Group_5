@@ -3,6 +3,19 @@
 {% block head %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/global.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/status.css' %}">
+    <script>
+    document.getElementById("print").addEventListener("click", function() {
+    var printContents = document.getElementById('request-table').innerHTML;
+    var originalContents = document.body.innerHTML;
+
+    document.body.innerHTML = printContents;
+
+    window.print();
+
+    document.body.innerHTML = originalContents;
+});
+
+    </script>
     <style>
         .table td, .table th {
             width: 12.5%;
@@ -21,6 +34,7 @@
             </form>
         </div>
         <br>
+
         <div id="request-table">{{ table|safe }}</div>
     </div>
 {% endblock %}
