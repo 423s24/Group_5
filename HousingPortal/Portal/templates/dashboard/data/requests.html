@@ -1,22 +1,32 @@
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/status.css' %}">
 <table class="table table-hover">
-    <thead>
+<thead>
+    <tr>
+        <th>Request ID</th>
+        <th>Name</th>
+        <th>Title</th>
+        <th>Status</th>
+        <th>Building</th>
+        <th>Unit</th>
+        <th>Access Permission</th>
+    </tr>
+</thead>
+<tbody>
+    {% for maintenance_request in maintenance_requests %}
+    <tr onclick="window.location='/dashboard/requests/{{maintenance_request.id}}'" style="cursor: pointer;">
+        <td>{{ maintenance_request.id }}</td>
+        <td>{{maintenance_request.first_name}} {{ maintenance_request.last_name }}</td>
+        <td>{{ maintenance_request.title }}</td>
+        <td class="status-cell"><span class="status-badge {{ maintenance_request.status|lower|cut:' ' }}">{{ maintenance_request.status }}</span></td>
+        <td>{{maintenance_request.building.buildingName}}</td>
+        <td>{{maintenance_request.unit}}</td>
+        <td>{{ maintenance_request.entry_permission }}</td>
+    </tr>
+        {% empty %}
         <tr>
-            <th>Name</th>
-            <th>Building</th>
-            <th>Unit</th>
-            <th>Request</th>
-            <th>Access Permission</th>
+            <td colspan="8" style="text-align:center;">No results found!</td>
         </tr>
-    </thead>
-    <tbody>
-        {% for request in requests %}
-        <tr onclick="window.location='{% url 'request_info' request_id=request.id %}'" style="cursor: pointer;">
-            <td>{{request.first_name}} {{ request.last_name }}</td>
-            <td>{{request.building.buildingName}}</td>
-            <td>{{request.unit}}</td>
-            <td>{{request.request}}</td>
-            <td>{{ request.entry_permission }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
+    {% endfor %}
+</tbody>
 </table>

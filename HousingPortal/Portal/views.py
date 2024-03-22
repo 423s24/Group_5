@@ -125,7 +125,7 @@ def dashboard(request):
 @login_required(login_url="/login")
 def admin_dashboard(request):
     users = UserAccount.objects.all()
-    requests = MaintenanceRequest.objects.all()
+    maintenance_requests = MaintenanceRequest.objects.all()
     buildings = Building.objects.all()
     per_page = 10
     paginator = Paginator(users, per_page)
@@ -138,14 +138,14 @@ def admin_dashboard(request):
         users = paginator.page(paginator.num_pages)
     
     if request.user.is_superuser:
-        return render(request, 'dashboard/admin_dashboard.html', {'users': users, 'requests': requests, 'buildings': buildings})
+        return render(request, 'dashboard/admin_dashboard.html', {'users': users, 'maintenance_requests': maintenance_requests, 'buildings': buildings})
     else:
         return handler_403(request)
 
 @login_required(login_url="/login")
 def manager_dashboard(request):
     users = UserAccount.objects.all()
-    requests = MaintenanceRequest.objects.all()
+    maintenance_requests = MaintenanceRequest.objects.all()
     per_page = 10
     paginator = Paginator(users, per_page)
     page = request.GET.get('page', 1)
@@ -157,15 +157,15 @@ def manager_dashboard(request):
         users = paginator.page(paginator.num_pages)
 
     if request.user.manager != None:
-        return render(request, 'dashboard/manager_dashboard.html', {'users':users, 'requests':requests})
+        return render(request, 'dashboard/manager_dashboard.html', {'users':users, 'maintenance_requests':maintenance_requests})
     else:
         return handler_403(request)
 
 @login_required(login_url="/login")
 def tenant_dashboard(request):
-    requests = MaintenanceRequest.objects.filter(userId=request.user.id)
+    maintenance_requests = MaintenanceRequest.objects.filter(userId=request.user.id)
 
-    return render(request, 'dashboard/tenant_dashboard.html', {'requests':requests})
+    return render(request, 'dashboard/tenant_dashboard.html', {'maintenance_requests':maintenance_requests})
     
 @login_required(login_url="/login")
 def users(request):
@@ -176,7 +176,7 @@ def maintenance_requests(request):
     if request.user.is_superuser or (request.user.manager != None):
         search_query = request.GET.get('search_query')
         if search_query:
-            requests = MaintenanceRequest.objects.filter(
+            maintenance_requests = MaintenanceRequest.objects.filter(
                 Q(id__icontains=search_query) |
                 Q(first_name__icontains=search_query) |
                 Q(last_name__icontains=search_query) |
@@ -187,9 +187,9 @@ def maintenance_requests(request):
                 Q(entry_permission__icontains=search_query)
             )
         else:
-            requests = MaintenanceRequest.objects.all()
+            maintenance_requests = MaintenanceRequest.objects.all()
 
-        html = render_to_string('dashboard/pages/requests_table.html', {'requests': requests})
+        html = render_to_string('dashboard/data/requests.html', {'maintenance_requests': maintenance_requests})
         if request.headers.get('HX-Request'):
             return HttpResponse(html)
         else:

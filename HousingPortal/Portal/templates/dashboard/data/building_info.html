@@ -44,32 +44,7 @@
     <br>
     <br>
 <h2>Maintenance Requests:</h2>
-<table class="table table-hover">
-    <thead>
-        <tr class="header-row">
-            <th>Request ID</th>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Building</th>
-            <th>Unit</th>
-            <th>Request</th>
-            <th>Access Permission</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for request in maintenance_requests %}
-            <tr onclick="window.location='{% url 'request_info' request_id=request.id %}'" style="cursor: pointer;">
-                <td>{{ request.id }}</td>
-                <td>{{request.first_name}}</td>
-                <td>{{request.last_name}}</td>
-                <td>{{request.building.buildingName}}</td>
-                <td>{{request.unit}}</td>
-                <td>{{request.request}}</td>
-                <td>{{ request.entry_permission }}</td>
-            </tr>
-        {% endfor %}
-    </tbody>
-</table>
+{% include 'dashboard/data/requests.html' %}
     <br>
     <br>
     </div>
