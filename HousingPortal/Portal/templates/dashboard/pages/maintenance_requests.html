@@ -3,6 +3,7 @@
 {% block head %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/global.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/status.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/skeleton_loader.css' %}">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js"></script>
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.js"></script>
 
@@ -47,13 +48,41 @@ document.addEventListener("DOMContentLoaded", function() {
     <div class="container">
         <br>
         <div id="search-bar" class="form-group">
-            <form method="GET" action="" hx-get="." hx-trigger="keyup" hx-target="#request-table">
-                <input type="text" name="search_query" placeholder="Search..." hx-target="#request-table" class="form-control">
-            </form>
+            <input type="search" name="search_query" placeholder="Search..." hx-get="." hx-trigger="input changed delay:500ms, search" hx-target="#request-data" hx-indicator=".htmx-indicator" class="form-control">
         </div>
+        <span class="htmx-indicator"> 
+            Searching... 
+        </span> 
         <br>
         <button id="download">Export</button>
         <br>
-        <div id="request-table">{{ table|safe }}</div>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Request ID</th>
+                    <th>Name</th>
+                    <th>Title</th>
+                    <th>Status</th>
+                    <th>Building</th>
+                    <th>Unit</th>
+                    <th>Access Permission</th>
+                </tr>
+            </thead>
+            <tbody id="request-data" hx-trigger="load delay:250ms" hx-get="." hx-swap="innerHTML">
+                {% for _ in "12345678" %}
+                <tr class="skeleton-row">
+                    <td><span class="skeleton-loader"></span></td>
+                    <td><span class="skeleton-loader"></span></td>
+                    <td><span class="skeleton-loader"></span></td>
+                    <td><span class="skeleton-loader"></span></td>
+                    <td><span class="skeleton-loader"></span></td>
+                    <td><span class="skeleton-loader"></span></td>
+                    <td><span class="skeleton-loader"></span></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <br>
+        <br>
     </div>
 {% endblock %}

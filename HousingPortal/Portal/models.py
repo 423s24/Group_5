@@ -55,6 +55,10 @@ class UserAccount(AbstractUser):
                 self.manager = None
             self.save()
 
+class UserAccountMaintenanceRequest(models.Model):
+    user_id = models.ForeignKey('UserAccount', on_delete=models.CASCADE)
+    maintenanceRequest_id = models.ForeignKey('MaintenanceRequest', on_delete=models.CASCADE)
+
 class Manager(models.Model):
     archived = models.BooleanField(default=False)
     #managerBuilding = models.ManyToManyField('Building', through='ManagerBuilding')
@@ -73,6 +77,7 @@ class Building(models.Model):
 
 class MaintenanceRequest(models.Model):
     userId = models.ForeignKey('UserAccount', on_delete=models.CASCADE)
+    assigned_manager = models.ForeignKey('UserAccount', on_delete=models.SET_NULL, null=True, blank=True, related_name='assigned_manager')
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     phone = models.CharField(max_length=100)

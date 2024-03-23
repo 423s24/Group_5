@@ -1,0 +1,16 @@
+
+{% for maintenance_request in maintenance_requests %}
+<tr onclick="window.location='/dashboard/requests/{{maintenance_request.id}}'" style="cursor: pointer;">
+    <td>{{ maintenance_request.id }}</td>
+    <td>{{maintenance_request.first_name}} {{ maintenance_request.last_name }}</td>
+    <td>{{ maintenance_request.title }}</td>
+    <td class="status-cell"><span class="status-badge {{ maintenance_request.status|lower|cut:' ' }}">{{ maintenance_request.status }}</span></td>
+    <td>{{maintenance_request.building.buildingName}}</td>
+    <td>{{maintenance_request.unit}}</td>
+    <td>{{ maintenance_request.entry_permission }}</td>
+</tr>
+    {% empty %}
+    <tr>
+        <td colspan="8" style="text-align:center;">No results found!</td>
+    </tr>
+{% endfor %}

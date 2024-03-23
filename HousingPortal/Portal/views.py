@@ -19,6 +19,9 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from datetime import date
 
+# Remove after testing
+import time
+
 def html_email(building,address,unit,name,phone,entry,request,recipient,subject):
     sender_email = "cs423robot@gmail.com" 
     recipient_email = recipient
@@ -189,11 +192,12 @@ def maintenance_requests(request):
         else:
             maintenance_requests = MaintenanceRequest.objects.all()
 
-        html = render_to_string('dashboard/data/requests.html', {'maintenance_requests': maintenance_requests})
+        html = render_to_string('dashboard/data/requests_htmx.html', {'maintenance_requests': maintenance_requests})
         if request.headers.get('HX-Request'):
+            #time.sleep(2)
             return HttpResponse(html)
         else:
-            return render(request, 'dashboard/pages/maintenance_requests.html', {"table": html})
+            return render(request, 'dashboard/pages/maintenance_requests.html')
     else:
         return handler_403(request)
 
