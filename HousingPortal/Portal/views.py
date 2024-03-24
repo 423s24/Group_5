@@ -13,6 +13,7 @@ from django.http import JsonResponse
 from django.template.loader import render_to_string
 from django.template.response import TemplateResponse
 import json
+import threading
 
 import smtplib
 from email.mime.text import MIMEText
@@ -107,6 +108,10 @@ def html_email(building,address,unit,name,phone,entry,request,recipient,subject)
         server.login(sender_email, "tjcm gvmf ilvq jnqy") 
         server.sendmail(sender_email, recipient_email, message.as_string())
 
+def send_email_thread(building_id, address, unit, full_name, phone, entry_permission, req, recipient_email, subject):
+    email_thread = threading.Thread(target=html_email, args=(building_id, address, unit, full_name, phone, entry_permission, req, recipient_email, subject))
+    email_thread.start()
+    
 # Create your views here.
 def home(request):
     if request.user.is_authenticated:
@@ -216,8 +221,8 @@ def maintenance(request):
         building_id = request.POST.get('building')
         building = Building.objects.get(id=building_id)
         entry_permission = request.POST.get('entry_permission') == '1'
-        html_email(building_id,address,unit,full_name,phone,entry_permission,req,"cs423robot@gmail.com","Maintenance Request")
-        html_email(building_id,address,unit,full_name,phone,entry_permission,req,request.user.email,"Maintenance Request Confirmation")
+        send_email_thread(building_id,address,unit,full_name,phone,entry_permission,req,"cs423robot@gmail.com","Maintenance Request")
+        send_email_thread(building_id,address,unit,full_name,phone,entry_permission,req,request.user.email,"Maintenance Request Confirmation")
         maintenanceRequest = MaintenanceRequest.objects.create(userId=request.user, first_name=first_name, last_name=last_name, address=address, unit=unit, request=req, phone=phone, building=building, entry_permission=entry_permission, title=title)
         return redirect('/request/' + str(maintenanceRequest.id))
 
