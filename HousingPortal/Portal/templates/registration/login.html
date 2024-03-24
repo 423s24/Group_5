@@ -16,6 +16,7 @@
     <form method="post">
       {% csrf_token %}{{form|crispy}}
         <p>Don't have an account? Create one <a href="/signup">Here</a>!</p>
+        <p>Forgot password? Click <a href="/reset_password">Here</a>!</p>
         <button type="submit">Login</button>
     </form>
   </div>

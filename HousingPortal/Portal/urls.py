@@ -34,14 +34,14 @@ urlpatterns = [
     path('request/<int:request_id>/add_note', views.add_note, name='add_note'),
     path('request/edit_note/<int:note_id>/', views.edit_note, name='edit_note'),
     path('request/delete_note/<int:note_id>/', views.delete_note, name='delete_note'),
-    path('request/<int:request_id>/edit_request', views.edit_request, name='edit_request')
+    path('request/<int:request_id>/edit_request', views.edit_request, name='edit_request'),
     #path('success/', views.success_view, name='success_view'),
     #path('login/', LoginView.as_view(template_name='registration/login.html'), name='login'),
     #path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     #path('password_change/', auth_views.PasswordChangeView.as_view(), name='password_change'),
     #path('password_change/done/', auth_views.PasswordChangeDoneView.as_view(), name='password_change_done'),
-    #path('password_reset/', auth_views.PasswordResetView.as_view(), name='password_reset'),
-    #path('password_reset/done/', auth_views.PasswordResetDoneView.as_view(), name='password_reset_done'),
-    #path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(), name='password_reset'),
-    #path('reset/done/', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete')
+    path('reset_password/', auth_views.PasswordResetView.as_view(template_name='registration/password_reset.html'), name='reset_password'),
+    path('reset_password_sent/', auth_views.PasswordResetDoneView.as_view(template_name='registration/password_reset_sent.html'), name='password_reset_done'),
+    path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(template_name='registration/password_reset_conf.html'), name='password_reset_confirm'),
+    path('reset_password_complete/', auth_views.PasswordResetCompleteView.as_view(template_name='registration/password_reset_comp.html'), name='password_reset_complete'),
 ]
