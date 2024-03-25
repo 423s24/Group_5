@@ -68,7 +68,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     <th>Access Permission</th>
                 </tr>
             </thead>
-            <tbody id="request-data" hx-trigger="load delay:250ms" hx-get="." hx-swap="innerHTML">
+            <tbody id="request-data" hx-trigger="load delay:200ms" hx-get="." hx-swap="innerHTML">
                 {% for _ in "12345678" %}
                 <tr class="skeleton-row">
                     <td><span class="skeleton-loader"></span></td>

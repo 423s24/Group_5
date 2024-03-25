@@ -171,7 +171,7 @@ def manager_dashboard(request):
 
 @login_required(login_url="/login")
 def tenant_dashboard(request):
-    maintenance_requests = MaintenanceRequest.objects.filter(userId=request.user.id)
+    maintenance_requests = MaintenanceRequest.objects.filter(user_id=request.user.id)
 
     return render(request, 'dashboard/tenant_dashboard.html', {'maintenance_requests':maintenance_requests})
     
@@ -190,7 +190,7 @@ def maintenance_requests(request):
                 Q(last_name__icontains=search_query) |
                 Q(title__icontains=search_query) |
                 Q(status__icontains=search_query) |
-                Q(building__buildingName__icontains=search_query) |
+                Q(building__building_name__icontains=search_query) |
                 Q(unit__icontains=search_query) |
                 Q(entry_permission__icontains=search_query)
             )
@@ -219,11 +219,12 @@ def maintenance(request):
         req = request.POST.get('request')
         phone = request.POST.get('phone')
         building_id = request.POST.get('building')
+        date_submitted = timezone.now()
         building = Building.objects.get(id=building_id)
         entry_permission = request.POST.get('entry_permission') == '1'
         send_email_thread(building_id,address,unit,full_name,phone,entry_permission,req,"cs423robot@gmail.com","Maintenance Request")
         send_email_thread(building_id,address,unit,full_name,phone,entry_permission,req,request.user.email,"Maintenance Request Confirmation")
-        maintenanceRequest = MaintenanceRequest.objects.create(userId=request.user, first_name=first_name, last_name=last_name, address=address, unit=unit, request=req, phone=phone, building=building, entry_permission=entry_permission, title=title)
+        maintenanceRequest = MaintenanceRequest.objects.create(user_id=request.user, first_name=first_name, last_name=last_name, address=address, unit=unit, request=req, phone=phone, building=building, entry_permission=entry_permission, title=title, date_submitted=date_submitted)
         return redirect('/request/' + str(maintenanceRequest.id))
 
     return render(request, 'forms/maintenance/maintenance.html', {'buildings': buildings})
@@ -299,7 +300,7 @@ def delete_note(request, note_id):
 @login_required(login_url="/login")
 def request_info(request, request_id):
     maintenance_request = get_object_or_404(MaintenanceRequest, pk=request_id)
-    if request.user.is_superuser or request.user.manager != None or request.user == maintenance_request.userId:
+    if request.user.is_superuser or request.user.manager != None or request.user == maintenance_request.user_id:
         can_edit_request = (request.user.is_superuser or request.user.manager)
         return render(request, 'dashboard/data/request_info.html', {'maintenance_request': maintenance_request, 'can_edit_request': can_edit_request})
     else:
@@ -336,8 +337,8 @@ def add_note(request, request_id):
     if request.method == 'POST' and request.user.is_superuser or request.user.manager != None:
         new_note = MaintenanceNotes(
             maintenanceRequestId = maintenance_request,
-            userId = request.user,
-            dateMade = timezone.now(),
+            user_id = request.user,
+            date_submitted = timezone.now(),
             notes = notes
         )
         new_note.save()

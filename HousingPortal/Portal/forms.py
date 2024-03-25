@@ -19,4 +19,4 @@ class AuthForm(AuthenticationForm):
 class BuildingForm(forms.ModelForm):
     class Meta:
         model = Building
-        fields = ["buildingName", "address", "city", "state", "country", "zipcode"]
+        fields = ["building_name", "address", "city", "state", "country", "zipcode"]

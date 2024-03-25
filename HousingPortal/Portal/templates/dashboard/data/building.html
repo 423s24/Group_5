@@ -12,7 +12,7 @@
     <tbody>
         {% for b in buildings %}
         <tr onclick="window.location='{% url 'building_info' building_id=b.id %}'" style="cursor: pointer;">
-            <td>{{ b.buildingName }}</td>
+            <td>{{ b.building_name }}</td>
             <td>{{ b.address }}</td>
             <td>{{ b.city }}</td>
             <td>{{ b.state }}</td>

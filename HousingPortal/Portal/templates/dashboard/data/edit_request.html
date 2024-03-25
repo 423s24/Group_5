@@ -49,7 +49,7 @@
                         <td><select id="building" name="building">
                             {% for building in buildings %}
                               <option value="{{ building.id }}" {% if building.id == maintenance_request.building.id %}selected{% endif %}>
-                                {{ building.buildingName }}
+                                {{ building.building_name }}
                               </option>
                             {% endfor %}
                           </select></td>
@@ -79,7 +79,7 @@
                     </tr>
                     <tr>
                         <td>Date Completed:</td>
-                        <td>{{ maintenance_request.dateCompleted }}</td>
+                        <td>{{ maintenance_request.date_completedd }}</td>
                     </tr>
                 </tbody>
             </table>

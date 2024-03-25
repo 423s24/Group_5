@@ -18,6 +18,7 @@ class UserAccount(AbstractUser):
     # AbstractUser has fields: id, password, last_login, is_superuser, username, first_name, last_name, email, is_staff, is_active, date_joined
     manager = models.OneToOneField('Manager', on_delete=models.SET_NULL, null=True, blank=True)
     archived = models.BooleanField(default=False)
+    email_notifications = models.BooleanField(default=False)
 
     @property
     def account_type(self):
@@ -68,7 +69,7 @@ class ManagerBuilding(models.Model):
     buildingId = models.ForeignKey('Building', on_delete=models.CASCADE)
 
 class Building(models.Model):
-    buildingName = models.CharField(max_length=100, default="")
+    building_name = models.CharField(max_length=100, default="")
     address = models.CharField(max_length=100)
     city = models.CharField(max_length=100)
     state = models.CharField(max_length=100)
@@ -76,7 +77,7 @@ class Building(models.Model):
     zipcode = models.CharField(max_length=100)
 
 class MaintenanceRequest(models.Model):
-    userId = models.ForeignKey('UserAccount', on_delete=models.CASCADE)
+    user_id = models.ForeignKey('UserAccount', on_delete=models.CASCADE)
     assigned_manager = models.ForeignKey('UserAccount', on_delete=models.SET_NULL, null=True, blank=True, related_name='assigned_manager')
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
@@ -86,7 +87,7 @@ class MaintenanceRequest(models.Model):
     # address seems arbitrary kept it in but don't think its necessary
     address = models.CharField(max_length=100)
     date_submitted = models.DateTimeField(null=True, blank=True)
-    dateCompleted = models.DateTimeField(null=True, blank=True)
+    date_completed = models.DateTimeField(null=True, blank=True)
     status = models.CharField(max_length=100, default='New')
     title = models.CharField(max_length=100, default='')
     request = models.CharField(max_length=10000)
@@ -94,7 +95,7 @@ class MaintenanceRequest(models.Model):
 
 class MaintenanceNotes(models.Model):
     maintenanceRequestId = models.ForeignKey('MaintenanceRequest', on_delete=models.CASCADE, related_name='maintenance_notes')
-    userId = models.ForeignKey('UserAccount', on_delete=models.CASCADE)
-    dateMade = models.DateTimeField(null=True, blank=True)
-    tenantViewable = models.BooleanField(default=False)
+    user_id = models.ForeignKey('UserAccount', on_delete=models.CASCADE)
+    date_submitted = models.DateTimeField(null=True, blank=True)
+    tenant_viewable = models.BooleanField(default=False)
     notes = models.CharField(max_length=10000, default='')

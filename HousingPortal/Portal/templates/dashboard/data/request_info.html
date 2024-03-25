@@ -31,7 +31,7 @@
         </tr>
         <tr>
             <td>Building Name</td>
-            <td>{{ maintenance_request.building.buildingName }}</td>
+            <td>{{ maintenance_request.building.building_name }}</td>
         </tr>
         <tr>
             <td>Unit</td>
@@ -47,7 +47,7 @@
         </tr>
         <tr>
             <td>Date Completed</td>
-            <td>{{ maintenance_request.dateCompleted }}</td>
+            <td>{{ maintenance_request.date_completedd }}</td>
         </tr>
     </tbody>
     </table>
@@ -91,9 +91,9 @@
                     {% if maintenance_request.maintenance_notes.all %}
                         {% for notes in maintenance_request.maintenance_notes.all %}
                             <tr>
-                                <td>{{ notes.userId }}</td>
+                                <td>{{ notes.user_id }}</td>
                                 <td id="note_{{ notes.id }}">{{notes.notes}}</td>
-                                <td>{{notes.dateMade}}</td>
+                                <td>{{notes.date_submitted}}</td>
                                 <td><button class="table-button" onclick="editNote('{{ notes.id }}')">Edit</button></td>
                                 <td><button class="table-button" onclick="deleteNote('{{ notes.id }}')">Delete</button></td>
                             </tr>
