@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", function() {
             var newHeight = imageHeight * widthRatio;
             var heightRatio = newHeight / pageHeight;
 
-            doc.addImage(imgData, 'PNG', 10, 10, pageWidth-20, newHeight-20);
+            doc.addImage(imgData, 'PNG', 5, 5, pageWidth-10, newHeight-10);
 
             // Open PDF in a new browser tab
             window.open(URL.createObjectURL(doc.output("blob")));
