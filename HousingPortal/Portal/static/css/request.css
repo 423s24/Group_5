@@ -80,3 +80,7 @@ textarea {
 #notesTable {
     transition: opacity 0.5s;
 }
+
+.date {
+    color: gray;
+}

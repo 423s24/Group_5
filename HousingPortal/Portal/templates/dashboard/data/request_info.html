@@ -92,7 +92,7 @@ document.addEventListener("DOMContentLoaded", function() {
         </tr>
         <tr>
             <td>Request</td>
-            <td>{{ maintenance_request.request }}</td>
+            <td><p>{{ maintenance_request.request }}</p></td>
         </tr>
         <tr>
             <td>Entry Permission</td>
@@ -111,8 +111,6 @@ document.addEventListener("DOMContentLoaded", function() {
                     <tr class="header-row">
                         <th>User</th>
                         <th>Notes</th>
-                        <th>Date Made</th>
-                        <th></th>
                         <th></th>
                     </tr>
                 </thead>
@@ -121,10 +119,14 @@ document.addEventListener("DOMContentLoaded", function() {
                         {% for notes in maintenance_request.maintenance_notes.all %}
                             <tr>
                                 <td>{{ notes.user_id }}</td>
-                                <td id="note_{{ notes.id }}">{{notes.notes}}</td>
-                                <td>{{notes.date_submitted}}</td>
-                                <td><button class="table-button" onclick="editNote('{{ notes.id }}')">Edit</button></td>
-                                <td><button class="table-button" onclick="deleteNote('{{ notes.id }}')">Delete</button></td>
+                                <td id="note_{{ notes.id }}">
+                                    <p>{{notes.notes}}</p>
+                                    <span class="date">{{notes.date_submitted}}</span>
+                                </td>
+                                <td>
+                                    <button class="table-button" onclick="editNote('{{ notes.id }}')">Edit</button>
+                                    <button class="table-button" onclick="deleteNote('{{ notes.id }}')">Delete</button>
+                                </td>
                             </tr>
                         {% endfor %}
                     {% else %}

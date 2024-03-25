@@ -1,9 +1,10 @@
 {% load static %}
+<!--
 <link rel="stylesheet" type="text/css" href="{% static 'css/status.css' %}">
 <table class="table table-hover">
 <thead>
     <tr>
-        <th>Request ID</th>
+        <th>ID</th>
         <th>Name</th>
         <th>Title</th>
         <th>Status</th>
@@ -29,4 +30,33 @@
         </tr>
     {% endfor %}
 </tbody>
+</table>
+-->
+<link rel="stylesheet" type="text/css" href="{% static 'css/status.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/skeleton_loader.css' %}">
+<table class="table table-hover" id="request-table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Title</th>
+            <th>Status</th>
+            <th class="hidden">Building</th>
+            <th class="hidden">Unit</th>
+            <th class="hidden">Access Permission</th>
+        </tr>
+    </thead>
+    <tbody id="request-data" hx-trigger="load delay:200ms" hx-get="./requests" hx-swap="innerHTML">
+        {% for _ in "12345678" %}
+        <tr class="skeleton-row">
+            <td><span class="skeleton-loader"></span></td>
+            <td><span class="skeleton-loader"></span></td>
+            <td><span class="skeleton-loader"></span></td>
+            <td><span class="skeleton-loader"></span></td>
+            <td class="hidden"><span class="skeleton-loader"></span></td>
+            <td class="hidden"><span class="skeleton-loader"></span></td>
+            <td class="hidden"><span class="skeleton-loader"></span></td>
+        </tr>
+        {% endfor %}
+    </tbody>
 </table>

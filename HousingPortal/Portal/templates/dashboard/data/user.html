@@ -2,20 +2,20 @@
     <thead>
         <tr>
             <th>Username</th>
-            <th>Email</th>
+            <th class="hidden">Email</th>
             <th>Name</th>
-            <th>Account Type</th>
-            <th>Archived</th>
+            <th class="hidden">Account Type</th>
+            <th class="hidden">Archived</th>
         </tr>
     </thead>
     <tbody>
         {% for u in users %}
         <tr onclick="window.location='/dashboard/users/{{u.username}}'" style="cursor: pointer;">
             <td>{{ u.username }}</td>
-            <td>{{ u.email }}</td>
+            <td class="hidden">{{ u.email }}</td>
             <td>{{u.first_name}} {{u.last_name}}</td>
-            <td>{{ u.account_type }}</td>
-            <td>{{ u.archived }}</td>
+            <td class="hidden">{{ u.account_type }}</td>
+            <td class="hidden">{{ u.archived }}</td>
         </tr>
         {% endfor %}
     </tbody>

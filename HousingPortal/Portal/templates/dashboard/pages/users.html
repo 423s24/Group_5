@@ -32,20 +32,20 @@
             <thead>
                 <tr>
                     <th>Username</th>
-                    <th>Email</th>
+                    <th class="hidden">Email</th>
                     <th>Name</th>
-                    <th>Account Type</th>
-                    <th>Archived</th>
+                    <th class="hidden">Account Type</th>
+                    <th class="hidden">Archived</th>
                 </tr>
             </thead>
             <tbody id="request-data" hx-trigger="load delay:200ms" hx-get="." hx-swap="innerHTML">
                 {% for _ in "12345678" %}
                 <tr class="skeleton-row">
                     <td><span class="skeleton-loader"></span></td>
+                    <td class="hidden"><span class="skeleton-loader"></span></td>
                     <td><span class="skeleton-loader"></span></td>
-                    <td><span class="skeleton-loader"></span></td>
-                    <td><span class="skeleton-loader"></span></td>
-                    <td><span class="skeleton-loader"></span></td>
+                    <td class="hidden"><span class="skeleton-loader"></span></td>
+                    <td class="hidden"><span class="skeleton-loader"></span></td>
                 </tr>
                 {% endfor %}
             </tbody>
