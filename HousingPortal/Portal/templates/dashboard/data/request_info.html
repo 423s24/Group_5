@@ -6,14 +6,43 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/request.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/status.css' %}">
 <script src="{% static 'js/request.js' %}" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.js"></script>
+
+    <script>
+document.addEventListener("DOMContentLoaded", function() {
+    document.getElementById("download").addEventListener("click", function() {
+        var element = document.getElementById('to-export');
+        html2canvas(element).then(function(canvas) {
+            var imgData = canvas.toDataURL('image/png');
+            var doc = new jsPDF('p', 'mm', 'a4');
+            var pageWidth = doc.internal.pageSize.getWidth();
+            var pageHeight = doc.internal.pageSize.getHeight();
+            var imageWidth = canvas.width;
+            var imageHeight = canvas.height;
+
+            var widthRatio = pageWidth / imageWidth;
+            var newHeight = imageHeight * widthRatio;
+            var heightRatio = newHeight / pageHeight;
+
+            doc.addImage(imgData, 'PNG', 5, 5, pageWidth-10, newHeight-10);
+
+            // Open PDF in a new browser tab
+            window.open(URL.createObjectURL(doc.output("blob")));
+        });
+    });
+});
+
+</script>
 {% endblock %}
 {% block content %}
     <div class="container">
+    <div id="to-export">
     <br>
 <h1>Request #{{ maintenance_request.id }} Information</h1>
 
 <h3>Request Details:</h3>
-
+    <br><button id="download">Export</button><br>
     {% if can_edit_request %}
     <a href="{% url 'edit_request' request_id=maintenance_request.id %}"><button>Edit Request</button></a>
     {% endif %}
@@ -107,6 +136,7 @@
             </table>
         </div>
         <br>
+        </div>
         <br>
         <form method="post" action="{% url 'add_note' request_id=maintenance_request.id %}">
             {% csrf_token %}
