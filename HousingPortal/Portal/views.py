@@ -245,7 +245,7 @@ def maintenance_requests(request):
 
         html = render_to_string('dashboard/data/requests_htmx.html', {'maintenance_requests': maintenance_requests})
         if request.headers.get('HX-Request'):
-            time.sleep(2)
+            #time.sleep(2)
             return HttpResponse(html)
         else:
             return render(request, 'dashboard/pages/maintenance_requests.html')
