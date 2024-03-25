@@ -118,7 +118,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     {% if maintenance_request.maintenance_notes.all %}
                         {% for notes in maintenance_request.maintenance_notes.all %}
                             <tr>
-                                <td>{{ notes.user_id }}</td>
+                                <td><a href="/dashboard/users/{{notes.user_id}}">{{ notes.user_id }}</a></td>
                                 <td id="note_{{ notes.id }}">
                                     <p>{{notes.notes}}</p>
                                     <span class="date">{{notes.date_submitted}}</span>

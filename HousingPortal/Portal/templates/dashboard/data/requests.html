@@ -1,5 +1,4 @@
 {% load static %}
-<!--
 <link rel="stylesheet" type="text/css" href="{% static 'css/status.css' %}">
 <table class="table table-hover">
 <thead>
@@ -31,7 +30,7 @@
     {% endfor %}
 </tbody>
 </table>
--->
+<!--
 <link rel="stylesheet" type="text/css" href="{% static 'css/status.css' %}">
 <link rel="stylesheet" type="text/css" href="{% static 'css/skeleton_loader.css' %}">
 <table class="table table-hover" id="request-table">
@@ -46,7 +45,7 @@
             <th class="hidden">Access Permission</th>
         </tr>
     </thead>
-    <tbody id="request-data" hx-trigger="load delay:200ms" hx-get="./requests" hx-swap="innerHTML">
+    <tbody id="request-data" hx-trigger="load delay:200ms" hx-get="/dashboard/requests" hx-swap="innerHTML">
         {% for _ in "12345678" %}
         <tr class="skeleton-row">
             <td><span class="skeleton-loader"></span></td>
@@ -60,3 +59,4 @@
         {% endfor %}
     </tbody>
 </table>
+-->
