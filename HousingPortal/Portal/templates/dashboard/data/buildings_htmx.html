@@ -1,0 +1,10 @@
+{% for building in buildings %}
+<tr onclick="window.location='buildinguldings/{{building.it}}'" style="cursor: pointer;">
+    <td>{{ building.building_name }}</td>
+    <td>{{ building.address }}</td>
+    <td>{{ building.city }}</td>
+    <td>{{ building.state }}</td>
+    <td>{{ building.country }}</td>
+    <td>{{ building.zipcode }}</td>
+</tr>
+{% endfor %}

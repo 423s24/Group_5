@@ -7,33 +7,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js"></script>
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.js"></script>
 
-    <script>
-document.addEventListener("DOMContentLoaded", function() {
-    document.getElementById("download").addEventListener("click", function() {
-        var element = document.getElementById('request-table');
-        html2canvas(element).then(function(canvas) {
-            var imgData = canvas.toDataURL('image/png');
-            var doc = new jsPDF('p', 'mm', 'a4');
-            var pageWidth = doc.internal.pageSize.getWidth();
-            var pageHeight = doc.internal.pageSize.getHeight();
-            var imageWidth = canvas.width;
-            var imageHeight = canvas.height;
-
-            var widthRatio = pageWidth / imageWidth;
-            var newHeight = imageHeight * widthRatio;
-            var heightRatio = newHeight / pageHeight;
-
-            doc.addImage(imgData, 'PNG', 5, 5, pageWidth-10, newHeight-10);
-
-            // Open PDF in a new browser tab
-            window.open(URL.createObjectURL(doc.output("blob")));
-        });
-    });
-});
-
-</script>
-
-
 
     <style>
         .table td, .table th {
@@ -55,25 +28,19 @@ document.addEventListener("DOMContentLoaded", function() {
             <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
         </span> 
         <br>
-        <button id="download">Export</button>
-        <br>
         <table class="table table-hover" id="request-table">
             <thead>
                 <tr>
-                    <th>Request ID</th>
+                    <th>Username</th>
+                    <th>Email</th>
                     <th>Name</th>
-                    <th>Title</th>
-                    <th>Status</th>
-                    <th>Building</th>
-                    <th>Unit</th>
-                    <th>Access Permission</th>
+                    <th>Account Type</th>
+                    <th>Archived</th>
                 </tr>
             </thead>
             <tbody id="request-data" hx-trigger="load delay:200ms" hx-get="." hx-swap="innerHTML">
                 {% for _ in "12345678" %}
                 <tr class="skeleton-row">
-                    <td><span class="skeleton-loader"></span></td>
-                    <td><span class="skeleton-loader"></span></td>
                     <td><span class="skeleton-loader"></span></td>
                     <td><span class="skeleton-loader"></span></td>
                     <td><span class="skeleton-loader"></span></td>

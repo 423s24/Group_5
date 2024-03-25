@@ -23,7 +23,7 @@ from datetime import date
 # Remove after testing
 import time
 
-def html_email(building,address,unit,name,phone,entry,request,recipient,subject):
+def html_email(building_name,address,unit,name,phone,entry,title,request,recipient,subject):
     sender_email = "cs423robot@gmail.com" 
     recipient_email = recipient
     #subject = "Maintenance Request"
@@ -43,7 +43,7 @@ def html_email(building,address,unit,name,phone,entry,request,recipient,subject)
     # write the text/plain part
     text = """\
     Hello, a new maintenance request has been made on """ + today + """
-    Building: """ + building + """
+    Building: """ + building_name + """
     Address: """ + address + """
     Unit: """ + unit + """
     Resident Name: """ + name + """
@@ -64,7 +64,7 @@ def html_email(building,address,unit,name,phone,entry,request,recipient,subject)
 <table>
   <tr>
     <td>Building:</td>
-    <td><strong>""" + building + """</strong></td>
+    <td><strong>""" + building_name + """</strong></td>
   </tr>
   <tr>
     <td>Address:</td>
@@ -85,6 +85,10 @@ def html_email(building,address,unit,name,phone,entry,request,recipient,subject)
   <tr>
     <td width:50px>Can we enter without<br> a resident present:</td>
     <td><strong>""" + enter + """</strong></td>
+  </tr>
+  <tr>
+    <td>Title:</td>
+    <td><strong>""" + title + """</strong></td>
   </tr>
   <tr>
     <td>Request:</td>
@@ -108,8 +112,8 @@ def html_email(building,address,unit,name,phone,entry,request,recipient,subject)
         server.login(sender_email, "tjcm gvmf ilvq jnqy") 
         server.sendmail(sender_email, recipient_email, message.as_string())
 
-def send_email_thread(building_id, address, unit, full_name, phone, entry_permission, req, recipient_email, subject):
-    email_thread = threading.Thread(target=html_email, args=(building_id, address, unit, full_name, phone, entry_permission, req, recipient_email, subject))
+def send_email_thread(building_name, address, unit, full_name, phone, entry_permission, title, req, recipient_email, subject):
+    email_thread = threading.Thread(target=html_email, args=(building_name, address, unit, full_name, phone, entry_permission, title, req, recipient_email, subject))
     email_thread.start()
     
 # Create your views here.
@@ -177,8 +181,50 @@ def tenant_dashboard(request):
     
 @login_required(login_url="/login")
 def users(request):
-    return redirect('/dashboard')
+    if request.user.is_superuser:
+        search_query = request.GET.get('search_query')
+        if search_query:
+            users = UserAccount.objects.filter(
+                Q(username__icontains=search_query) |
+                Q(first_name__icontains=search_query) |
+                Q(last_name__icontains=search_query) |
+                Q(email__icontains=search_query)
+            )
+        else:
+            users = UserAccount.objects.all()
 
+        html = render_to_string('dashboard/data/users_htmx.html', {'users': users})
+        if request.headers.get('HX-Request'):
+            return HttpResponse(html)
+        else:
+            return render(request, 'dashboard/pages/users.html')
+    else:
+        return handler_403(request)
+
+@login_required(login_url="/login")
+def buildings(request):
+    if request.user.is_superuser:
+        search_query = request.GET.get('search_query')
+        if search_query:
+            buildings = Building.objects.filter(
+                Q(building_name__icontains=search_query) |
+                Q(address__icontains=search_query) |
+                Q(city__icontains=search_query) |
+                Q(state__icontains=search_query) |
+                Q(country__icontains=search_query) |
+                Q(zipcode__icontains=search_query)
+            )
+        else:
+            buildings = Building.objects.all()
+
+        html = render_to_string('dashboard/data/buildings_htmx.html', {'buildings': buildings})
+        if request.headers.get('HX-Request'):
+            return HttpResponse(html)
+        else:
+            return render(request, 'dashboard/pages/buildings.html')
+    else:
+        return handler_403(request)
+    
 @login_required(login_url="/login")
 def maintenance_requests(request):
     if request.user.is_superuser or (request.user.manager != None):
@@ -199,7 +245,7 @@ def maintenance_requests(request):
 
         html = render_to_string('dashboard/data/requests_htmx.html', {'maintenance_requests': maintenance_requests})
         if request.headers.get('HX-Request'):
-            #time.sleep(2)
+            time.sleep(2)
             return HttpResponse(html)
         else:
             return render(request, 'dashboard/pages/maintenance_requests.html')
@@ -222,8 +268,8 @@ def maintenance(request):
         date_submitted = timezone.now()
         building = Building.objects.get(id=building_id)
         entry_permission = request.POST.get('entry_permission') == '1'
-        send_email_thread(building_id,address,unit,full_name,phone,entry_permission,req,"cs423robot@gmail.com","Maintenance Request")
-        send_email_thread(building_id,address,unit,full_name,phone,entry_permission,req,request.user.email,"Maintenance Request Confirmation")
+        send_email_thread(building.building_name,address,unit,full_name,phone,entry_permission,title, req,"cs423robot@gmail.com","Maintenance Request")
+        send_email_thread(building.building_name,address,unit,full_name,phone,entry_permission,title, req,request.user.email,"Maintenance Request Confirmation")
         maintenanceRequest = MaintenanceRequest.objects.create(user_id=request.user, first_name=first_name, last_name=last_name, address=address, unit=unit, request=req, phone=phone, building=building, entry_permission=entry_permission, title=title, date_submitted=date_submitted)
         return redirect('/request/' + str(maintenanceRequest.id))
 

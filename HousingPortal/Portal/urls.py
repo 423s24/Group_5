@@ -10,10 +10,10 @@ urlpatterns = [
     path('dashboard/', views.dashboard, name='dashboard'),
     path('dashboard/requests/', views.maintenance_requests, name='maintenance_requests'),
     path('dashboard/requests/<int:request_id>', views.request_info, name='request_info'),
-    #TODO path('dashboard/users/', views.users, name='users'),
+    path('dashboard/users/', views.users, name='users'),
     path('dashboard/users/<str:username>/', views.view_user, name='view_user'),
     #TODO dashboard/users/create
-    #TODO path('dashboard/buildings/', views.dashboard, name='dashboard'),
+    path('dashboard/buildings/', views.buildings, name='buildings'),
     path('dashboard/buildings/<int:building_id>', views.building_info, name='building_info'),
     path('dashboard/buildings/create/', views.add_building, name='createbuilding'),
     path('support/', views.support, name='support'),
