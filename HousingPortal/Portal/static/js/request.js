@@ -106,3 +106,39 @@ confirmDelete.onclick = function() {
     });
     deleteNoteModal.style.display = "none";
 }
+
+
+function deleteRequest(id_str) {
+    id = parseInt(id_str);
+
+    var data = {
+        type: 'MaintenanceRequest',
+        id: id
+    };
+
+    var confirmed = window.confirm('Are you sure you want to delete this account?');
+    if (confirmed) {
+        fetch('/delete/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken') // Get CSRF token from cookie
+            },
+            credentials: 'same-origin', // Include cookies in the request
+            body: JSON.stringify(data) // Convert data to JSON format
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            // Handle successful response
+            console.log('Delete success');
+            //window.history.back();
+            window.location.replace("/dashboard");
+        })
+        .catch(error => {
+            // Handle errors
+            console.error('Error submitting deleting:', error);
+        });
+    }
+}

@@ -33,6 +33,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 });
 </script>
+
     <style>
         .export-link {
             font-size: 24px; /* Adjust the font size to make the icon slightly bigger */
@@ -62,6 +63,7 @@ document.addEventListener("DOMContentLoaded", function() {
     <br>
     {% if can_edit_request %}
     <a href="{% url 'edit_request' request_id=maintenance_request.id %}"><button>Edit Request</button></a>
+    <button onclick="deleteRequest('{{maintenance_request.id}}')">Delete Request</button>
     {% endif %}
     <table class="table">
         <thead>
