@@ -6,35 +6,39 @@
     <script src="{% static 'js/profile.js' %}" defer></script>
 {% endblock %}
 {% block content %}
-<div id="profile-info">
-    <h1>Your Profile</h1>
-    <p>First Name: <span id="first-name">{{user.first_name}}</span></p>
-    <p>Last Name: <span id="last-name">{{user.last_name}}</span></p>
-    <p>Username: <span id="username">{{user.username}}</span></p>
-    <p>Email: <span id="email">{{user.email}}</span></p>
-    <p>Account Type: <span id="account-type">{{user.account_type}}</span></p>
-    <p>Date joined: <span id="date-joined">{{user.date_joined}}</span></p>
-    <button id="edit-button">Edit</button>
-    <br>
-    <br>
-    <button onclick="deleteUser('{{user.id}}')">Delete User</button>
-  </div>
-<div id="edit-form" style="display:none;">
-    <h1>Edit Profile</h1>
-    <label for="edit-first-name">First Name:</label>
-    <input type="text" id="edit-first-name"><br>
-    <br>
-    <label for="edit-last-name">Last Name:</label>
-    <input type="text" id="edit-last-name"><br>
-    <br>
-    <label for="edit-username">Username:</label>
-    <input type="text" id="edit-username"><br>
-    <br>
-    <label for="edit-email">Email:</label>
-    <input type="email" id="edit-email"><br>
-    <p>Account Type: <span id="account-type">{{user.account_type}}</span></p>
-    <p>Date joined: <span id="date-joined">{{user.date_joined}}</span></p>
-    <button id="cancel-button">Cancel</button>
-    <button id="save-button">Save</button>
-  </div>
+    <div class="container">
+        <div id="profile-info">
+            <br>
+            <h1>Your Profile</h1>
+            <hr>
+            <p>First Name: <span id="first-name">{{user.first_name}}</span></p>
+            <p>Last Name: <span id="last-name">{{user.last_name}}</span></p>
+            <p>Username: <span id="username">{{user.username}}</span></p>
+            <p>Email: <span id="email">{{user.email}}</span></p>
+            <p>Account Type: <span id="account-type">{{user.account_type}}</span></p>
+            <p>Date joined: <span id="date-joined">{{user.date_joined}}</span></p>
+            <button id="edit-button">Edit</button>
+            <br>
+            <br>
+            <button onclick="deleteUser('{{user.id}}')">Delete User</button>
+          </div>
+        <div id="edit-form" style="display:none;">
+            <h1>Edit Profile</h1>
+            <label for="edit-first-name">First Name:</label>
+            <input type="text" id="edit-first-name"><br>
+            <br>
+            <label for="edit-last-name">Last Name:</label>
+            <input type="text" id="edit-last-name"><br>
+            <br>
+            <label for="edit-username">Username:</label>
+            <input type="text" id="edit-username"><br>
+            <br>
+            <label for="edit-email">Email:</label>
+            <input type="email" id="edit-email"><br>
+            <p>Account Type: <span id="account-type">{{user.account_type}}</span></p>
+            <p>Date joined: <span id="date-joined">{{user.date_joined}}</span></p>
+            <button id="cancel-button">Cancel</button>
+            <button id="save-button">Save</button>
+          </div>
+    </div>
 {% endblock %}

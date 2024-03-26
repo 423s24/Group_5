@@ -19,6 +19,9 @@
 {% endblock %}
 {% block content %}
     <div class="container">
+    <br>
+    <h1>Users</h1>
+    <hr>
         <br>
         <div id="search-bar" class="form-group">
             <input type="search" name="search_query" placeholder="Search..." hx-get="." hx-trigger="input changed delay:500ms, search" hx-target="#request-data" hx-indicator=".htmx-indicator" class="form-control">

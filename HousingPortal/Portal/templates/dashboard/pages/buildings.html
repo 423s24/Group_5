@@ -15,10 +15,25 @@
             text-align: center;
             overflow: auto;
         }
+
+        .create-building-link {
+            font-size: 24px; /* Adjust the font size to make the icon slightly bigger */
+            color: black; /* Change the color of the icon to black */
+            text-decoration: none; /* Remove underline from the link */
+            position: relative; /* Needed for positioning the tooltip */
+        }
+
+        .create-building-link:hover .tooltip {
+            visibility: visible; /* Show the tooltip on hover */
+            opacity: 1; /* Make the tooltip fully visible */
+        }
     </style>
 {% endblock %}
 {% block content %}
     <div class="container">
+    <br>
+    <h1>Buildings</h1>
+    <hr>
         <br>
         <div id="search-bar" class="form-group">
             <input type="search" name="search_query" placeholder="Search..." hx-get="." hx-trigger="input changed delay:500ms, search" hx-target="#request-data" hx-indicator=".htmx-indicator" class="form-control">
@@ -28,6 +43,10 @@
             <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
         </span> 
         <br>
+        <a href="{% url 'createbuilding' %}" class="create-building-link">
+            <i class='bx bx-list-plus'></i>
+            <span class="tooltip">Create Building</span>
+        </a>
         <table class="table table-hover" id="request-table">
             <thead>
                 <tr>

@@ -68,6 +68,13 @@
         </div>
         <ul>
             {% if user.is_authenticated %}
+                <li>
+                <a href="{% url 'maintenance' %}">
+                    <i class='bx bx-folder-plus' ></i>
+                    <span class="sidebar-item">SubmitRequest</span>
+                </a>
+                <span class="tooltip">SubmitRequest</span>
+            </li>
             <li>
                 <a href="/dashboard">
                     <i class="bx bxs-grid-alt"></i>

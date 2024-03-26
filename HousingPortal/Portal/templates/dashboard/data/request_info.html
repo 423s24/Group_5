@@ -32,17 +32,34 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 });
-
 </script>
+    <style>
+        .export-link {
+            font-size: 24px; /* Adjust the font size to make the icon slightly bigger */
+            color: black; /* Change the color of the icon to black */
+            text-decoration: none; /* Remove underline from the link */
+            position: relative; /* Needed for positioning the tooltip */
+        }
+
+        .export-link:hover .tooltip {
+            visibility: visible; /* Show the tooltip on hover */
+            opacity: 1; /* Make the tooltip fully visible */
+        }
+    </style>
 {% endblock %}
 {% block content %}
     <div class="container">
     <div id="to-export">
     <br>
 <h1>Request #{{ maintenance_request.id }} Information</h1>
-
+<hr>
 <h3>Request Details:</h3>
-    <br><button id="download">Export</button><br>
+    <br>
+    <a class="export-link" id="download">
+        <i class='bx bx-export'></i>
+        <span class="tooltip">Export Table</span>
+    </a>
+    <br>
     {% if can_edit_request %}
     <a href="{% url 'edit_request' request_id=maintenance_request.id %}"><button>Edit Request</button></a>
     {% endif %}

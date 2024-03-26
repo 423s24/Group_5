@@ -137,7 +137,7 @@ def dashboard(request):
 @login_required(login_url="/login")
 def admin_dashboard(request):
     users = UserAccount.objects.all()
-    maintenance_requests = MaintenanceRequest.objects.all()
+    maintenance_requests = MaintenanceRequest.objects.order_by('-date_submitted')[:10]
     buildings = Building.objects.all()
     per_page = 10
     paginator = Paginator(users, per_page)
@@ -157,7 +157,7 @@ def admin_dashboard(request):
 @login_required(login_url="/login")
 def manager_dashboard(request):
     users = UserAccount.objects.all()
-    maintenance_requests = MaintenanceRequest.objects.all()
+    maintenance_requests = MaintenanceRequest.objects.order_by('-date_submitted')[:10]
     per_page = 10
     paginator = Paginator(users, per_page)
     page = request.GET.get('page', 1)

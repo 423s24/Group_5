@@ -42,10 +42,25 @@ document.addEventListener("DOMContentLoaded", function() {
             text-align: center;
             overflow: auto;
         }
+
+        .export-link {
+            font-size: 24px; /* Adjust the font size to make the icon slightly bigger */
+            color: black; /* Change the color of the icon to black */
+            text-decoration: none; /* Remove underline from the link */
+            position: relative; /* Needed for positioning the tooltip */
+        }
+
+        .export-link:hover .tooltip {
+            visibility: visible; /* Show the tooltip on hover */
+            opacity: 1; /* Make the tooltip fully visible */
+        }
     </style>
 {% endblock %}
 {% block content %}
     <div class="container">
+    <br>
+    <h1>All Requests</h1>
+    <hr>
         <br>
         <div id="search-bar" class="form-group">
             <input type="search" name="search_query" placeholder="Search..." hx-get="." hx-trigger="input changed delay:500ms, search" hx-target="#request-data" hx-indicator=".htmx-indicator" class="form-control">
@@ -55,8 +70,10 @@ document.addEventListener("DOMContentLoaded", function() {
             <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
         </span> 
         <br>
-        <button id="download">Export</button>
-        <br>
+        <a class="export-link" id="download">
+            <i class='bx bx-export'></i>
+            <span class="tooltip">Export Table</span>
+        </a>
         <table class="table table-hover" id="request-table">
             <thead>
                 <tr>
