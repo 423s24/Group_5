@@ -270,5 +270,5 @@ ul {
 
 #bottom-sidenav {
     margin-top: auto;
-    transform: translateY(80%);
+    bottom: 0;
 }
