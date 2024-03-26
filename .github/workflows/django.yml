@@ -38,9 +38,6 @@ jobs:
         cd HousingPortal
         pip install -r requirements.txt
         
-    - name: Wait for PostgreSQL to be ready
-      run: |
-        ./wait-for-it.sh localhost:6000 -t 60
     - name: Run Tests
       run: |
         cd HousingPortal
