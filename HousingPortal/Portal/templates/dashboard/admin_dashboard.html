@@ -8,32 +8,8 @@
 {% block content %}
     <div class="container">
 <br>
-<h2>Dashboard</h2>
-<div id="home">
-    <a href="{% url 'home' %}">Home</a>
-</div>
-    <br>
-    <br>
-    <div id="home">
-    <a href="{% url 'maintenance_requests' %}">Requests</a>
-    </div>
-    <br>
-    <div id="home">
-        <a href="users">Users</a>
-    </div>
-    <br>
-    <div id="home">
-        <a href="buildings">Buildings</a>
-    </div>
-<br>
-<br>
-<hr>
-<br>
-<br>
-<div id="home">
-    <a href="{% url 'signup' %}">Add User Account</a>
-</div>
-<br>
+<h1>Dashboard</h1>
+
 <br>
 <h2>User Accounts</h2>
 {% include 'dashboard/data/user.html' %}
