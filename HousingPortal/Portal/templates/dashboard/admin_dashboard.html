@@ -11,6 +11,10 @@
 <h1>Dashboard</h1>
 <hr>
 <br>
+        <a href="{% url 'maintenance' %}" class="create-link">
+            <i class="bi bi-file-earmark-plus"></i>
+            <span class="tooltip">Add Request</span>
+        </a>
 <h2>User Accounts</h2>
 {% include 'dashboard/data/user.html' %}
 <br>
