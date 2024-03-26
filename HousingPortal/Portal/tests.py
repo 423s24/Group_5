@@ -1,10 +1,16 @@
 from django.test import TestCase, skipIfDBFeature
 from django.utils import timezone
+from django.conf import settings
 from .models import *
 
 # Create your tests here.
 
 class MaintenaceNotesTestCase(TestCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        settings.DATABASES['default']['ENGINE'] = 'django.db.backends.dummy'
+
     @skipIfDBFeature('is_dummy')
     def setUp(self):
         self.user = UserAccount.objects.create(username='testuser', password='Not4password')
