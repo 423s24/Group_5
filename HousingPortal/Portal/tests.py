@@ -1,10 +1,11 @@
-from django.test import TestCase
+from django.test import TestCase, skipIfDBFeature
 from django.utils import timezone
 from .models import *
 
 # Create your tests here.
 
 class MaintenaceNotesTestCase(TestCase):
+    @skipIfDBFeature('is_dummy')
     def setUp(self):
         self.user = UserAccount.objects.create(username='testuser', password='Not4password')
 
@@ -22,6 +23,7 @@ class MaintenaceNotesTestCase(TestCase):
             entry_permission=False
         )
 
+    @skipIfDBFeature('is_dummy')
     def test_maintenance_note_creation(self):
         maintenance_notes = MaintenanceNotes.objects.create(
             maintenanceRequestId=self.maintenance_request,
@@ -36,6 +38,7 @@ class MaintenaceNotesTestCase(TestCase):
         self.assertTrue(maintenance_notes.tenant_viewable)
         self.assertEqual(maintenance_notes.notes, 'Test Note')
 
+    @skipIfDBFeature('is_dummy')
     def test_maintenance_note_default(self):
         maintenance_notes = MaintenanceNotes.objects.create(
             maintenanceRequestId=self.maintenance_request,
