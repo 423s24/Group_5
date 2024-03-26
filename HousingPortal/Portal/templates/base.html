@@ -20,10 +20,16 @@
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const btn = document.getElementById("btn");
+            const buttonContainer = document.getElementById("button-container");
             const sidebar = document.querySelector(".sidebar");
 
-            btn.addEventListener("click", function () {
+            //btn.addEventListener("click", function () {
+            //    sidebar.classList.toggle("active");
+            //    buttonContainer.classList.toggle("active");
+            //});
+            buttonContainer.addEventListener("click", function () {
                 sidebar.classList.toggle("active");
+                buttonContainer.classList.toggle("active");
             });
         });
     </script>
@@ -59,25 +65,30 @@
     </div>
 
 </div>-->
+    <div id="button-container" class="sidebar-button">
+        <i class="bi bi-caret-right"></i>
+        <i class="bi bi-caret-left"></i>
+    </div>
     <div class="sidebar">
         <div class="top">
             <div class="logo">
-                <a href="/"><img src="{% static 'images/logos/hrdc-logo-light.png' %}" alt="HRDC Logo"></a>
+                <span id="full"><a href="/"><img src="{% static 'images/logos/hrdc-logo-light.png' %}" alt="HRDC Logo"></a></span>
+                <span id="cropped"><a href="/"><img style="width:45px;"src="{% static 'images/logos/cropped-HRDC-favicon-01-192x192.png' %}" alt="HRDC Logo"></a></span>
             </div>
-            <i class="bx bx-menu" id="btn"></i>
+            <!--<i class="bx bx-menu" id="btn"></i>-->
         </div>
         <ul>
             {% if user.is_authenticated %}
             <li>
                 <a href="#">
-                    <i class="bx bx-search-alt-2"></i>
+                    <i class="bi bi-search"></i>
                     <span class="sidebar-item">Search</span>
                 </a>
                 <span class="tooltip">Search</span>
             </li>
             <li>
                 <a href="/dashboard">
-                    <i class="bx bxs-grid-alt"></i>
+                    <i class="bi bi-grid"></i>
                     <span class="sidebar-item">Dashboard</span>
                 </a>
                 <span class="tooltip">Dashboard</span>
@@ -85,51 +96,52 @@
             <hr style="color: white;">
             <li>
                 <a href="{% url 'maintenance_requests' %}">
-                    <i class="bx bx-purchase-tag-alt"></i>
-                    <span class="sidebar-item">AllRequests</span>
+                    <i class="bi bi-tags"></i>
+                    <span class="sidebar-item">All&nbsp;Requests</span>
                 </a>
-                <span class="tooltip">All Requests</span>
+                <span class="tooltip">All&nbsp;Requests</span>
             </li>
             <li>
                 <a href="#">
-                    <i class="bx bx-flag"></i>
-                    <span class="sidebar-item">SavedRequests</span>
+                    <i class="bi bi-bookmarks"></i>
+                    <span class="sidebar-item">Saved&nbsp;Requests</span>
                 </a>
-                <span class="tooltip">Saved Requests</span>
+                <span class="tooltip">Saved&nbsp;Requests</span>
             </li>
             <hr style="color: white;">
             <li>
                 <a href="/dashboard/buildings">
-                    <i class="bx bx-building"></i>
+                    <i class="bi bi-buildings"></i>
                     <span class="sidebar-item">Buildings</span>
                 </a>
                 <span class="tooltip">Buildings</span>
             </li>
             <li>
                 <a href="/dashboard/users">
-                    <i class="bx bx-user-pin"></i>
+                    <i class="bi bi-people"></i>
                     <span class="sidebar-item">Users</span>
                 </a>
                 <span class="tooltip">Users</span>
             </li>
+            <hr style="color: white;">
             <div id="bottom-sidenav">
                 <li>
                     <a href="/profile">
-                        <i class='bx bxs-face'></i>
+                        <i class="bi bi-person-circle"></i>
                         <span class="sidebar-item">{{ user.username }}</span>
                     </a>
                     <span class="tooltip">{{ user.username }}</span>
                 </li>
                 <li>
                     <a href="/support">
-                        <i class='bx bx-support'></i>
+                        <i class="bi bi-question-circle"></i>
                         <span class="sidebar-item">Support</span>
                     </a>
                     <span class="tooltip">Support</span>
                 </li>
                 <li>
                     <a href="/logout">
-                        <i class="bx bx-log-out"></i>
+                        <i class="bi bi-box-arrow-left"></i>
                         <span class="sidebar-item">Logout</span>
                     </a>
                     <span class="tooltip">Logout</span>
@@ -138,7 +150,7 @@
             {% else %}
             <li>
                 <a href="/login">
-                    <i class='bx bx-log-in'></i>
+                    <i class="bi bi-box-arrow-in-right"></i>
                     <span class="sidebar-item">Login</span>
                 </a>
                 <span class="tooltip">Login</span>
