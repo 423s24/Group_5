@@ -8,17 +8,29 @@
     <script src="https://unpkg.com/@popperjs/core@2"></script>
     <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
     <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
-    <link rel="icon" type="image/png" href="{% static 'images/logos/hrdc-favicon.png' %}">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" type="text/css" href="{% static 'css/global.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/header.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/footer.css' %}">
     <script src="{% static 'js/global.js' %}"></script>
     <script src="https://unpkg.com/htmx.org"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const btn = document.getElementById("btn");
+            const sidebar = document.querySelector(".sidebar");
+
+            btn.addEventListener("click", function () {
+                sidebar.classList.toggle("active");
+            });
+        });
+    </script>
+
     {% block head %}
     {% endblock %}
 </head>
 <body>
-    <div id="topnav" class="navbar navbar-expand-lg">
+    <!--<div id="topnav" class="navbar navbar-expand-lg">
     <li class="nav-item">
         <a href="/"><img src="{% static 'images/logos/hrdc-logo-light.png' %}" alt="HRDC Logo"></a>
     </li>
@@ -27,7 +39,6 @@
             <li class="nav-item">
                 <a class="nav-link" href="{% url 'maintenance' %}">Maintenance</a>
             </li>
-            <!-- Dropdown -->
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
                     Account
@@ -44,11 +55,83 @@
             </li>
         </ul>
     </div>
-</div>
 
-    <div id="wrapper">
-        {% block content %}
-        {% endblock %}
+</div>-->
+    <div class="sidebar">
+        <div class="top">
+            <div class="logo">
+                <a href="/"><img src="{% static 'images/logos/hrdc-logo-light.png' %}" alt="HRDC Logo"></a>
+            </div>
+            <i class="bx bx-menu" id="btn"></i>
+        </div>
+        <ul>
+            {% if user.is_authenticated %}
+            <li>
+                <a href="/dashboard">
+                    <i class="bx bxs-grid-alt"></i>
+                    <span class="sidebar-item">Dashboard</span>
+                </a>
+                <span class="tooltip">Dashboard</span>
+            </li>
+            <li>
+                <a href="#">
+                    <i class="bx bx-search-alt-2"></i>
+                    <span class="sidebar-item">Search</span>
+                </a>
+                <span class="tooltip">Search</span>
+            </li>
+            <li>
+                <a href="{% url 'maintenance_requests' %}">
+                    <i class="bx bx-purchase-tag-alt"></i>
+                    <span class="sidebar-item">Requests</span>
+                </a>
+                <span class="tooltip">Requests</span>
+            </li>
+            <li>
+                <a href="buildings">
+                    <i class="bx bx-building"></i>
+                    <span class="sidebar-item">Buildings</span>
+                </a>
+                <span class="tooltip">Buildings</span>
+            </li>
+            <li>
+                <a href="users">
+                    <i class="bx bx-user-pin"></i>
+                    <span class="sidebar-item">Users</span>
+                </a>
+                <span class="tooltip">Users</span>
+            </li>
+            <li>
+                <a href="/profile">
+                    <i class='bx bxs-face'></i>
+                    <span class="sidebar-item">{{ user.username }}</span>
+                </a>
+                <span class="tooltip">{{ user.username }}</span>
+            </li>
+            <li>
+                <a href="/logout">
+                    <i class="bx bx-log-out"></i>
+                    <span class="sidebar-item">Logout</span>
+                </a>
+                <span class="tooltip">Logout</span>
+            </li>
+            {% else %}
+            <li>
+                <a href="/login">
+                    <i class='bx bx-log-in'></i>
+                    <span class="sidebar-item">Login</span>
+                </a>
+                <span class="tooltip">Login</span>
+            </li>
+            {% endif %}
+        </ul>
+    </div>
+
+    <div class="main-content">
+        <div id="wrapper">
+            {% block content %}
+            {% endblock %}
+        </div>
     </div>
     <footer class="footer mt-auto py-3 text-center">
     <div class="container">
