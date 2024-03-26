@@ -1,7 +1,6 @@
 from django.test import TestCase
 from django.utils import timezone
-import HousingPortal.Portal
-from HousingPortal.Portal.models import UserAccount, MaintenanceNotes, MaintenanceRequest
+from .models import *
 
 # Create your tests here.
 
