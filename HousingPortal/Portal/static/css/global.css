@@ -212,6 +212,7 @@ ul {
     align-items: center;
     text-decoration: none;
     border-radius: 0.8rem;
+    line-height: 50px;
 }
 
 .sidebar ul li a:hover {
@@ -244,7 +245,7 @@ ul {
     border-radius: .6rem;
     padding: .4rem 1.2rem;
     line-height: 1.8rem;
-    z-index: 20;
+    z-index: 2000;
     opacity: 0;
 }
 
@@ -264,5 +265,9 @@ ul {
     transition: all 0.5s ease;
     width: calc(100% - 80px);
     padding: 1rem;
->>>>>>> Stashed changes
+}
+
+#bottom-sidenav {
+    margin-top: 30vh;
+    bottom: 0;
 }

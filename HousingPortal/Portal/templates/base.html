@@ -83,9 +83,16 @@
             <li>
                 <a href="{% url 'maintenance_requests' %}">
                     <i class="bx bx-purchase-tag-alt"></i>
-                    <span class="sidebar-item">Requests</span>
+                    <span class="sidebar-item">AllRequests</span>
                 </a>
-                <span class="tooltip">Requests</span>
+                <span class="tooltip">All Requests</span>
+            </li>
+            <li>
+                <a href="#">
+                    <i class="bx bx-flag"></i>
+                    <span class="sidebar-item">SavedRequests</span>
+                </a>
+                <span class="tooltip">Saved Requests</span>
             </li>
             <li>
                 <a href="/dashboard/buildings">
@@ -101,20 +108,29 @@
                 </a>
                 <span class="tooltip">Users</span>
             </li>
-            <li>
-                <a href="/profile">
-                    <i class='bx bxs-face'></i>
-                    <span class="sidebar-item">{{ user.username }}</span>
-                </a>
-                <span class="tooltip">{{ user.username }}</span>
-            </li>
-            <li>
-                <a href="/logout">
-                    <i class="bx bx-log-out"></i>
-                    <span class="sidebar-item">Logout</span>
-                </a>
-                <span class="tooltip">Logout</span>
-            </li>
+            <div id="bottom-sidenav">
+                <li>
+                    <a href="/profile">
+                        <i class='bx bxs-face'></i>
+                        <span class="sidebar-item">{{ user.username }}</span>
+                    </a>
+                    <span class="tooltip">{{ user.username }}</span>
+                </li>
+                <li>
+                    <a href="/support">
+                        <i class='bx bx-support'></i>
+                        <span class="sidebar-item">Support</span>
+                    </a>
+                    <span class="tooltip">Support</span>
+                </li>
+                <li>
+                    <a href="/logout">
+                        <i class="bx bx-log-out"></i>
+                        <span class="sidebar-item">Logout</span>
+                    </a>
+                    <span class="tooltip">Logout</span>
+                </li>
+            </div>
             {% else %}
             <li>
                 <a href="/login">
