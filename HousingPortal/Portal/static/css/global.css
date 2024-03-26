@@ -26,7 +26,7 @@ a {
 
 #home a {
     color: white;
-    background-color: #12171e;
+    background-color: #333;
 }
 
 #home a:hover {
@@ -38,7 +38,7 @@ td a {
 }
 
 button {
-    background-color: #12171e;
+    background-color: #333;
     color: #fff;
     padding: 10px 20px;
     margin: 10px 0;
@@ -50,7 +50,7 @@ button {
 .table-button {
     display: block;
     width: 90%;
-    background-color: #12171e;
+    background-color: #333;
     color: #fff;
     border: none;
     padding: 10px 20px;
@@ -69,7 +69,7 @@ button:hover {
 }
 
 .hoverable-table thead, .data-table thead {
-    background-color: #12171e;
+    background-color: #333;
     color: #fff;
 }
 
@@ -105,7 +105,7 @@ textarea {
 }
 
 .table th {
-    background-color: #12171e;
+    background-color: #333;
     color: white;
 }
 
