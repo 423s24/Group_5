@@ -196,6 +196,7 @@ ul {
 .top .logo img {
     width: 140px;
     height: auto;
+    margin-left: 4px;
 }
 
 .sidebar ul li {
@@ -334,4 +335,10 @@ ul {
 
 #full {
     display: none;
+}
+
+#bottom-sidenav {
+    position: absolute;
+    bottom: 0;
+    width: 70%;
 }
