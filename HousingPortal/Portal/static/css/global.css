@@ -342,3 +342,7 @@ ul {
     bottom: 0;
     width: 70%;
 }
+
+.sidebar.active #bottom-sidenav {
+    width: 89.765%;
+}
