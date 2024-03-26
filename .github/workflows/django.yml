@@ -37,10 +37,7 @@ jobs:
         python -m pip install --upgrade pip
         cd HousingPortal
         pip install -r requirements.txt
-
-    - name: Start PostgreSQL
-      run: docker start postgres
-
+        
     - name: Wait for PostgreSQL to be ready
       run: |
         ./wait-for-it.sh localhost:6000 -t 60
