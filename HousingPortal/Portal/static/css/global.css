@@ -26,7 +26,7 @@ a {
 
 #home a {
     color: white;
-    background-color: #0F7278;
+    background-color: #12171e;
 }
 
 #home a:hover {
@@ -38,7 +38,7 @@ td a {
 }
 
 button {
-    background-color: #0F7278;
+    background-color: #12171e;
     color: #fff;
     padding: 10px 20px;
     margin: 10px 0;
@@ -50,7 +50,7 @@ button {
 .table-button {
     display: block;
     width: 90%;
-    background-color: #0F7278;
+    background-color: #12171e;
     color: #fff;
     border: none;
     padding: 10px 20px;
@@ -69,7 +69,7 @@ button:hover {
 }
 
 .hoverable-table thead, .data-table thead {
-    background-color: #0F7278;
+    background-color: #12171e;
     color: #fff;
 }
 
@@ -105,7 +105,7 @@ textarea {
 }
 
 .table th {
-    background-color: #0F7278;
+    background-color: #12171e;
     color: white;
 }
 
@@ -268,6 +268,6 @@ ul {
 }
 
 #bottom-sidenav {
-    margin-top: 30vh;
-    bottom: 0;
+    margin-top: auto;
+    transform: translateY(80%);
 }
