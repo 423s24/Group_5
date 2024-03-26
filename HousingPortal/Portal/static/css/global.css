@@ -276,7 +276,7 @@ ul {
 .sidebar-button {
     position: relative;
     background-color: black;
-    border: 2px solid white;
+    border: 1.5px solid white;
     right: -60px;
     top: 50px;
     z-index: 20;
