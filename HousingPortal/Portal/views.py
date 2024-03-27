@@ -346,9 +346,15 @@ def delete_note(request, note_id):
 @login_required(login_url="/login")
 def request_info(request, request_id):
     maintenance_request = get_object_or_404(MaintenanceRequest, pk=request_id)
-    if request.user.is_superuser or request.user.manager != None or request.user == maintenance_request.user_id:
+    if request.user.is_superuser or request.user.manager != None:
         can_edit_request = (request.user.is_superuser or request.user.manager)
-        return render(request, 'dashboard/data/request_info.html', {'maintenance_request': maintenance_request, 'can_edit_request': can_edit_request})
+        maintenance_notes = maintenance_request.maintenance_notes.all()
+        return render(request, 'dashboard/data/request_info.html', {'maintenance_request': maintenance_request, 'can_edit_request': can_edit_request, 'maintenance_notes': maintenance_notes})
+    elif request.user == maintenance_request.user_id:
+        can_edit_request = (request.user.is_superuser or request.user.manager)
+        maintenance_notes = maintenance_request.maintenance_notes.filter(tenant_viewable=True)
+        return render(request, 'dashboard/data/request_info.html',
+                      {'maintenance_request': maintenance_request, 'can_edit_request': can_edit_request,'maintenance_notes': maintenance_notes})
     else:
         return handler_403(request)
     
@@ -380,12 +386,14 @@ def view_user(request, username):
 def add_note(request, request_id):
     maintenance_request = get_object_or_404(MaintenanceRequest, pk=request_id)
     notes = request.POST.get('notes')
+    is_tenant_viewable = 'is_tenant_viewable' in request.POST
     if request.method == 'POST' and request.user.is_superuser or request.user.manager != None:
         new_note = MaintenanceNotes(
             maintenanceRequestId = maintenance_request,
             user_id = request.user,
             date_submitted = timezone.now(),
-            notes = notes
+            notes = notes,
+            tenant_viewable = is_tenant_viewable
         )
         new_note.save()
         return redirect('request_info', request_id=request_id)
