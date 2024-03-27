@@ -2,9 +2,9 @@
 <tr onclick="window.location='/dashboard/buildings/{{building.id}}'" style="cursor: pointer;">
     <td>{{ building.building_name }}</td>
     <td>{{ building.address }}</td>
-    <td>{{ building.city }}</td>
-    <td>{{ building.state }}</td>
-    <td>{{ building.country }}</td>
-    <td>{{ building.zipcode }}</td>
+    <td class="hidden">{{ building.city }}</td>
+    <td class="hidden">{{ building.state }}</td>
+    <td class="hidden">{{ building.country }}</td>
+    <td class="hidden">{{ building.zipcode }}</td>
 </tr>
 {% endfor %}

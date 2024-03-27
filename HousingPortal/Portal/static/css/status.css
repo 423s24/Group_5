@@ -12,6 +12,7 @@
 
 .status-cell {
     text-align: center;
+    white-space: nowrap;
 }
 
 .table-cell {

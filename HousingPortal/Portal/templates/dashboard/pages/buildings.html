@@ -11,7 +11,6 @@
     <style>
         .table td, .table th {
             width: 12.5%;
-            white-space: nowrap;
             text-align: center;
             overflow: auto;
         }
@@ -52,10 +51,10 @@
                 <tr>
                     <th>Building Name</th>
                     <th>Address</th>
-                    <th>City</th>
-                    <th>State</th>
-                    <th>Country</th>
-                    <th>Zipcode</th>
+                    <th class="hidden">City</th>
+                    <th class="hidden">State</th>
+                    <th class="hidden">Country</th>
+                    <th class="hidden">Zipcode</th>
                 </tr>
             </thead>
             <tbody id="request-data" hx-trigger="load delay:200ms" hx-get="." hx-swap="innerHTML">
@@ -63,10 +62,10 @@
                 <tr class="skeleton-row">
                     <td><span class="skeleton-loader"></span></td>
                     <td><span class="skeleton-loader"></span></td>
-                    <td><span class="skeleton-loader"></span></td>
-                    <td><span class="skeleton-loader"></span></td>
-                    <td><span class="skeleton-loader"></span></td>
-                    <td><span class="skeleton-loader"></span></td>
+                    <td class="hidden"><span class="skeleton-loader"></span></td>
+                    <td class="hidden"><span class="skeleton-loader"></span></td>
+                    <td class="hidden"><span class="skeleton-loader"></span></td>
+                    <td class="hidden"><span class="skeleton-loader"></span></td>
                 </tr>
                 {% endfor %}
             </tbody>

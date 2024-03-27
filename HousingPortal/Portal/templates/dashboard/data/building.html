@@ -3,10 +3,10 @@
         <tr class="header-row">
             <th>Building Name</th>
             <th>Address</th>
-            <th>City</th>
-            <th>State</th>
-            <th>Country</th>
-            <th>Zipcode</th>
+            <th class="hidden">City</th>
+            <th class="hidden">State</th>
+            <th class="hidden">Country</th>
+            <th class="hidden">Zipcode</th>
         </tr>
     </thead>
     <tbody>
@@ -14,10 +14,10 @@
         <tr onclick="window.location='{% url 'building_info' building_id=b.id %}'" style="cursor: pointer;">
             <td>{{ b.building_name }}</td>
             <td>{{ b.address }}</td>
-            <td>{{ b.city }}</td>
-            <td>{{ b.state }}</td>
-            <td>{{ b.country }}</td>
-            <td>{{ b.zipcode }}</td>
+            <td class="hidden">{{ b.city }}</td>
+            <td class="hidden">{{ b.state }}</td>
+            <td class="hidden">{{ b.country }}</td>
+            <td class="hidden">{{ b.zipcode }}</td>
         </tr>
         {% endfor %}
     </tbody>

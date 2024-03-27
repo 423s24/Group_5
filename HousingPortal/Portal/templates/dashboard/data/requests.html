@@ -7,9 +7,9 @@
         <th>Name</th>
         <th>Title</th>
         <th>Status</th>
-        <th>Building</th>
-        <th>Unit</th>
-        <th>Access Permission</th>
+        <th class="hidden">Building</th>
+        <th class="hidden">Unit</th>
+        <th class="hidden">Access Permission</th>
     </tr>
 </thead>
 <tbody>
@@ -19,9 +19,9 @@
         <td>{{maintenance_request.first_name}} {{ maintenance_request.last_name }}</td>
         <td>{{ maintenance_request.title }}</td>
         <td class="status-cell"><span class="status-badge {{ maintenance_request.status|lower|cut:' ' }}">{{ maintenance_request.status }}</span></td>
-        <td>{{maintenance_request.building.building_name}}</td>
-        <td>{{maintenance_request.unit}}</td>
-        <td>{{ maintenance_request.entry_permission }}</td>
+        <td class="hidden">{{maintenance_request.building.building_name}}</td>
+        <td class="hidden">{{maintenance_request.unit}}</td>
+        <td class="hidden">{{ maintenance_request.entry_permission }}</td>
     </tr>
         {% empty %}
         <tr>

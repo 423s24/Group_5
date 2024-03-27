@@ -8,12 +8,6 @@ html, body {
     color: #333;
 }
 
-#wrapper {
-    min-height: calc(100vh - 130px);
-    margin-right: 10px;
-    margin-left: 10px;
-}
-
 h1, h2 {
     color: #444;
 }
@@ -98,12 +92,8 @@ textarea {
     background-color: #0F7278;
 }
 
-.footer {
-    background-color: #0F7278;
-}
-
 .footer a {
-    color: white;
+    color: var(--primary-color);
 }
 
 .table th {
@@ -128,6 +118,12 @@ textarea {
 }
 
 @media only screen and (max-width: 600px) {
+    #wrapper {
+        min-height: calc(100vh);
+        margin-right: 10px;
+        margin-left: 10px;
+    }
+    
     .hidden {
         display: none;
     }
@@ -140,17 +136,17 @@ textarea {
         width: 100%;
         background-color: var(--primary-color);
         padding: 0.4rem 0.8rem;
-        transition: all 0.5s ease, z-index 0s;
+        transition: all 0.5s ease;
         z-index: 1;
     }
 
     .sidebar.active {
         height: 100%;
-        z-index: 10;
     }
 
     .main-content {
-        z-index: 4;
+        position: relative;
+        top: 60px;
     }
 
     #cropped {
