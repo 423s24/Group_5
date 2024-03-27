@@ -308,8 +308,8 @@ def edit_request(request, request_id):
         maintenance_request.building = building
 
         if request.user.is_superuser or request.user.manager:
-            if (maintenance_request.dateCompleted is not None):
-                maintenance_request.dateCompleted = None
+            if (maintenance_request.date_completed is not None):
+                maintenance_request.date_completed = None
 
         maintenance_request.save()
         return redirect('request_info', request_id=maintenance_request.id)
