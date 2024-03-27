@@ -24,8 +24,11 @@
         <img src="images/directory.png" alt="Directory Structure">
 
     <h2>How to Build Software</h2>
-    <p>Ensure that you have python installed. Various python packages are required to run this project. Postgresql is required as it is the database 
-        used for the project.</p>
+    <h3>Dependencies</h3>
+    <p><a href="https://www.python.org/downloads/">Python</a></p>
+    <p><a href="https://www.postgresql.org/download/">PostgreSQL</a></p>
+
+    <h3>Building the Software</h3>
 
     <p>To create the database if not done already, run the following command in the terminal: “createdb -h localhost -p 6000 -U postgres -W housingportal”</p>
         
@@ -39,16 +42,19 @@
         manage.py run the following command: “python manage.py runserver”.</p>
     
     <h2>How to test the software</h2>
-    <p>Undecided: If it starts then the test is complete</p>
+    <p>If the software properly starts up after following the above instructions, and the database is able to take in and retain information, 
+        the software is working properly</p>
 
-    <h2>How to set up automated build and Test</h2>
-    <p>Undecided: run a file if it works then build and test are complete</p>
+    <h2>How to set up automated build and test</h2>
+    <p>Automated tests will run on Github any time a new commit is pushed. This should also be true for any branches made.</p>
 
     <h2>How to release a new version of software</h2>
-    <p>Undecided: Push to github, new version released</p>
+    <p>Push source code to Github. Newest release can be build with the instructions above. If the steps for building the software changes at any time, the 
+        new information will be in the Building the Software section of the documentation.
+    </p>
 
     <h2>How to access the list of outstanding bugs and the list of resolved bugs</h2>
-    <p>Undecided: Have a list of bugs on Github?</p>
+    <p>On the Github page for the project, select the "Issues" tab. A list of opened issues by developers and users can be viewed. Link to page <a href="https://github.com/423s24/Group_5/issues">here</a>.</p>
 
     <h2>How to set up the Database</h2>
     <p>Install PostgreSQL. Setup your database server with user ‘postgres’ and password ‘root’ (sudo -u postgres psql -c "ALTER USER postgres PASSWORD 
@@ -63,7 +69,7 @@
     <p>Go to the outer HousingPortal folder in a terminal window and type “python manage.py createsuperuser”. Follow the prompts to create a superuser.</p>
 
     <h2>Comments in source code</h2>
-    <h3>Undecided: Source code should have the following required comments:</h3>
+    <h3>Source code should have the following required comments:</h3>
 
     
         <p>Comment explaining the files relation to the project as well as the function of the file</p>
