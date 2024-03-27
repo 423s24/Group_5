@@ -6,11 +6,22 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/global.css' %}">
 {% endblock %}
 {% block content %}
-    <div class="container">
+<div class="container">
 <br>
 <h1>Dashboard</h1>
 <hr>
 <br>
+        <a href="{% url 'maintenance' %}" class="create-link">
+            <i class="bi bi-file-earmark-plus"></i>
+            <span class="tooltip">Add Request</span>
+        </a>
+        <div class="fab-container">
+            <a href="{% url 'maintenance' %}">
+                <button class="fab">
+                    <i class="bi bi-plus"></i>
+                </button>
+            </a>
+        </div>
 <h2>User Accounts</h2>
 {% include 'dashboard/data/user.html' %}
 <br>

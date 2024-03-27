@@ -80,6 +80,7 @@
         </div>
         <ul>
             {% if user.is_authenticated %}
+            {% if user.is_superuser %}
             <li>
                 <a href="#">
                     <i class="bi bi-search"></i>
@@ -87,6 +88,7 @@
                 </a>
                 <span class="tooltip">Search</span>
             </li>
+            {% endif %}
             <li>
                 <a href="/dashboard">
                     <i class="bi bi-grid"></i>
@@ -95,6 +97,7 @@
                 <span class="tooltip">Dashboard</span>
             </li>
             <hr style="color: white;">
+            {% if user.is_superuser %}
             <li>
                 <a href="{% url 'maintenance_requests' %}">
                     <i class="bi bi-tags"></i>
@@ -102,6 +105,7 @@
                 </a>
                 <span class="tooltip">All&nbsp;Requests</span>
             </li>
+            {% endif %}
             <li>
                 <a href="#">
                     <i class="bi bi-inbox"></i>

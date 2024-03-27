@@ -3,6 +3,7 @@
 {% block head %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/global.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/status.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/dashboard.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/skeleton_loader.css' %}">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js"></script>
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.js"></script>
@@ -41,22 +42,33 @@ document.addEventListener("DOMContentLoaded", function() {
             overflow: auto;
         }
 
-        .export-link {
+        .links {
             font-size: 24px; /* Adjust the font size to make the icon slightly bigger */
             color: black; /* Change the color of the icon to black */
             text-decoration: none; /* Remove underline from the link */
             position: relative; /* Needed for positioning the tooltip */
         }
 
-        .export-link:hover .tooltip {
+        .links:hover .tooltip {
             visibility: visible; /* Show the tooltip on hover */
             opacity: 1; /* Make the tooltip fully visible */
+        }
+
+        .link-container {
+            display: flex;
         }
     </style>
 {% endblock %}
 {% block content %}
     <div class="container">
     <br>
+    <div class="fab-container">
+        <a href="{% url 'maintenance' %}">
+            <button class="fab">
+                <i class="bi bi-plus"></i>
+            </button>
+        </a>
+    </div>
     <h1>All Requests</h1>
     <hr>
         <br>
@@ -68,10 +80,16 @@ document.addEventListener("DOMContentLoaded", function() {
             <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
         </span> 
         <br>
-        <a class="export-link" id="download">
+        <div class="link-container">
+        <a href="{% url 'maintenance' %}" class="links">
+            <i class="bi bi-file-earmark-plus"></i>
+            <span class="tooltip">Add Request</span>
+        </a>
+        <a class="links" id="download">
             <i class="bi bi-box-arrow-up"></i>
             <span class="tooltip">Export Table</span>
         </a>
+        </div>
         <table class="table table-hover" id="request-table">
             <thead>
                 <tr>
