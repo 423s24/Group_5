@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/global.css' %}">
+{% endblock %}
+{% block content %}
+<div class="container">
+    <br>
+    <h1>Search</h1>
+    <hr>
+    <span class="htmx-indicator">
+        <strong>Searching..</strong>
+        <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+    </span>
+    <div>
+        <form method="GET" action="{% url 'search' %}">
+            <div id="search-bar" class="form-group">
+                <input type="search" name="search_query" placeholder="Search..." hx-get="." hx-trigger="input changed delay:500ms, search" hx-target="#request-data" hx-indicator=".htmx-indicator" class="form-control">
+            </div>
+            <label>
+                <input type="radio" name="search_option" value="user_accounts" hx-post="." hx-trigger="changed"> User Accounts
+            </label><br>
+            <label>
+                <input type="radio" name="search_option" value="buildings" hx-post="." hx-trigger="changed"> Buildings
+            </label><br>
+            <label>
+                <input type="radio" name="search_option" value="maintenance_requests" hx-post="." hx-trigger="changed"> Maintenance Requests
+            </label><br>
+            <label>
+                <input type="radio" name="search_option" value="maintenance_notes" hx-post="." hx-trigger="changed"> Maintenance Notes
+            </label>
+
+        </form>
+    </div>
+    {% if search_results %}
+        <div class="table hoverable-table">
+            {% if search_option == 'user_accounts' %}
+                <table>
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <!-- Add other relevant columns -->
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in search_results %}
+                        <tr>
+                            <td>{{ user.username }}</td>
+                            <td>{{ user.first_name }}</td>
+                            <td>{{ user.last_name }}</td>
+                            <!-- Add other relevant data -->
+                        </tr>
+                    {% endfor %}
+                </tbody>
+                </table>
+            {% elif search_option == 'buildings' %}
+                {% include 'dashboard/data/building' %}
+            {% endif %}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

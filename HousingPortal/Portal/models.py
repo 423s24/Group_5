@@ -89,6 +89,7 @@ class MaintenanceRequest(models.Model):
     date_submitted = models.DateTimeField(null=True, blank=True)
     date_completed = models.DateTimeField(null=True, blank=True)
     status = models.CharField(max_length=100, default='New')
+    priority = models.CharField(max_length=100, default='Low')
     title = models.CharField(max_length=100, default='')
     request = models.CharField(max_length=10000)
     entry_permission = models.BooleanField(default=False)

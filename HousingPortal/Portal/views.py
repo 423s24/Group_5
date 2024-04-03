@@ -514,6 +514,56 @@ def delete(request):
                 except Building.DoesNotExist:
                     return JsonResponse({'success': False})
                 
+@login_required(login_url='/login')
+def advanced_search(request):
+    if request.user.is_superuser:
+        search_query = request.GET.get('search_query')
+        search_option = request.GET.get('search_option')
+
+        search_results = []
+
+        # Temporary for the sprint 3 will need to refine it
+        if search_option == 'user_accounts':
+            search_results = UserAccount.objects.filter(
+                Q(username__icontains=search_query) |
+                Q(first_name__icontains=search_query) |
+                Q(last_name__icontains=search_query)
+            )
+        elif search_option == 'buildings':
+            search_results = Building.objects.filter(
+                Q(name__icontains=search_query) |
+                Q(address__icontains=search_query)
+            )
+        elif search_option == 'maintenance_requests':
+            search_results = MaintenanceRequest.objects.filter(
+                Q(first_name__icontains=search_query) |
+                Q(last_name__icontains=search_query) |
+                Q(request__icontains=search_query)
+            )
+        elif search_option == 'maintenance_notes':
+            search_results = MaintenanceNotes.objects.filter(
+                Q(notes__icontains=search_query)
+            )
+        else:
+            user_accounts = UserAccount.objects.all()
+            buildings = Building.objects.all()
+            maintenance_requests = MaintenanceRequest.objects.all()
+            maintenance_notes = MaintenanceNotes.objects.all()
+
+            # Combine the results into a single list
+            search_results.extend(user_accounts)
+            search_results.extend(buildings)
+            search_results.extend(maintenance_requests)
+            search_results.extend(maintenance_notes)
+
+        html = render_to_string('dashboard/data/users_htmx.html', {'users': users})
+        if request.headers.get('HX-Request'):
+            return HttpResponse(html)
+        else:
+            return render(request, 'dashboard/pages/advanced_search.html', {'search_results': search_results})
+    else:
+        return handler_403(request)
+
 
 # Views for errors
 def handler_403(request, exception=None):

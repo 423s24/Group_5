@@ -18,7 +18,7 @@ urlpatterns = [
     path('dashboard/buildings/create/', views.add_building, name='createbuilding'),
     path('support/', views.support, name='support'),
     path('profile/', views.profile, name='profile'),
-
+    path('search/', views.advanced_search, name='search'),
     # Authenticaiton URLs
     path('signup/', views.signup_view, name='signup'),
     path('login/', views.login_view, name='login'),
