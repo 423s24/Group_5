@@ -24,6 +24,7 @@ class MaintenaceNotesTestCase(TestCase):
             address="Test Address",
             date_submitted=timezone.now(),
             status='New',
+            priority='High',
             title='Test Request',
             request='Test request Description',
             entry_permission=False
