@@ -1,104 +1,37 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'base.html' %}
+{% load static %}
+{% load tz %}
+{% block title %}Maintenance Form{% endblock %}
+{% block content %}
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Maintenance Form</title>
-    <style>
-        html {
-            font-family: Arial, Helvetica, sans-serif;
-        }
-        
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f0f0f0; 
-        }
-
-        
-        .form-container {
-            width: 400px;
-            padding: 20px;
-            background-color: #ffffff; 
-            border-radius: 10px;
-            box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1); 
-        }
-
-        .form-container h1 {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .form-container input,
-        .form-container textarea{
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            border: 1px solid #ccc; 
-            border-radius: 5px;
-            box-sizing: border-box;
-            font-family: Arial, Helvetica, sans-serif;
-        }
-
-        .form-container button {
-            width: 100%;
-            padding: 10px;
-            background-color: #045721; 
-            color: #ffffff; 
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .form-container button:hover {
-            background-color: #0bd652; 
-        }
-
-        .form-container select {
-          width: 100%;
-          padding: 10px;
-          margin-bottom: 10px;
-          border: 1px solid #ccc; 
-          border-radius: 5px;
-          box-sizing: border-box;
-          font-family: Arial, sans-serif;
-        }
-
-        textarea {
-            width: 95%;
-            resize: vertical;
-        }
-
-    </style>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/Maintenance.css' %}">
 </head>
-<body>
-    <div class="form-container">
-        <h1>Maintenance Form</h1>
-        <form method="POST">
-            {% csrf_token %}
-            <input type="text" name="first_name" placeholder="First Name" value="{{user.first_name}}" required>
-            <input type="text" name="last_name" placeholder="Last Name" value="{{user.last_name}}" required>
-            <input type="text" name="phone" placeholder="Phone" required>
-            <input type="text" name="address" placeholder="Address" required>
-            <input type="text" name="unit" placeholder="Unit" required>
-            <label for="building">Building:</label>
-            <select id="building" name="building">
-                {% for building in buildings %}
-                <option value="{{ building.id }}">{{ building.building_name }}</option>
-                {% endfor %}
-            </select> <br>
-            <label for="entry_permission">Can Personnel Conducting Maintenance Enter if you are absent: </label>
-            <select id="entry_permission" name="entry_permission">
-                <option value="1">Yes</option>
-                <option value="0">No</option>
-            </select> <br>
-            <input type="text" name="title" placeholder="Title" required>
-            <textarea name="request" placeholder="Maintenance Request" rows="4" required></textarea>
-            <button type="submit">Submit</button>
-        </form>
-    </div>
-</body>
-</html>
+          <div class="form-container">
+            <h1>Maintenance Form</h1>
+            <br>
+            <form method="POST">
+                {% csrf_token %}
+                <p><input type="text" name="first_name" placeholder="First Name" value="{{user.first_name}}" required></span></p>
+                <p><input type="text" name="last_name" placeholder="Last Name" value="{{user.last_name}}" required></span></p>
+                <p><input type="text" name="phone" placeholder="Phone" required></span></p>
+                <p><input type="text" name="address" placeholder="Address" required></span></p>
+                <p><input type="text" name="unit" placeholder="Unit" required></span></p>
+                <p><select id="building" name="building">
+                    {% for building in buildings %}
+                    <option value="{{ building.id }}">{{ building.building_name }}</option>
+                    {% endfor %}
+                </select></span></p>
+                <label id="personnel" for="entry_permission">Can Personnel Conducting Maintenance Enter if you are absent: </label>
+                <p><select id="entry_permission" name="entry_permission">
+                    <option value="1">Yes</option>
+                    <option value="0">No</option>
+                </select> </span></p>
+                
+                <p><input type="text" name="title" placeholder="Title" required></span></p>
+                <textarea name="request" placeholder="Maintenance Request" rows="4" required></textarea>
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+        
+
+{% endblock %}
