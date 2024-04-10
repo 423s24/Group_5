@@ -12,7 +12,6 @@ var noteToDelete;
 
 let csrftoken = getCookie('csrftoken');
 
-
 function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -28,6 +27,33 @@ function getCookie(name) {
     }
     return cookieValue;
 }
+
+document.getElementById("download").addEventListener("click", function() {
+    var element = document.getElementById('to-export');
+    html2canvas(element).then(function(canvas) {
+        var imgData = canvas.toDataURL('image/png');
+        var doc = new jsPDF('p', 'mm', 'a4');
+        var pageWidth = doc.internal.pageSize.getWidth();
+        var pageHeight = doc.internal.pageSize.getHeight();
+        var imageWidth = canvas.width;
+        var imageHeight = canvas.height;
+
+        var widthRatio = pageWidth / imageWidth;
+        var newHeight = imageHeight * widthRatio;
+        var heightRatio = newHeight / pageHeight;
+
+        doc.addImage(imgData, 'PNG', 5, 5, pageWidth-10, newHeight-10);
+
+        // Open PDF in a new browser tab
+        window.open(URL.createObjectURL(doc.output("blob")));
+    });
+});
+var save_button = document.getElementById("save");
+var request_id = save_button.getAttribute('request-id');
+save_button.addEventListener("click", function() {
+    toggle_save(request_id);
+});
+
 
 
 cancelNote.onclick = function() {
@@ -141,4 +167,39 @@ function deleteRequest(id_str) {
             console.error('Error submitting deleting:', error);
         });
     }
+}
+
+function toggle_save(request_id) {
+    // Send a POST request to the Django /toggle_save/request_id URL
+    fetch('/toggle_save/'+request_id, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken') // Get CSRF token from cookie
+        },
+        credentials: 'same-origin', // Include cookies in the request
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Check if 'saved' key exists in the response
+        if ('saved' in data) {
+            // Get the bookmark icon element
+            var bookmarkIcon = document.getElementById("bookmarkIcon");
+            
+            // Change the class of the bookmark icon based on the response
+            if (data.saved) {
+                bookmarkIcon.classList.remove("bi-bookmark");
+                bookmarkIcon.classList.add("bi-bookmark-fill");
+            } else {
+                bookmarkIcon.classList.remove("bi-bookmark-fill");
+                bookmarkIcon.classList.add("bi-bookmark");
+            }
+        } else {
+            console.error('Response does not contain the "saved" key.');
+        }
+    })
+    .catch(error => {
+        console.error('Error toggling save:', error);
+    });
+    
 }

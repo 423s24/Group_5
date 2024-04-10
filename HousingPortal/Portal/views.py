@@ -254,33 +254,30 @@ def maintenance_requests(request):
     
 @login_required(login_url="/login")
 def saved_requests(request):
-    if request.user.is_superuser or (request.user.manager != None):
-        search_query = request.GET.get('search_query')
-        if search_query:
-            maintenance_requests = MaintenanceRequest.objects.filter(
-                Q(id__icontains=search_query) |
-                Q(first_name__icontains=search_query) |
-                Q(last_name__icontains=search_query) |
-                Q(title__icontains=search_query) |
-                Q(status__icontains=search_query) |
-                Q(building__building_name__icontains=search_query) |
-                Q(unit__icontains=search_query) |
-                Q(entry_permission__icontains=search_query),
-                useraccountmaintenancerequest__user_id=request.user
-            )
-        else:
-            maintenance_requests = MaintenanceRequest.objects.filter(
-                useraccountmaintenancerequest__user_id=request.user
-            )
-
-        html = render_to_string('dashboard/data/requests_htmx.html', {'maintenance_requests': maintenance_requests})
-        if request.headers.get('HX-Request'):
-            #time.sleep(2)
-            return HttpResponse(html)
-        else:
-            return render(request, 'dashboard/pages/saved_requests.html')
+    search_query = request.GET.get('search_query')
+    if search_query:
+        maintenance_requests = MaintenanceRequest.objects.filter(
+            Q(id__icontains=search_query) |
+            Q(first_name__icontains=search_query) |
+            Q(last_name__icontains=search_query) |
+            Q(title__icontains=search_query) |
+            Q(status__icontains=search_query) |
+            Q(building__building_name__icontains=search_query) |
+            Q(unit__icontains=search_query) |
+            Q(entry_permission__icontains=search_query),
+            useraccountmaintenancerequest__user_id=request.user
+        )
     else:
-        return handler_403(request)
+        maintenance_requests = MaintenanceRequest.objects.filter(
+            useraccountmaintenancerequest__user_id=request.user
+        )
+
+    html = render_to_string('dashboard/data/requests_htmx.html', {'maintenance_requests': maintenance_requests})
+    if request.headers.get('HX-Request'):
+        #time.sleep(2)
+        return HttpResponse(html)
+    else:
+        return render(request, 'dashboard/pages/saved_requests.html')
     
 
 
@@ -539,6 +536,8 @@ def toggle_save(request, request_id):
                 )
                 new_relationship.save()
                 return JsonResponse({'saved': True})
+    else:
+        return handler_404(request, None)
 
 # Views for handling deleting
 @login_required(login_url="/login")
@@ -574,6 +573,8 @@ def delete(request):
                     return JsonResponse({'success': True})
                 except Building.DoesNotExist:
                     return JsonResponse({'success': False})
+    else:
+        return handler_404(request, None)
                 
 @login_required(login_url='/login')
 def advanced_search(request):
