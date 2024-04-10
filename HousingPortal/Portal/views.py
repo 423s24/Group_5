@@ -519,6 +519,17 @@ def request_is_saved(request, request_id):
         # Relationship does not exist
         return False
     
+def check_username(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        username = data.get('username')
+        if UserAccount.objects.filter(username=username).exists():
+            return JsonResponse({'taken': True})
+        else:
+            return JsonResponse({'taken': False})
+    else:
+        return handler_404(request)
+    
 @login_required(login_url="/login")
 def toggle_save(request, request_id):
     if request.method == 'POST':
@@ -574,7 +585,7 @@ def delete(request):
                 except Building.DoesNotExist:
                     return JsonResponse({'success': False})
     else:
-        return handler_404(request, None)
+        return handler_404(request)
                 
 @login_required(login_url='/login')
 def advanced_search(request):
@@ -631,7 +642,7 @@ def advanced_search(request):
 def handler_403(request, exception=None):
     return render(request, 'errors/403.html', status=403)
 
-def handler_404(request, exception):
+def handler_404(request, exception=None):
     return render(request, 'errors/404.html', status=404)
 
 def handler_500(request):

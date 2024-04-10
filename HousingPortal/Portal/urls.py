@@ -33,6 +33,7 @@ urlpatterns = [
     # Functionality URLs
     path('delete/', views.delete, name='delete'),
     path('toggle_save/<int:request_id>', views.toggle_save, name='toggle_save'),
+    path('check_username/', views.check_username, name='check_username'),
     
     # TODO Change urls below to new site structure
     path('forms/maintenance', views.maintenance, name='maintenance'),
