@@ -383,8 +383,9 @@ def request_info(request, request_id):
     elif request.user == maintenance_request.user_id:
         can_edit_request = (request.user.is_superuser or request.user.manager)
         maintenance_notes = maintenance_request.maintenance_notes.filter(tenant_viewable=True)
+        saved = request_is_saved(request, request_id)
         return render(request, 'dashboard/data/request_info.html',
-                      {'maintenance_request': maintenance_request, 'can_edit_request': can_edit_request,'maintenance_notes': maintenance_notes})
+                      {'maintenance_request': maintenance_request, 'can_edit_request': can_edit_request,'maintenance_notes': maintenance_notes, 'saved': saved})
     else:
         return handler_403(request)
     
