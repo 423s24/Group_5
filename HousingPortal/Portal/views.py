@@ -525,18 +525,20 @@ def request_is_saved(request, request_id):
 @login_required(login_url="/login")
 def toggle_save(request, request_id):
     if request.method == 'POST':
-        try:
-            existing_relationship = UserAccountMaintenanceRequest.objects.get(
-                user_id=request.user, maintenanceRequest_id=MaintenanceRequest.objects.get(pk=request_id)
-            )
-            existing_relationship.delete()
-            return JsonResponse({'saved': False})
-        except UserAccountMaintenanceRequest.DoesNotExist:
-            new_relationship = UserAccountMaintenanceRequest.objects.create(
-                user_id=request.user, maintenanceRequest_id=MaintenanceRequest.objects.get(pk=request_id)
-            )
-            new_relationship.save()
-            return JsonResponse({'saved': True})
+        maintenance_request = MaintenanceRequest.objects.get(pk=request_id)
+        if (request.user.is_superuser or request.user.manager != None or request.user == maintenance_request.user_id):
+            try:
+                existing_relationship = UserAccountMaintenanceRequest.objects.get(
+                    user_id=request.user, maintenanceRequest_id=maintenance_request
+                )
+                existing_relationship.delete()
+                return JsonResponse({'saved': False})
+            except UserAccountMaintenanceRequest.DoesNotExist:
+                new_relationship = UserAccountMaintenanceRequest.objects.create(
+                    user_id=request.user, maintenanceRequest_id=maintenance_request
+                )
+                new_relationship.save()
+                return JsonResponse({'saved': True})
 
 # Views for handling deleting
 @login_required(login_url="/login")
