@@ -251,6 +251,38 @@ def maintenance_requests(request):
             return render(request, 'dashboard/pages/maintenance_requests.html')
     else:
         return handler_403(request)
+    
+@login_required(login_url="/login")
+def saved_requests(request):
+    if request.user.is_superuser or (request.user.manager != None):
+        search_query = request.GET.get('search_query')
+        if search_query:
+            maintenance_requests = MaintenanceRequest.objects.filter(
+                Q(id__icontains=search_query) |
+                Q(first_name__icontains=search_query) |
+                Q(last_name__icontains=search_query) |
+                Q(title__icontains=search_query) |
+                Q(status__icontains=search_query) |
+                Q(building__building_name__icontains=search_query) |
+                Q(unit__icontains=search_query) |
+                Q(entry_permission__icontains=search_query),
+                useraccountmaintenancerequest__user_id=request.user
+            )
+        else:
+            maintenance_requests = MaintenanceRequest.objects.filter(
+                useraccountmaintenancerequest__user_id=request.user
+            )
+
+        html = render_to_string('dashboard/data/requests_htmx.html', {'maintenance_requests': maintenance_requests})
+        if request.headers.get('HX-Request'):
+            #time.sleep(2)
+            return HttpResponse(html)
+        else:
+            return render(request, 'dashboard/pages/saved_requests.html')
+    else:
+        return handler_403(request)
+    
+
 
 @login_required(login_url="/login")
 def maintenance(request):
@@ -349,7 +381,8 @@ def request_info(request, request_id):
     if request.user.is_superuser or request.user.manager != None:
         can_edit_request = (request.user.is_superuser or request.user.manager)
         maintenance_notes = maintenance_request.maintenance_notes.all()
-        return render(request, 'dashboard/data/request_info.html', {'maintenance_request': maintenance_request, 'can_edit_request': can_edit_request, 'maintenance_notes': maintenance_notes})
+        saved = request_is_saved(request, request_id)
+        return render(request, 'dashboard/data/request_info.html', {'maintenance_request': maintenance_request, 'can_edit_request': can_edit_request, 'maintenance_notes': maintenance_notes, 'saved': saved})
     elif request.user == maintenance_request.user_id:
         can_edit_request = (request.user.is_superuser or request.user.manager)
         maintenance_notes = maintenance_request.maintenance_notes.filter(tenant_viewable=True)
@@ -478,6 +511,32 @@ def logout_view(request):
     logout(request)
     return redirect('/')
 
+def request_is_saved(request, request_id):
+    try:
+        existing_relationship = UserAccountMaintenanceRequest.objects.get(
+            user_id=request.user, maintenanceRequest_id=MaintenanceRequest.objects.get(pk=request_id)
+        )
+        # Relationship exists
+        return True
+    except UserAccountMaintenanceRequest.DoesNotExist:
+        # Relationship does not exist
+        return False
+    
+@login_required(login_url="/login")
+def toggle_save(request, request_id):
+    if request.method == 'POST':
+        try:
+            existing_relationship = UserAccountMaintenanceRequest.objects.get(
+                user_id=request.user, maintenanceRequest_id=MaintenanceRequest.objects.get(pk=request_id)
+            )
+            existing_relationship.delete()
+            return JsonResponse({'saved': False})
+        except UserAccountMaintenanceRequest.DoesNotExist:
+            new_relationship = UserAccountMaintenanceRequest.objects.create(
+                user_id=request.user, maintenanceRequest_id=MaintenanceRequest.objects.get(pk=request_id)
+            )
+            new_relationship.save()
+            return JsonResponse({'saved': True})
 
 # Views for handling deleting
 @login_required(login_url="/login")

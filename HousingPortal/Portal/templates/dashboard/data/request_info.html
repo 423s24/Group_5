@@ -31,6 +31,62 @@ document.addEventListener("DOMContentLoaded", function() {
             window.open(URL.createObjectURL(doc.output("blob")));
         });
     });
+    var save_button = document.getElementById("save");
+    var request_id = save_button.getAttribute('request-id');
+    save_button.addEventListener("click", function() {
+        toggle_save(request_id);
+    });
+
+    function toggle_save(request_id) {
+    // Send a POST request to the Django /toggle_save/request_id URL
+    fetch('/toggle_save/'+request_id, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken') // Get CSRF token from cookie
+        },
+        credentials: 'same-origin', // Include cookies in the request
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Check if 'saved' key exists in the response
+        if ('saved' in data) {
+            // Get the bookmark icon element
+            var bookmarkIcon = document.getElementById("bookmarkIcon");
+            
+            // Change the class of the bookmark icon based on the response
+            if (data.saved) {
+                bookmarkIcon.classList.remove("bi-bookmark");
+                bookmarkIcon.classList.add("bi-bookmark-fill");
+            } else {
+                bookmarkIcon.classList.remove("bi-bookmark-fill");
+                bookmarkIcon.classList.add("bi-bookmark");
+            }
+        } else {
+            console.error('Response does not contain the "saved" key.');
+        }
+    })
+    .catch(error => {
+        console.error('Error toggling save:', error);
+    });
+    
+}
+// Function to get CSRF token from cookie
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i].trim();
+            // Check if the cookie name matches the desired name
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
 });
 </script>
 
@@ -59,6 +115,14 @@ document.addEventListener("DOMContentLoaded", function() {
     <a class="export-link" id="download">
         <i class="bi bi-box-arrow-up"></i>
         <span class="tooltip">Export Table</span>
+    </a>
+    <a class="export-link" id="save" request-id="{{ maintenance_request.id }}">
+        {% if saved %}
+        <i id="bookmarkIcon" class="bi bi-bookmark-fill"></i>
+        {% else %}
+        <i id="bookmarkIcon" class="bi bi-bookmark"></i>
+        {% endif %}
+        <span class="tooltip">Save Request</span>
     </a>
     <br>
     {% if can_edit_request %}

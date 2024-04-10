@@ -3,6 +3,7 @@
 {% block head %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/global.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/status.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/dashboard.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/skeleton_loader.css' %}">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js"></script>
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.js"></script>
@@ -30,55 +31,84 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 });
-
 </script>
-
-
-
+    
     <style>
         .table td, .table th {
-            width: 12.5%;
             text-align: center;
             overflow: auto;
+        }
+
+        .links {
+            font-size: 24px; /* Adjust the font size to make the icon slightly bigger */
+            color: black; /* Change the color of the icon to black */
+            text-decoration: none; /* Remove underline from the link */
+            position: relative; /* Needed for positioning the tooltip */
+        }
+
+        .links:hover .tooltip {
+            visibility: visible; /* Show the tooltip on hover */
+            opacity: 1; /* Make the tooltip fully visible */
+        }
+
+        .link-container {
+            display: flex;
         }
     </style>
 {% endblock %}
 {% block content %}
     <div class="container">
+    <br>
+    <div class="fab-container">
+        <a href="{% url 'maintenance' %}">
+            <button class="fab">
+                <i class="bi bi-plus"></i>
+            </button>
+        </a>
+    </div>
+    <h1>Saved Requests</h1>
+    <hr>
         <br>
         <div id="search-bar" class="form-group">
-            <input type="search" name="search_query" placeholder="Search..." hx-get="." hx-trigger="input changed delay:500ms, search" hx-target="#request-data" hx-indicator=".htmx-indicator" class="form-control">
+            <input type="search" name="search_query" placeholder="Search..." hx-get="/dashboard/requests/saved" hx-trigger="input changed delay:500ms, search" hx-target="#request-data" hx-indicator=".htmx-indicator" class="form-control">
         </div>
         <span class="htmx-indicator"> 
             <strong>Searching..</strong>
             <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
         </span> 
         <br>
-        <button id="download">Export</button>
-        <br>
+        <div class="link-container">
+        <a href="{% url 'maintenance' %}" class="links">
+            <i class="bi bi-file-earmark-plus"></i>
+            <span class="tooltip">Add Request</span>
+        </a>
+        <a class="links" id="download">
+            <i class="bi bi-box-arrow-up"></i>
+            <span class="tooltip">Export Table</span>
+        </a>
+        </div>
         <table class="table table-hover" id="request-table">
             <thead>
                 <tr>
-                    <th>Request ID</th>
+                    <th>ID</th>
                     <th>Name</th>
                     <th>Title</th>
                     <th>Status</th>
-                    <th>Building</th>
-                    <th>Unit</th>
-                    <th>Access Permission</th>
-                    <i class="bi bi-three-dots-vertical"></i>
+                    <th class="hidden">Building</th>
+                    <th class="hidden">Unit</th>
+                    <th class="hidden">Access Permission</th>
                 </tr>
             </thead>
-            <tbody id="request-data" hx-trigger="load delay:200ms" hx-get="." hx-swap="innerHTML">
+            <tbody id="request-data" hx-trigger="load delay:200ms" hx-get="/dashboard/requests/saved" hx-swap="innerHTML">
                 {% for _ in "12345678" %}
                 <tr class="skeleton-row">
                     <td><span class="skeleton-loader"></span></td>
                     <td><span class="skeleton-loader"></span></td>
                     <td><span class="skeleton-loader"></span></td>
                     <td><span class="skeleton-loader"></span></td>
-                    <td><span class="skeleton-loader"></span></td>
-                    <td><span class="skeleton-loader"></span></td>
-                    <td><span class="skeleton-loader"></span></td>
+                    <td class="hidden"><span class="skeleton-loader"></span></td>
+                    <td class="hidden"><span class="skeleton-loader"></span></td>
+                    <td class="hidden"><span class="skeleton-loader"></span></td>
                 </tr>
                 {% endfor %}
             </tbody>
