@@ -93,7 +93,7 @@
         </tr>
         <tr>
             <td>Request</td>
-            <td><p>{{ maintenance_request.request }}</p></td>
+            <td><p>{{ maintenance_request.request |linebreaks }}</p></td>
         </tr>
         <tr>
             <td>Entry Permission</td>
@@ -121,7 +121,7 @@
                             <tr>
                                 <td><a href="/dashboard/users/{{notes.user_id}}">{{ notes.user_id }}</a></td>
                                 <td id="note_{{ notes.id }}">
-                                    <p>{{notes.notes}}</p>
+                                    <p>{{notes.notes|linebreaks }}</p>
                                     <span class="date">{{notes.date_submitted}}</span>
                                 </td>
                                 <td>
