@@ -13,6 +13,7 @@ urlpatterns = [
     path('dashboard/requests/', views.maintenance_requests, name='maintenance_requests'),
     path('dashboard/requests/saved', views.saved_requests, name='saved_requests'),
     path('dashboard/requests/<int:request_id>', views.request_info, name='request_info'),
+    path('dashboard/requests/create', views.maintenance, name='maintenance'),
     path('dashboard/users/', views.users, name='users'),
     path('dashboard/users/<str:username>/', views.view_user, name='view_user'),
     #TODO dashboard/users/create
@@ -36,9 +37,6 @@ urlpatterns = [
     path('check_username/', views.check_username, name='check_username'),
     
     # TODO Change urls below to new site structure
-    path('forms/maintenance', views.maintenance, name='maintenance'),
-    path('createbuilding/', views.add_building, name='createbuilding'),
-    path('building/<int:building_id>', views.building_info, name='building_info'),
     path('request/<int:request_id>', views.request_info, name='request_info'),
     path('request/<int:request_id>/add_note', views.add_note, name='add_note'),
     path('request/edit_note/<int:note_id>/', views.edit_note, name='edit_note'),

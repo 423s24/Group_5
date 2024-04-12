@@ -60,6 +60,9 @@ class UserAccountMaintenanceRequest(models.Model):
     user_id = models.ForeignKey('UserAccount', on_delete=models.CASCADE)
     maintenanceRequest_id = models.ForeignKey('MaintenanceRequest', on_delete=models.CASCADE)
 
+    class Meta:
+        unique_together = ('user_id', 'maintenanceRequest_id')
+
 class Manager(models.Model):
     archived = models.BooleanField(default=False)
     #managerBuilding = models.ManyToManyField('Building', through='ManagerBuilding')

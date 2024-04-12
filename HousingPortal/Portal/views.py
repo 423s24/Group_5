@@ -137,7 +137,7 @@ def dashboard(request):
 @login_required(login_url="/login")
 def admin_dashboard(request):
     users = UserAccount.objects.all()
-    maintenance_requests = MaintenanceRequest.objects.order_by('-date_submitted')[:10]
+    maintenance_requests = MaintenanceRequest.objects.order_by('-id')[:10]
     buildings = Building.objects.all()
     per_page = 10
     paginator = Paginator(users, per_page)
@@ -156,8 +156,8 @@ def admin_dashboard(request):
 
 @login_required(login_url="/login")
 def manager_dashboard(request):
-    users = UserAccount.objects.all()
-    maintenance_requests = MaintenanceRequest.objects.order_by('-date_submitted')[:10]
+    users = UserAccount.objects.all().order_by('id')
+    maintenance_requests = MaintenanceRequest.objects.order_by('-id')[:10]
     per_page = 10
     paginator = Paginator(users, per_page)
     page = request.GET.get('page', 1)
@@ -189,9 +189,9 @@ def users(request):
                 Q(first_name__icontains=search_query) |
                 Q(last_name__icontains=search_query) |
                 Q(email__icontains=search_query)
-            )
+            ).order_by('id')
         else:
-            users = UserAccount.objects.all()
+            users = UserAccount.objects.all().order_by('id')
 
         html = render_to_string('dashboard/data/users_htmx.html', {'users': users})
         if request.headers.get('HX-Request'):
@@ -213,9 +213,9 @@ def buildings(request):
                 Q(state__icontains=search_query) |
                 Q(country__icontains=search_query) |
                 Q(zipcode__icontains=search_query)
-            )
+            ).order_by('id')
         else:
-            buildings = Building.objects.all()
+            buildings = Building.objects.all().order_by('id')
 
         html = render_to_string('dashboard/data/buildings_htmx.html', {'buildings': buildings})
         if request.headers.get('HX-Request'):
@@ -239,9 +239,9 @@ def maintenance_requests(request):
                 Q(building__building_name__icontains=search_query) |
                 Q(unit__icontains=search_query) |
                 Q(entry_permission__icontains=search_query)
-            )
+            ).order_by('id')
         else:
-            maintenance_requests = MaintenanceRequest.objects.all()
+            maintenance_requests = MaintenanceRequest.objects.all().order_by('id')
 
         html = render_to_string('dashboard/data/requests_htmx.html', {'maintenance_requests': maintenance_requests})
         if request.headers.get('HX-Request'):
@@ -266,11 +266,11 @@ def saved_requests(request):
             Q(unit__icontains=search_query) |
             Q(entry_permission__icontains=search_query),
             useraccountmaintenancerequest__user_id=request.user
-        )
+        ).order_by('id')
     else:
         maintenance_requests = MaintenanceRequest.objects.filter(
             useraccountmaintenancerequest__user_id=request.user
-        )
+        ).order_by('id')
 
     html = render_to_string('dashboard/data/requests_htmx.html', {'maintenance_requests': maintenance_requests})
     if request.headers.get('HX-Request'):
@@ -514,10 +514,8 @@ def request_is_saved(request, request_id):
         existing_relationship = UserAccountMaintenanceRequest.objects.get(
             user_id=request.user, maintenanceRequest_id=MaintenanceRequest.objects.get(pk=request_id)
         )
-        # Relationship exists
         return True
     except UserAccountMaintenanceRequest.DoesNotExist:
-        # Relationship does not exist
         return False
     
 def check_username(request):
