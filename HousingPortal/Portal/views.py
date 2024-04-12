@@ -1,4 +1,4 @@
-from django.db.models import Q
+from django.db.models import Q, Count
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.utils import timezone
@@ -279,6 +279,29 @@ def saved_requests(request):
     else:
         return render(request, 'dashboard/pages/saved_requests.html')
     
+
+
+@login_required(login_url="/login")
+def sort_requests(request):
+    search_query = request.GET.get('search_query')
+    sort_by = request.GET.get('sort_by', 'id')  # Default sorting is by 'id'
+    if search_query:
+        maintenance_requests = MaintenanceRequest.objects.filter(
+            Q(id__icontains=search_query) |
+            Q(first_name__icontains=search_query) |
+            Q(last_name__icontains=search_query) |
+            Q(title__icontains=search_query) |
+            Q(status__icontains=search_query) |
+            Q(building__building_name__icontains=search_query) |
+            Q(unit__icontains=search_query) |
+            Q(entry_permission__icontains=search_query)
+        ).order_by(sort_by)
+    else:
+        maintenance_requests = MaintenanceRequest.objects.all().order_by(sort_by)
+
+    html = render_to_string('dashboard/data/requests_htmx.html', {'maintenance_requests': maintenance_requests})
+    return HttpResponse(html)
+
 
 
 @login_required(login_url="/login")
@@ -589,52 +612,75 @@ def delete(request):
 @login_required(login_url='/login')
 def advanced_search(request):
     if request.user.is_superuser:
-        search_query = request.GET.get('search_query')
         search_option = request.GET.get('search_option')
 
-        search_results = []
-
-        # Temporary for the sprint 3 will need to refine it
-        if search_option == 'user_accounts':
-            search_results = UserAccount.objects.filter(
-                Q(username__icontains=search_query) |
-                Q(first_name__icontains=search_query) |
-                Q(last_name__icontains=search_query)
-            )
-        elif search_option == 'buildings':
-            search_results = Building.objects.filter(
-                Q(name__icontains=search_query) |
-                Q(address__icontains=search_query)
-            )
-        elif search_option == 'maintenance_requests':
-            search_results = MaintenanceRequest.objects.filter(
-                Q(first_name__icontains=search_query) |
-                Q(last_name__icontains=search_query) |
-                Q(request__icontains=search_query)
-            )
-        elif search_option == 'maintenance_notes':
-            search_results = MaintenanceNotes.objects.filter(
-                Q(notes__icontains=search_query)
-            )
+        if search_option == "user_accounts":
+            return search_user_accounts(request)
+        elif search_option == "buildings":
+            return search_buildings(request)
+        elif search_option == "maintenance_requests":
+            return search_maintenance_requests(request)
         else:
-            user_accounts = UserAccount.objects.all()
-            buildings = Building.objects.all()
-            maintenance_requests = MaintenanceRequest.objects.all()
-            maintenance_notes = MaintenanceNotes.objects.all()
-
-            # Combine the results into a single list
-            search_results.extend(user_accounts)
-            search_results.extend(buildings)
-            search_results.extend(maintenance_requests)
-            search_results.extend(maintenance_notes)
-
-        html = render_to_string('dashboard/data/users_htmx.html', {'users': users})
-        if request.headers.get('HX-Request'):
-            return HttpResponse(html)
-        else:
-            return render(request, 'dashboard/pages/advanced_search.html', {'search_results': search_results})
+            return render(request, 'dashboard/pages/advanced_search.html')
     else:
         return handler_403(request)
+
+
+def search_user_accounts(request):
+    search_query = request.GET.get('search_query')
+
+    users = UserAccount.objects.filter(
+        Q(username__icontains=search_query) |
+        Q(first_name__icontains=search_query) |
+        Q(last_name__icontains=search_query) |
+        Q(email__icontains=search_query)
+    )
+
+    html_content = render_to_string('dashboard/data/user.html', {'users': users})
+
+    return JsonResponse({'html_content': html_content})
+
+@login_required(login_url='/login')
+def search_buildings(request):
+    search_query = request.GET.get('search_query')
+
+    buildings = Building.objects.filter(
+        Q(building_name__icontains=search_query) |
+        Q(address__icontains=search_query) |
+        Q(city__icontains=search_query) |
+        Q(state__icontains=search_query) |
+        Q(country__icontains=search_query) |
+        Q(zipcode__icontains=search_query)
+    )
+    html_content = render_to_string('dashboard/data/building.html', {'buildings': buildings})
+
+    return JsonResponse({'html_content': html_content})
+
+@login_required(login_url='/login')
+def search_maintenance_requests(request):
+    search_query = request.GET.get('search_query')
+
+    maintenance_requests = MaintenanceRequest.objects.annotate(
+        num_notes=Count('maintenance_notes')  # Count the number of maintenance notes for each request
+    ).filter(
+        Q(user_id__username__icontains=search_query) |
+        Q(first_name__icontains=search_query) |
+        Q(last_name__icontains=search_query) |
+        Q(phone__icontains=search_query) |
+        Q(unit__icontains=search_query) |
+        Q(building__building_name__icontains=search_query) |
+        Q(status__icontains=search_query) |
+        Q(priority__icontains=search_query) |
+        Q(request__icontains=search_query) |
+        Q(entry_permission__icontains=search_query) |
+        Q(title__icontains=search_query) |
+        Q(maintenance_notes__notes__icontains=search_query) |  # Search within maintenance notes
+        Q(num_notes__gt=0)  # Filter requests with at least one maintenance note
+    ).distinct()  # Ensure distinct results
+
+    html_content = render_to_string('dashboard/data/requests.html', {'maintenance_requests': maintenance_requests})
+
+    return JsonResponse({'html_content': html_content})
 
 
 # Views for errors

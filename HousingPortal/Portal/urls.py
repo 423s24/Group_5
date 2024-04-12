@@ -20,8 +20,11 @@ urlpatterns = [
     path('dashboard/buildings/', views.buildings, name='buildings'),
     path('dashboard/buildings/<int:building_id>', views.building_info, name='building_info'),
     path('dashboard/buildings/create/', views.add_building, name='createbuilding'),
-    path('search/', views.advanced_search, name='search'),
-   
+    path('search/', views.advanced_search, name='advanced_search'),
+    path('search/user_accounts', views.search_user_accounts, name='search_user_accounts'),
+    path('search/buildings', views.search_buildings, name='search_buildings'),
+    path('search/maintenance_requests', views.search_maintenance_requests, name='search_maintenance_requests'),
+
     # Authenticaiton URLs
     path('signup/', views.signup_view, name='signup'),
     path('login/', views.login_view, name='login'),

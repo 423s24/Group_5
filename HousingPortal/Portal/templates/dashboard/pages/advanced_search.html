@@ -1,64 +1,60 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block head %}
-<link rel="stylesheet" type="text/css" href="{% static 'css/global.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/global.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/global.css' %}">
+    <script>
+        function updateTabs() {
+            var search_query = document.getElementById('search_query').value;
+            var search_option = document.querySelector('input[name="search_option"]:checked').value;
+            var url = "";
+
+            if (search_option === "user_accounts") {
+                url = "{% url 'search_user_accounts' %}";
+            } else if (search_option === "buildings") {
+                url = "{% url 'search_buildings' %}";
+            } else if (search_option === "maintenance_requests") {
+                url = "{% url 'search_maintenance_requests' %}";
+            }
+
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', url + '?search_query=' + encodeURIComponent(search_query), true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+                    var response = JSON.parse(xhr.responseText);
+                    document.getElementById('search_results').innerHTML = response.html_content;
+                }
+            };
+            xhr.send();
+        }
+    </script>
 {% endblock %}
 {% block content %}
-<div class="container">
-    <br>
-    <h1>Search</h1>
-    <hr>
-    <span class="htmx-indicator">
-        <strong>Searching..</strong>
-        <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
-    </span>
-    <div>
-        <form method="GET" action="{% url 'search' %}">
-            <div id="search-bar" class="form-group">
-                <input type="search" name="search_query" placeholder="Search..." hx-get="." hx-trigger="input changed delay:500ms, search" hx-target="#request-data" hx-indicator=".htmx-indicator" class="form-control">
-            </div>
-            <label>
-                <input type="radio" name="search_option" value="user_accounts" hx-post="." hx-trigger="changed"> User Accounts
-            </label><br>
-            <label>
-                <input type="radio" name="search_option" value="buildings" hx-post="." hx-trigger="changed"> Buildings
-            </label><br>
-            <label>
-                <input type="radio" name="search_option" value="maintenance_requests" hx-post="." hx-trigger="changed"> Maintenance Requests
-            </label><br>
-            <label>
-                <input type="radio" name="search_option" value="maintenance_notes" hx-post="." hx-trigger="changed"> Maintenance Notes
-            </label>
-
-        </form>
-    </div>
-    {% if search_results %}
-        <div class="table hoverable-table">
-            {% if search_option == 'user_accounts' %}
-                <table>
-                <thead>
-                    <tr>
-                        <th>Username</th>
-                        <th>First Name</th>
-                        <th>Last Name</th>
-                        <!-- Add other relevant columns -->
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for user in search_results %}
-                        <tr>
-                            <td>{{ user.username }}</td>
-                            <td>{{ user.first_name }}</td>
-                            <td>{{ user.last_name }}</td>
-                            <!-- Add other relevant data -->
-                        </tr>
-                    {% endfor %}
-                </tbody>
-                </table>
-            {% elif search_option == 'buildings' %}
-                {% include 'dashboard/data/building' %}
-            {% endif %}
+    <div class="container">
+        <br>
+        <h1>Search</h1>
+        <hr>
+        <br>
+        <div class="form-group">
+            <input type="search" id="search_query" class="form-control" placeholder="Search...">
         </div>
-    {% endif %}
-</div>
+        <br>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="search_option" id="user_accounts" value="user_accounts" checked>
+            <label class="form-check-label" for="user_accounts">User Accounts</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="search_option" id="buildings" value="buildings">
+            <label class="form-check-label" for="buildings">Buildings</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="search_option" id="maintenance_requests" value="maintenance_requests">
+            <label class="form-check-label" for="maintenance_requests">Maintenance Requests</label>
+        </div>
+        <br>
+        <button type="button" id="search_button" class="btn btn-primary" onclick="updateTabs()">Search</button>
+
+        <div id="search_results"></div>
+
+    </div>
 {% endblock %}

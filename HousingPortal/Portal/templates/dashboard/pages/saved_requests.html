@@ -32,7 +32,65 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 });
 </script>
-    
+    <script>
+    var ascending = true; // Default sorting order is ascending
+
+    function sortTable(columnIndex) {
+        var table, rows, switching, i, x, y, shouldSwitch;
+        table = document.getElementById("request-table");
+        switching = true;
+
+        var icon = document.getElementById("sort-icon-" + columnIndex);
+        if(icon.classList.contains("bi-arrow-up")) {
+            ascending = false;
+        } else {
+            ascending = true;
+        }
+        for (var j = 0; j < 7; j++) {
+            icon = document.getElementById("sort-icon-" + j);
+            icon.classList.remove("bi-arrow-down", "bi-arrow-up");
+        }
+
+        // Show icon for the current column
+        icon = document.getElementById("sort-icon-" + columnIndex);
+        icon.classList.add(ascending ? "bi-arrow-up" : "bi-arrow-down");
+
+        while (switching) {
+            switching = false;
+            rows = table.rows;
+
+            for (i = 1; i < (rows.length - 1); i++) {
+                shouldSwitch = false;
+                x = rows[i].getElementsByTagName("TD")[columnIndex];
+                y = rows[i + 1].getElementsByTagName("TD")[columnIndex];
+
+                if (ascending) {
+                    if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                        shouldSwitch = true;
+                        break;
+                    }
+                } else {
+                    if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                        shouldSwitch = true;
+                        break;
+                    }
+                }
+            }
+
+            if (shouldSwitch) {
+                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                switching = true;
+            } else {
+                if (ascending) {
+                    ascending = false; // Change sorting order to descending
+                } else {
+                    ascending = true; // Change sorting order to ascending
+                }
+            }
+        }
+    }
+</script>
+
     <style>
         .table td, .table th {
             text-align: center;
@@ -90,13 +148,13 @@ document.addEventListener("DOMContentLoaded", function() {
         <table class="table table-hover" id="request-table">
             <thead>
                 <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Title</th>
-                    <th>Status</th>
-                    <th class="hidden">Building</th>
-                    <th class="hidden">Unit</th>
-                    <th class="hidden">Access Permission</th>
+                    <th onclick="sortTable(0)">ID<i id="sort-icon-0" class="bi"></i></th>
+                    <th onclick="sortTable(1)">Name<i id="sort-icon-1" class="bi"></i></th>
+                    <th onclick="sortTable(2)">Title<i id="sort-icon-2" class="bi"></i></th>
+                    <th onclick="sortTable(3)">Status<i id="sort-icon-3" class="bi"></i></th>
+                    <th onclick="sortTable(4)" class="hidden">Building<i id="sort-icon-4" class="bi"></i></th>
+                    <th onclick="sortTable(5)" class="hidden">Unit<i id="sort-icon-5" class="bi"></i></th>
+                    <th onclick="sortTable(6)" class="hidden">Access Permission<i id="sort-icon-6" class="bi"></i></th>
                 </tr>
             </thead>
             <tbody id="request-data" hx-trigger="load delay:200ms" hx-get="/dashboard/requests/saved" hx-swap="innerHTML">
