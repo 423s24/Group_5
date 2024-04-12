@@ -60,3 +60,27 @@
     border-color: #b02a37;
     color: #b02a37;
 }
+
+.low {
+    background-color: rgba(0, 128, 0, var(--opacity-value)); /* green */
+    border-color: green;
+    color: green;
+}
+
+.medium {
+    background-color: rgba(255, 255, 0, var(--opacity-value)); /* yellow */
+    border-color: darkgoldenrod;
+    color: darkgoldenrod;
+}
+
+.high {
+    background-color: rgba(255, 165, 0, var(--opacity-value)); /* orange */
+    border-color: orange;
+    color: orange;
+}
+
+.urgent {
+    background-color: rgba(255, 0, 0, var(--opacity-value)); /* red */
+    border-color: red;
+    color: red;
+}

@@ -1,35 +1,37 @@
-function deleteUser(id_str) {
-    id = parseInt(id_str);
 
-    var data = {
-        type: 'UserAccount',
-        id: id
-    };
+window.onload = function() {
+    var deleteUserModal = document.getElementById("deleteUserModal");
+    var confirmDelete = document.getElementById('confirmDelete');
+    var cancelDelete = document.getElementById('cancelDelete');
 
-    var confirmed = window.confirm('Are you sure you want to delete this account?');
-    if (confirmed) {
-        fetch('/delete/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': getCookie('csrftoken') // Get CSRF token from cookie
-            },
-            credentials: 'same-origin', // Include cookies in the request
-            body: JSON.stringify(data) // Convert data to JSON format
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            // Handle successful response
-            console.log('Delete success');
-            //window.history.back();
-            window.location.replace("/dashboard");
-        })
-        .catch(error => {
-            // Handle errors
-            console.error('Error submitting deleting:', error);
-        });
+    window.deleteUser = function(id_str) {
+        id = parseInt(id_str)
+        deleteUserModal.style.display = "block";
+        var data = {'type': 'UserAccount', 'id': id}
+        cancelDelete.onclick = function () {
+            deleteUserModal.style.display = "none";
+        }
+
+        confirmDelete.onclick = function () {
+            fetch('/delete/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                credentials: 'same-origin',
+                body: JSON.stringify(data)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        window.location.replace("/dashboard");
+                    } else {
+                        alert("There was an error deleting your account.");
+                    }
+                });
+            deleteUserModal.style.display = "none";
+        }
     }
 }
 

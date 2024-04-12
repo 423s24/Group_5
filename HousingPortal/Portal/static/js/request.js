@@ -1,9 +1,9 @@
 var modal = document.getElementById("editNoteModal");
-var span = document.getElementsByClassName("close")[0];
 var noteText = document.getElementById('noteText');
 var saveNote = document.getElementById('saveNote');
 var cancelNote = document.getElementById('cancelNote');
 var currentNoteId;
+var optionsMenuModal = document.getElementById("optionsMenuModal")
 
 var deleteNoteModal = document.getElementById("deleteNoteModal");
 var confirmDelete = document.getElementById('confirmDelete');
@@ -55,7 +55,6 @@ save_button.addEventListener("click", function() {
 });
 
 
-
 cancelNote.onclick = function() {
     modal.style.display = "none";
 }
@@ -66,9 +65,6 @@ function editNote(noteId) {
     modal.style.display = "block";
 }
 
-span.onclick = function() {
-    modal.style.display = "none";
-}
 
 window.onclick = function(event) {
     if (event.target == modal) {
@@ -134,38 +130,39 @@ confirmDelete.onclick = function() {
 }
 
 
-function deleteRequest(id_str) {
-    id = parseInt(id_str);
+window.onload = function() {
+    var deleteRequestModal = document.getElementById("deleteRequestModal");
+    var confirmDelete = document.getElementById('confirmDelete1');
+    var cancelDelete = document.getElementById('cancelDelete1');
 
-    var data = {
-        type: 'MaintenanceRequest',
-        id: id
-    };
+    window.deleteRequest = function(id_str) {
+        id = parseInt(id_str)
+        deleteRequestModal.style.display = "block";
+        var data = {'type': 'MaintenanceRequest', 'id': id}
+        cancelDelete.onclick = function () {
+            deleteRequestModal.style.display = "none";
+        }
 
-    var confirmed = window.confirm('Are you sure you want to delete this account?');
-    if (confirmed) {
-        fetch('/delete/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': getCookie('csrftoken') // Get CSRF token from cookie
-            },
-            credentials: 'same-origin', // Include cookies in the request
-            body: JSON.stringify(data) // Convert data to JSON format
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            // Handle successful response
-            console.log('Delete success');
-            //window.history.back();
-            window.location.replace("/dashboard");
-        })
-        .catch(error => {
-            // Handle errors
-            console.error('Error submitting deleting:', error);
-        });
+        confirmDelete.onclick = function () {
+            fetch('/delete/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                credentials: 'same-origin',
+                body: JSON.stringify(data)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        window.location.replace("/dashboard");
+                    } else {
+                        alert("There was an error deleting the building.");
+                    }
+                });
+            deleteRequestModal.style.display = "none";
+        }
     }
 }
 

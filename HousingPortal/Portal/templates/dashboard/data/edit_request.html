@@ -12,7 +12,8 @@
     <div class="container">
         <br>
         <h1>Edit Maintenance Request #{{ maintenance_request.id }}</h1>
-
+        <hr>
+        <br>
         <form method="post" action="{% url 'edit_request' request_id=maintenance_request.id %}">
           {% csrf_token %}
 
@@ -78,13 +79,22 @@
                         </select></td>
                     </tr>
                     <tr>
+                        <td><label for="priority">Priority:</label></td>
+                        <td><select id="priority" name="priority">
+                        <option value="Low" {% if maintenance_request.priority == "Low" %}selected{% endif %}>Low</option>
+                        <option value="Medium" {% if maintenance_request.priority == "Medium" %}selected{% endif %}>Medium</option>
+                        <option value="High" {% if maintenance_request.priority == "High" %}selected{% endif %}>High</option>
+                        <option value="Urgent" {% if maintenance_request.priority == "Urgent" %}selected{% endif %}>Urgent</option>
+                </select></td>
+                    </tr>
+                    <tr>
                         <td>Date Completed:</td>
-                        <td>{{ maintenance_request.date_completedd }}</td>
+                        <td>{{ maintenance_request.date_completed }}</td>
                     </tr>
                 </tbody>
             </table>
             <br>
-          <input type="submit" value="Save Changes">
+          <input type="submit" value="Save Changes" class="button-17">
             <br>
             <br>
         </form>

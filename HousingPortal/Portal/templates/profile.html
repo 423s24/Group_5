@@ -4,6 +4,7 @@
 {% block title %}User Profile{% endblock %}
 {% block head %}
     <script src="{% static 'js/profile.js' %}" defer></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/request.css' %}">
 {% endblock %}
 {% block content %}
     <div class="container">
@@ -17,10 +18,10 @@
             <p>Email: <span id="email">{{user.email}}</span></p>
             <p>Account Type: <span id="account-type">{{user.account_type}}</span></p>
             <p>Date joined: <span id="date-joined">{{user.date_joined}}</span></p>
-            <button id="edit-button">Edit</button>
+            <button id="edit-button" class="button-17">Edit</button>
             <br>
             <br>
-            <button onclick="deleteUser('{{user.id}}')">Delete User</button>
+            <button onclick="deleteUser('{{user.id}}')" class="button-17">Delete User</button>
           </div>
         <div id="edit-form" style="display:none;">
             <h1>Edit Profile</h1>
@@ -37,8 +38,17 @@
             <input type="email" id="edit-email"><br>
             <p>Account Type: <span id="account-type">{{user.account_type}}</span></p>
             <p>Date joined: <span id="date-joined">{{user.date_joined}}</span></p>
-            <button id="cancel-button">Cancel</button>
-            <button id="save-button">Save</button>
+            <button id="cancel-button" class="button-17">Cancel</button>
+            <button id="save-button" class="button-17">Save</button>
           </div>
     </div>
+    <div id="deleteUserModal" class="modal">
+    <div class="modal-content">
+        <p>Are you sure you want to delete your account?</p>
+        <div id="modal-buttons">
+            <button id="cancelDelete" class="button-17">Cancel</button>
+            <button id="confirmDelete" class="button-17">Delete Account</button>
+        </div>
+    </div>
+</div>
 {% endblock %}

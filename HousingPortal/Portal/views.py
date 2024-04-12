@@ -319,10 +319,11 @@ def maintenance(request):
         building_id = request.POST.get('building')
         date_submitted = timezone.now()
         building = Building.objects.get(id=building_id)
+        priority = request.POST.get('priority')
         entry_permission = request.POST.get('entry_permission') == '1'
         send_email_thread(building.building_name,address,unit,full_name,phone,entry_permission,title, req,"cs423robot@gmail.com","Maintenance Request")
         send_email_thread(building.building_name,address,unit,full_name,phone,entry_permission,title, req,request.user.email,"Maintenance Request Confirmation")
-        maintenanceRequest = MaintenanceRequest.objects.create(user_id=request.user, first_name=first_name, last_name=last_name, address=address, unit=unit, request=req, phone=phone, building=building, entry_permission=entry_permission, title=title, date_submitted=date_submitted)
+        maintenanceRequest = MaintenanceRequest.objects.create(user_id=request.user, first_name=first_name, last_name=last_name, address=address, unit=unit, request=req, phone=phone, building=building, priority=priority, entry_permission=entry_permission, title=title, date_submitted=date_submitted)
         return redirect('/request/' + str(maintenanceRequest.id))
 
     return render(request, 'forms/maintenance/maintenance.html', {'buildings': buildings})
@@ -355,6 +356,7 @@ def edit_request(request, request_id):
         maintenance_request.phone = request.POST.get('phone', maintenance_request.phone)
         maintenance_request.entry_permission = request.POST.get('entry_permission', maintenance_request)
         maintenance_request.status = request.POST.get('status', maintenance_request.status)
+        maintenance_request.priority = request.POST.get('priority', maintenance_request.priority)
         building_id = request.POST.get('building')
         building = get_object_or_404(Building, pk=building_id)
         maintenance_request.building = building

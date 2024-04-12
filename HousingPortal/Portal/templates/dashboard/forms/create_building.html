@@ -1,11 +1,20 @@
 <!-- dashboard/forms/create_building.html -->
 {% extends 'base.html' %}
+{% load static %}
 {% block title %}Create Building{% endblock %}
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/global.css' %}">
+{% endblock %}
 {% block content %}
-  <h2>Create Building</h2>
-  <form method="post" action="">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Save</button>
-  </form>
+    <div class="container">
+    <br>
+      <h1>Create Building</h1>
+      <hr>
+        <br>
+        <form method="post" action="">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="button-17">Save</button>
+      </form>
+    </div>
 {% endblock %}

@@ -2,7 +2,6 @@
 {% load static %}
 {% block head %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/global.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'css/global.css' %}">
     <script>
         function updateTabs() {
             var search_query = document.getElementById('search_query').value;
@@ -52,7 +51,7 @@
             <label class="form-check-label" for="maintenance_requests">Maintenance Requests</label>
         </div>
         <br>
-        <button type="button" id="search_button" class="btn btn-primary" onclick="updateTabs()">Search</button>
+        <button type="button" id="search_button" class="button-17" onclick="updateTabs()">Search</button>
 
         <div id="search_results"></div>
 
