@@ -3,6 +3,7 @@
 {% load tz %}
 {% block title %}Maintenance Form{% endblock %}
 {% block content %}
+    <div class="container">
 <head>
     <script>
         window.onbeforeunload = () => {
@@ -14,7 +15,9 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/maintenance.css' %}">
 </head>
           <div class="form-container">
+          <br>
             <h1>Maintenance Form</h1>
+            <hr>
             <br>
             <form method="POST">
                 {% csrf_token %}
@@ -37,6 +40,7 @@
                 <p><input type="text" name="title" placeholder="Title" required></p>
                 <textarea name="request" placeholder="Maintenance Request" rows="4" required></textarea>
                 <br>
+                <br>
                 <p><select id="priority" name="priority">
                         <option value="Low">Low</option>
                         <option value="Medium">Medium</option>
@@ -46,6 +50,6 @@
                 <button type="submit" class="button-17">Submit</button>
             </form>
         </div>
-        
+        </div>
 
 {% endblock %}
