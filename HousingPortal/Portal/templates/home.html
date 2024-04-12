@@ -1,10 +1,23 @@
 {% extends 'base.html' %}
+{% load static %}
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/global.css' %}">
+    <style>
+    a {
+        text-decoration: none;
+    }
+
+    a:visited {
+        color: white;
+    }
+    </style>
+{% endblock %}
 {% block content %}
 <div class="container">
 <br>
 <h1>Welcome to HRDC Housing Portal</h1>
     <hr>
 <p>Here you can put in a maintenance request form, housing application, and pay your bill.</p>
-<p>Click <a href="login">Login</a> to get started!</p>
+<p>Click <a href="login" class="button-17">Login</a> to get started!</p>
 </div>
 {% endblock %}
