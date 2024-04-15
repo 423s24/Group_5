@@ -1,3 +1,18 @@
+function showNotification(message, isSuccess) {
+    var notification = document.getElementById('notification');
+    var messageElement = document.getElementById('notificationMessage');
+
+    // Set the message and styles based on success or failure
+    messageElement.textContent = message;
+    notification.style.backgroundColor = isSuccess ? '#90ee90' : '#f08080'; // Green for success, red for failure
+    notification.style.display = 'block';
+
+    // Hide the notification after 3 seconds
+    setTimeout(function() {
+        notification.style.display = 'none';
+    }, 3000);
+}
+
 document.getElementById('cancel-button').addEventListener('click', function() {
     document.getElementById('edit-form').style.display = 'none';
     document.getElementById('building-info').style.display = 'block';
@@ -57,10 +72,15 @@ function submitChanges() {
         }
         // Handle successful response
         console.log('Changes submitted successfully');
+        // Call this function to show a success notification
+        showNotification('Changes were successful.', true);
+
     })
     .catch(error => {
         // Handle errors
         console.error('Error submitting changes:', error);
+        // Call this function to show a failure notification
+        showNotification('Changes were not successful.', false);
     });
 }
 // Function to get CSRF token from cookie

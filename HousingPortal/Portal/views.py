@@ -346,7 +346,6 @@ def building_info(request, building_id):
             building.state = updated_state
             building.country = updated_country
             building.zipcode = updated_zipcode
-            
 
             try:
                 building.full_clean()  # This will run all validators on the model fields
