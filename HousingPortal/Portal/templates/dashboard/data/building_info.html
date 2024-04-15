@@ -59,6 +59,7 @@
     return cookieValue;
 }
     </script>
+    <script src="{% static 'js/building.js' %}" defer></script>
 {% endblock %}
 {% block content %}
     <div class="container">
@@ -66,37 +67,74 @@
 <h1>{{ building.building_name }} Information</h1>
     <hr>
     <h2>Building Details:</h2>
-    <button onclick="deleteBuilding({{building.id}})" class="button-17">Delete Building</button>
-    <table class="table">
-        <thead>
-        </thead>
-        <tbody>
-            <tr>
-                <td>Building Name:</td>
-                <td>{{ building.building_name }}</td>
-            </tr>
-            <tr>
-                <td>Address:</td>
-                <td>{{ building.address }}</td>
-            </tr>
-            <tr>
-                <td>City:</td>
-                <td>{{ building.city }}</td>
-            </tr>
-            <tr>
-                <td>State:</td>
-                <td>{{ building.state }}</td>
-            </tr>
-            <tr>
-                <td>Country:</td>
-                <td>{{ building.country }}</td>
-            </tr>
-            <tr>
-                <td>Zipcode:</td>
-                <td>{{ building.zipcode }}</td>
-            </tr>
-        </tbody>
-    </table>
+    <div id="building-info">
+        <table class="table">
+            <button onclick="deleteBuilding({{building.id}})" class="button-17">Delete Building</button>
+            <button id="edit-button" class="button-17">Edit Building</button>
+            <thead>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Building Name:</td>
+                    <td id="building-name">{{ building.building_name }}</td>
+                </tr>
+                <tr>
+                    <td>Address:</td>
+                    <td id="building-address">{{ building.address }}</td>
+                </tr>
+                <tr>
+                    <td>City:</td>
+                    <td id="building-city">{{ building.city }}</td>
+                </tr>
+                <tr>
+                    <td>State:</td>
+                    <td id="building-state">{{ building.state }}</td>
+                </tr>
+                <tr>
+                    <td>Country:</td>
+                    <td id="building-country">{{ building.country }}</td>
+                </tr>
+                <tr>
+                    <td>Zipcode:</td>
+                    <td id="building-zipcode">{{ building.zipcode }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div id="edit-form" style="display:none;">
+        <button id="cancel-button" class="button-17">Cancel</button>
+        <button id="save-button" class="button-17">Save</button>
+        <table class="table">
+            <thead>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Building Name:</td>
+                    <td><input type="text" id="edit-building-name"></td>
+                </tr>
+                <tr>
+                    <td>Address:</td>
+                    <td><input type="text" id="edit-building-address"></td>
+                </tr>
+                <tr>
+                    <td>City:</td>
+                    <td><input type="text" id="edit-building-city"></td>
+                </tr>
+                <tr>
+                    <td>State:</td>
+                    <td><input type="text" id="edit-building-state"></td>
+                </tr>
+                <tr>
+                    <td>Country:</td>
+                    <td><input type="text" id="edit-building-country"></td>
+                </tr>
+                <tr>
+                    <td>Zipcode:</td>
+                    <td><input type="text" id="edit-building-zipcode"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
     <br>
     <br>
 <h2>Maintenance Requests:</h2>

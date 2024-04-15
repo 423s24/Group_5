@@ -330,6 +330,32 @@ def user_profile(request, username):
 @login_required(login_url="/login")
 def building_info(request, building_id):
     if request.user.is_superuser or request.user.manager != None:
+        if request.method == 'POST':
+            data = json.loads(request.body)
+            updated_name = data.get('name')
+            updated_address = data.get('address')
+            updated_city = data.get('city')
+            updated_state = data.get('state')
+            updated_country = data.get('country')
+            updated_zipcode = data.get('zipcode')
+
+            building = Building.objects.get(id=building_id)
+            building.building_name = updated_name
+            building.address = updated_address
+            building.city = updated_city
+            building.state = updated_state
+            building.country = updated_country
+            building.zipcode = updated_zipcode
+            
+
+            try:
+                building.full_clean()  # This will run all validators on the model fields
+                building.save()
+                return JsonResponse({'message': 'Profile updated successfully'})
+            except ValidationError as e:
+                # Handle the validation error, e.g., return an error response
+                return JsonResponse({'errors': e.message_dict}, status=400)
+            
         building = get_object_or_404(Building, pk=building_id)
         maintenance_requests = MaintenanceRequest.objects.filter(building=building)
         return render(request, 'dashboard/data/building_info.html', {'building': building, 'maintenance_requests': maintenance_requests})
