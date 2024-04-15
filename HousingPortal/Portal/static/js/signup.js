@@ -1,24 +1,47 @@
 document.addEventListener("DOMContentLoaded", function() {
     var usernameInput = document.getElementById("id_username");
+    usernameInput.maxlength = "30";
 
     async function checkUsername() {
         var username = usernameInput.value.trim(); // Trim whitespace from the input
-        
-        try {
-            // Make an asynchronous request to check if the username exists
-            var usernameExists = await check_username(username);
-    
-            // Change style of username input field based on whether the username exists
-            if (usernameExists) {
-                usernameInput.style.borderColor = "red";
-            } else {
-                usernameInput.style.borderColor = ""; // Reset to default
+
+        var allowedPattern = /^[a-z0-9\-_.]{0,30}$/;
+
+        if (username.length === 0) {
+            usernameInput.style.borderColor = "";
+            usernameInput.style.background = "";
+        } else {
+            if (!allowedPattern.test(username)) {
+                // If not, prevent further input
+                usernameInput.value = username.substring(0, username.length - 1);
             }
-        } catch (error) {
-            console.error('Error checking username:', error);
-            // Handle error here if needed
+            
+            try {
+                // Make an asynchronous request to check if the username exists
+                var usernameExists = await check_username(username);
+        
+                // Change style of username input field based on whether the username exists
+                if (usernameExists) {
+                    usernameInput.style.borderColor = "red";
+                    usernameInput.style.background = "red";
+                } else {
+                    usernameInput.style.borderColor = "green"; // Reset to default
+                    usernameInput.style.background = "";
+                }
+            } catch (error) {
+                console.error('Error checking username:', error);
+                // Handle error here if needed
+            }
         }
     }
+
+    function enforceLowercase(event) {
+        // Convert the input value to lowercase
+        event.target.value = event.target.value.toLowerCase();
+    }
+
+    // Listen for the "input" event and enforce lowercase
+    usernameInput.addEventListener("input", enforceLowercase);
     
     usernameInput.addEventListener("input", checkUsername);    
 });

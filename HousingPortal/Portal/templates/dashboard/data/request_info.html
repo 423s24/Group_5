@@ -48,6 +48,10 @@
         </thead>
     <tbody>
         <tr>
+            <td>Submitted By</td>
+            <td><a href="/dashboard/users/{{maintenance_request.user_id.username}}">{{maintenance_request.user_id.username}}</a></td>
+        </tr>
+        <tr>
             <td>Name</td>
             <td>{{ maintenance_request.first_name }} {{ maintenance_request.last_name }}</td>
         </tr>

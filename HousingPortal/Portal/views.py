@@ -12,6 +12,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.template.loader import render_to_string
 from django.template.response import TemplateResponse
+from django.core.exceptions import ValidationError
 import json
 import threading
 
@@ -425,9 +426,14 @@ def view_user(request, username):
             u.username = updated_username
             u.email = updated_email
             u.setAccountType(account_type)
-            u.save()
 
-            return JsonResponse({'message': 'Profile updated successfully'})
+            try:
+                u.full_clean()  # This will run all validators on the model fields
+                u.save()
+                return JsonResponse({'message': 'Profile updated successfully'})
+            except ValidationError as e:
+                # Handle the validation error, e.g., return an error response
+                return JsonResponse({'errors': e.message_dict}, status=400)
             
         return render(request, 'dashboard/pages/view_user.html', {'u': u})
     else:
@@ -478,9 +484,14 @@ def profile(request):
         user.last_name = updated_last_name
         user.username = updated_username
         user.email = updated_email
-        user.save()
 
-        return JsonResponse({'message': 'Profile updated successfully'})
+        try:
+            user.full_clean()  # This will run all validators on the model fields
+            user.save()
+            return JsonResponse({'message': 'Profile updated successfully'})
+        except ValidationError as e:
+            # Handle the validation error, e.g., return an error response
+            return JsonResponse({'errors': e.message_dict}, status=400)
     
     return render(request, 'profile.html')
 
@@ -540,7 +551,7 @@ def request_is_saved(request, request_id):
 def check_username(request):
     if request.method == 'POST':
         data = json.loads(request.body)
-        username = data.get('username')
+        username = data.get('username').lower()
         if UserAccount.objects.filter(username=username).exists():
             return JsonResponse({'taken': True})
         else:

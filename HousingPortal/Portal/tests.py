@@ -21,7 +21,6 @@ class MaintenaceNotesTestCase(TestCase):
             last_name="User",
             phone="1234567890",
             unit='Test Unit',
-            address="Test Address",
             date_submitted=timezone.now(),
             status='New',
             priority='High',

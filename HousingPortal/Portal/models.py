@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager, PermissionsMixin
+from django.core.validators import MaxLengthValidator, MinLengthValidator, RegexValidator
 
 ACCOUNT_TYPES = [
     ('admin', 'admin'),
@@ -17,11 +18,21 @@ PRIORITY = [
     ('high', 'high'),
 ]
 
+class UsernameField(models.CharField):
+    def __init__(self, *args, **kwargs):
+        super(UsernameField, self).__init__(*args, **kwargs)
+        # Add a validator to ensure the value contains only the specified characters
+        self.validators.append(RegexValidator(r'^[a-z0-9\-_.]*$', 'Only lowercase letters, numbers, hyphen, underscore, and period are allowed.'))
+        self.validators.append(MaxLengthValidator(30, message='Username must be at most 30 characters long.'))
+        self.validators.append(MinLengthValidator(1, message='Username must be at least 1 character long.'))
+
 # Create your models here.
 
 class UserAccount(AbstractUser): 
     # AbstractUser has fields: id, password, last_login, is_superuser, username, first_name, last_name, email, is_staff, is_active, date_joined
+    username = UsernameField(unique=True)
     manager = models.OneToOneField('Manager', on_delete=models.SET_NULL, null=True, blank=True)
+    #is_manager = models.BooleanField(default=False)
     archived = models.BooleanField(default=False)
     email_notifications = models.BooleanField(default=False)
 
