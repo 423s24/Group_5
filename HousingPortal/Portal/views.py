@@ -23,7 +23,7 @@ from datetime import date
 # Remove after testing
 import time
 
-def html_email(building_name,address,unit,name,phone,entry,title,request,recipient,subject):
+def html_email(building_name,unit,name,phone,entry,title,request,recipient,subject):
     sender_email = "cs423robot@gmail.com" 
     recipient_email = recipient
     #subject = "Maintenance Request"
@@ -44,7 +44,6 @@ def html_email(building_name,address,unit,name,phone,entry,title,request,recipie
     text = """\
     Hello, a new maintenance request has been made on """ + today + """
     Building: """ + building_name + """
-    Address: """ + address + """
     Unit: """ + unit + """
     Resident Name: """ + name + """
     Phone: """ + phone + """
@@ -65,10 +64,6 @@ def html_email(building_name,address,unit,name,phone,entry,title,request,recipie
   <tr>
     <td>Building:</td>
     <td><strong>""" + building_name + """</strong></td>
-  </tr>
-  <tr>
-    <td>Address:</td>
-    <td><strong>""" + address + """</strong></td>
   </tr>
   <tr>
     <td>Unit:</td>
@@ -112,8 +107,8 @@ def html_email(building_name,address,unit,name,phone,entry,title,request,recipie
         server.login(sender_email, "tjcm gvmf ilvq jnqy") 
         server.sendmail(sender_email, recipient_email, message.as_string())
 
-def send_email_thread(building_name, address, unit, full_name, phone, entry_permission, title, req, recipient_email, subject):
-    email_thread = threading.Thread(target=html_email, args=(building_name, address, unit, full_name, phone, entry_permission, title, req, recipient_email, subject))
+def send_email_thread(building_name, unit, full_name, phone, entry_permission, title, req, recipient_email, subject):
+    email_thread = threading.Thread(target=html_email, args=(building_name, unit, full_name, phone, entry_permission, title, req, recipient_email, subject))
     email_thread.start()
     
 # Create your views here.
@@ -311,7 +306,6 @@ def maintenance(request):
         first_name = request.POST.get('first_name')
         last_name = request.POST.get('last_name')
         full_name = first_name + " " + last_name
-        address = request.POST.get('address')
         unit = request.POST.get('unit')
         title = request.POST.get('title')
         req = request.POST.get('request')
@@ -321,9 +315,9 @@ def maintenance(request):
         building = Building.objects.get(id=building_id)
         priority = request.POST.get('priority')
         entry_permission = request.POST.get('entry_permission') == '1'
-        send_email_thread(building.building_name,address,unit,full_name,phone,entry_permission,title, req,"cs423robot@gmail.com","Maintenance Request")
-        send_email_thread(building.building_name,address,unit,full_name,phone,entry_permission,title, req,request.user.email,"Maintenance Request Confirmation")
-        maintenanceRequest = MaintenanceRequest.objects.create(user_id=request.user, first_name=first_name, last_name=last_name, address=address, unit=unit, request=req, phone=phone, building=building, priority=priority, entry_permission=entry_permission, title=title, date_submitted=date_submitted)
+        send_email_thread(building.building_name,unit,full_name,phone,entry_permission,title, req,"cs423robot@gmail.com","Maintenance Request")
+        send_email_thread(building.building_name,unit,full_name,phone,entry_permission,title, req,request.user.email,"Maintenance Request Confirmation")
+        maintenanceRequest = MaintenanceRequest.objects.create(user_id=request.user, first_name=first_name, last_name=last_name, unit=unit, request=req, phone=phone, building=building, priority=priority, entry_permission=entry_permission, title=title, date_submitted=date_submitted)
         return redirect('/request/' + str(maintenanceRequest.id))
 
     return render(request, 'forms/maintenance/maintenance.html', {'buildings': buildings})

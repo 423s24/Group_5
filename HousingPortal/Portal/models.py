@@ -12,6 +12,11 @@ STATUS = [
     ('pending', 'pending'),
 ]
 
+PRIORITY = [
+    ('low', 'low'),
+    ('high', 'high'),
+]
+
 # Create your models here.
 
 class UserAccount(AbstractUser): 
@@ -87,8 +92,6 @@ class MaintenanceRequest(models.Model):
     phone = models.CharField(max_length=100)
     unit = models.CharField(max_length=100, default='')
     building = models.ForeignKey('Building', null=True, on_delete=models.SET_NULL)
-    # address seems arbitrary kept it in but don't think its necessary
-    address = models.CharField(max_length=100)
     date_submitted = models.DateTimeField(null=True, blank=True)
     date_completed = models.DateTimeField(null=True, blank=True)
     status = models.CharField(max_length=100, default='New')
