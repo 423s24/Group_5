@@ -200,3 +200,52 @@ function toggle_save(request_id) {
     });
     
 }
+
+
+function removeImage(imageId) {
+    const csrftoken = getCookie('csrftoken'); // Function to get CSRF token from cookie
+    fetch(`/remove_image/${imageId}/`, {
+        method: 'DELETE',
+        headers: {
+            'X-CSRFToken': csrftoken
+        }
+    })
+    .then(response => {
+        if (response.ok) {
+            // Refresh the page or update the image container
+            location.reload();
+        } else {
+            console.error('Failed to remove image');
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+
+
+// JavaScript to handle modal
+document.addEventListener('DOMContentLoaded', function () {
+    var modal = document.querySelector('.file-modal');
+    var modalImg = document.querySelector('.file-modal-content');
+    var fileImages = document.querySelectorAll('.file-image');
+    var closeButton = document.querySelector('.file-close');
+
+    fileImages.forEach(function (image) {
+        image.addEventListener('click', function () {
+            modal.style.display = 'block';
+            modalImg.src = image.src;
+            modalImg.style.maxWidth = 'unset'; // Override max-width property
+            modalImg.style.width = '70%';
+            modalImg.style.maxWidth = '70%';
+            document.getElementById("container").style.overflow = "hidden";
+        });
+    });
+
+    closeButton.addEventListener('click', function () {
+        modal.style.display = 'none';
+        document.getElementById("container").style.overflow = "auto";
+    });
+});
+
+
+

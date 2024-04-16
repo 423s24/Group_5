@@ -108,6 +108,54 @@
     </table>
     <br>
     <br>
+    <!--
+    <h2>Files:</h2>
+    <div class="img-container">
+        {% for maintenance_file in maintenance_files %}
+            <div class="image-wrapper">
+                <img src="{{ maintenance_file.file.url }}" alt="Maintenance Image">
+                <button onclick="removeImage('{{ maintenance_file.id }}')">Remove</button>
+            </div>
+        {% endfor %}
+    </div> -->
+    <h2>Files:</h2>
+    <table class="file-table">
+        <thead>
+            <tr>
+                <th>File</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for maintenance_file in maintenance_files %}
+            <tr>
+                <td>
+                    <div class="file-container">
+                        <img src="{{ maintenance_file.file.url }}" alt="Maintenance Image" class="file-image">
+                        <!-- Modal for displaying larger image -->
+                        <div id="fileModal" class="file-modal">
+                            <span class="file-close">&times;</span>
+                            <img class="file-modal-content" id="fileImg">
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <button onclick="removeImage('{{ maintenance_file.id }}')" class="button-17">Remove</button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <form id="uploadForm" method="post" enctype="multipart/form-data" action="{% url 'upload_image' %}">
+        {% csrf_token %}
+        <input type="hidden" name="request_id" value="{{ maintenance_request.id }}">
+        <input type="file" name="images" id="imageInput" multiple>
+        <button type="submit" class="button-17">Upload Image</button>
+    </form>
+
+    <br>
+    <br>
     {% if request.user.is_superuser or request.user.manager %}
         <h3>Maintenance Notes:</h3>
         <div id="notesTable">

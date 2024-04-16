@@ -117,3 +117,10 @@ class MaintenanceNotes(models.Model):
     date_submitted = models.DateTimeField(null=True, blank=True)
     tenant_viewable = models.BooleanField(default=False)
     notes = models.CharField(max_length=10000, default='')
+
+def maintenance_file_path(instance, filename):
+    return f'maintenance_files/{instance.maintenanceRequestId.id}/{filename}'
+
+class MaintenanceFile(models.Model):
+    maintenanceRequestId = models.ForeignKey('MaintenanceRequest', on_delete=models.CASCADE, related_name='maintenance_files')
+    file = models.FileField(upload_to=maintenance_file_path)

@@ -316,12 +316,19 @@ def maintenance(request):
         building = Building.objects.get(id=building_id)
         priority = request.POST.get('priority')
         entry_permission = request.POST.get('entry_permission') == '1'
+        images = request.FILES.getlist('images')
+
         send_email_thread(building.building_name,unit,full_name,phone,entry_permission,title, req,"cs423robot@gmail.com","Maintenance Request")
         send_email_thread(building.building_name,unit,full_name,phone,entry_permission,title, req,request.user.email,"Maintenance Request Confirmation")
         maintenanceRequest = MaintenanceRequest.objects.create(user_id=request.user, first_name=first_name, last_name=last_name, unit=unit, request=req, phone=phone, building=building, priority=priority, entry_permission=entry_permission, title=title, date_submitted=date_submitted)
+
+        for image in images:
+            MaintenanceFile.objects.create(maintenanceRequestId = maintenanceRequest, file=image)
+
         return redirect('/request/' + str(maintenanceRequest.id))
 
     return render(request, 'forms/maintenance/maintenance.html', {'buildings': buildings})
+
 
 @login_required(login_url="/login")
 def user_profile(request, username):
@@ -420,17 +427,18 @@ def delete_note(request, note_id):
 @login_required(login_url="/login")
 def request_info(request, request_id):
     maintenance_request = get_object_or_404(MaintenanceRequest, pk=request_id)
+    maintenance_files = MaintenanceFile.objects.filter(maintenanceRequestId=maintenance_request)
     if request.user.is_superuser or request.user.manager != None:
         can_edit_request = (request.user.is_superuser or request.user.manager)
         maintenance_notes = maintenance_request.maintenance_notes.all()
         saved = request_is_saved(request, request_id)
-        return render(request, 'dashboard/data/request_info.html', {'maintenance_request': maintenance_request, 'can_edit_request': can_edit_request, 'maintenance_notes': maintenance_notes, 'saved': saved})
+        return render(request, 'dashboard/data/request_info.html', {'maintenance_request': maintenance_request, 'maintenance_files': maintenance_files,'can_edit_request': can_edit_request, 'maintenance_notes': maintenance_notes, 'saved': saved})
     elif request.user == maintenance_request.user_id:
         can_edit_request = (request.user.is_superuser or request.user.manager)
         maintenance_notes = maintenance_request.maintenance_notes.filter(tenant_viewable=True)
         saved = request_is_saved(request, request_id)
         return render(request, 'dashboard/data/request_info.html',
-                      {'maintenance_request': maintenance_request, 'can_edit_request': can_edit_request,'maintenance_notes': maintenance_notes, 'saved': saved})
+                      {'maintenance_request': maintenance_request, 'maintenance_files': maintenance_files, 'can_edit_request': can_edit_request,'maintenance_notes': maintenance_notes, 'saved': saved})
     else:
         return handler_403(request)
     
@@ -713,6 +721,31 @@ def search_maintenance_requests(request):
     html_content = render_to_string('dashboard/data/requests.html', {'maintenance_requests': maintenance_requests})
 
     return JsonResponse({'html_content': html_content})
+
+@login_required(login_url='/login')
+def upload_image(request):
+    if request.method == 'POST':
+        print("ITS A POST REQUIRE")
+        maintenance_request_id = request.POST.get('request_id')
+        maintenance_request = get_object_or_404(MaintenanceRequest, pk=maintenance_request_id)
+        images = request.FILES.getlist('images')
+        for image in images:
+            MaintenanceFile.objects.create(maintenanceRequestId=maintenance_request, file=image)
+        return redirect('request_info', request_id=maintenance_request_id)
+    else:
+        return handler_500(request)
+
+
+@login_required(login_url='/login')
+def remove_image(request, image_id):
+    if request.method == 'DELETE':
+        try:
+            maintenance_file = MaintenanceFile.objects.get(pk=image_id)
+            maintenance_file.delete()
+            return JsonResponse({'success': True})
+        except MaintenanceFile.DoesNotExist:
+            pass
+    return JsonResponse({'success': False})
 
 
 # Views for errors

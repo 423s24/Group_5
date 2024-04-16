@@ -1,7 +1,9 @@
 
-from django.urls import path
+from django.urls import path, include
 from django.contrib.auth import views as auth_views
 from . import views
+from django.conf import settings
+from django.conf.urls.static import static
 from django.contrib.auth.views import LoginView
 
 urlpatterns = [
@@ -45,4 +47,11 @@ urlpatterns = [
     path('request/edit_note/<int:note_id>/', views.edit_note, name='edit_note'),
     path('request/delete_note/<int:note_id>/', views.delete_note, name='delete_note'),
     path('request/<int:request_id>/edit_request', views.edit_request, name='edit_request'),
+
+
+    path('upload_image/', views.upload_image, name='upload_image'),
+    path('remove_image/<int:image_id>/', views.remove_image, name='remove_image'),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

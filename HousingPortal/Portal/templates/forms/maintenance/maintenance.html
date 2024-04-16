@@ -19,7 +19,7 @@
             <h1>Maintenance Request Form</h1>
             <hr>
             <br>
-            <form method="POST">
+            <form method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
                 <p><input type="text" name="first_name" placeholder="First Name" value="{{user.first_name}}" required></p>
                 <p><input type="text" name="last_name" placeholder="Last Name" value="{{user.last_name}}" required></p>
@@ -49,6 +49,9 @@
                         <option value="High">High</option>
                         <option value="Urgent">Urgent</option>
                 </select></p>
+                <br>
+                <input type="file" name="images" accept="image/*, application/pdf, application/msword" multiple>
+
                 <button type="submit" class="button-17">Submit</button>
             </form>
         </div>
