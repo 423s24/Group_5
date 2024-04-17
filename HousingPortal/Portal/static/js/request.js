@@ -362,8 +362,6 @@ document.getElementById('save-button').addEventListener('click', function() {
 
     // Hide edit form, show profile info
     submitChanges();
-    document.getElementById('edit-form').style.display = 'none';
-    document.getElementById('request-info').style.display = 'block';
 });
 
 function updateFields() {
@@ -393,6 +391,9 @@ function updateFields() {
     document.getElementById('request').innerText = document.getElementById('edit-request').value;
     var edit_entry_permission = document.getElementById('edit-entry-permission');
     document.getElementById('entry-permission').innerText = edit_entry_permission.options[edit_entry_permission.selectedIndex].innerText;
+
+    document.getElementById('edit-form').style.display = 'none';
+    document.getElementById('request-info').style.display = 'block';
 }
 
 function submitChanges() {

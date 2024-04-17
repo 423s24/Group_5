@@ -82,6 +82,9 @@ function updateFields() {
     document.getElementById('username').innerText = document.getElementById('edit-username').value;
     document.getElementById('email').innerText = document.getElementById('edit-email').value;
     document.getElementById('account-type').innerText = document.getElementById('edit-account-type').value;
+
+    document.getElementById('edit-form').style.display = 'none';
+    document.getElementById('profile-info').style.display = 'block';
 }
 
 document.getElementById('save-button').addEventListener('click', function() {
@@ -103,8 +106,6 @@ document.getElementById('save-button').addEventListener('click', function() {
     }
 
     submitProfileChanges();
-    document.getElementById('edit-form').style.display = 'none';
-    document.getElementById('profile-info').style.display = 'block';
 });
 
 // Function to submit profile changes

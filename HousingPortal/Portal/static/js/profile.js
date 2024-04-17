@@ -57,6 +57,9 @@ function updateFields() {
     document.getElementById('last-name').innerText = document.getElementById('edit-last-name').value;
     document.getElementById('username').innerText = document.getElementById('edit-username').value;
     document.getElementById('email').innerText = document.getElementById('edit-email').value;
+
+    document.getElementById('edit-form').style.display = 'none';
+    document.getElementById('profile-info').style.display = 'block';
 }
 
 document.getElementById('save-button').addEventListener('click', function() {
@@ -79,8 +82,6 @@ document.getElementById('save-button').addEventListener('click', function() {
 
     // Hide edit form, show profile info
     submitProfileChanges();
-    document.getElementById('edit-form').style.display = 'none';
-    document.getElementById('profile-info').style.display = 'block';
 });
 
 // Function to submit profile changes

@@ -35,8 +35,6 @@ document.getElementById('edit-button').addEventListener('click', function() {
 document.getElementById('save-button').addEventListener('click', function() {
     // Hide edit form, show profile info
     submitChanges();
-    document.getElementById('edit-form').style.display = 'none';
-    document.getElementById('building-info').style.display = 'block';
 });
 
 function updateFields() {
@@ -46,6 +44,9 @@ function updateFields() {
     document.getElementById('building-state').innerText = document.getElementById('edit-building-state').value;
     document.getElementById('building-country').innerText = document.getElementById('edit-building-country').value;
     document.getElementById('building-zipcode').innerText = document.getElementById('edit-building-zipcode').value;
+
+    document.getElementById('edit-form').style.display = 'none';
+    document.getElementById('building-info').style.display = 'block';
 }
 
 function submitChanges() {
