@@ -35,13 +35,11 @@ class MaintenaceNotesTestCase(TestCase):
             maintenanceRequestId=self.maintenance_request,
             user_id=self.user,
             date_submitted=timezone.now(),
-            tenant_viewable=True,
             notes='Test Note'
         )
 
         self.assertEqual(maintenance_notes.maintenanceRequestId, self.maintenance_request)
         self.assertEqual(maintenance_notes.user_id, self.user)
-        self.assertTrue(maintenance_notes.tenant_viewable)
         self.assertEqual(maintenance_notes.notes, 'Test Note')
 
     @skipIfDBFeature('is_dummy')
@@ -52,5 +50,4 @@ class MaintenaceNotesTestCase(TestCase):
             date_submitted=timezone.now()
         )
 
-        self.assertFalse(maintenance_notes.tenant_viewable)
         self.assertEqual(maintenance_notes.notes, '')
