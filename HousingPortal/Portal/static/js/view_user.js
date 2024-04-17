@@ -115,7 +115,7 @@ function submitProfileChanges() {
         last_name: document.getElementById('edit-last-name').value,
         username: document.getElementById('edit-username').value,
         email: document.getElementById('edit-email').value,
-        account_type: document.getElementById('account-type').textContent
+        account_type: document.getElementById('edit-account-type').value,
         // Add other fields as needed
     };
 
