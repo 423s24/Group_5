@@ -741,6 +741,7 @@ def remove_image(request, image_id):
     if request.method == 'DELETE':
         try:
             maintenance_file = MaintenanceFile.objects.get(pk=image_id)
+            maintenance_file.file.delete()
             maintenance_file.delete()
             return JsonResponse({'success': True})
         except MaintenanceFile.DoesNotExist:
