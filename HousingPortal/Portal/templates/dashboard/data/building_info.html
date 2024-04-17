@@ -62,7 +62,6 @@
     <script src="{% static 'js/building.js' %}" defer></script>
 {% endblock %}
 {% block content %}
-    <!-- Notification container -->
     <div id="notification">
         <p id="notificationMessage"></p>
     </div>
@@ -73,9 +72,9 @@
     <hr>
     <h2>Building Details:</h2>
     <div id="building-info">
+        <button id="edit-button" class="button-17">Edit Building</button>
+        <button onclick="deleteBuilding('{{building.id}}')" class="button-17">Delete Building</button>
         <table class="table">
-            <button id="edit-button" class="button-17">Edit Building</button>
-            <button onclick="deleteBuilding({{building.id}})" class="button-17">Delete Building</button>
             <thead>
             </thead>
             <tbody>

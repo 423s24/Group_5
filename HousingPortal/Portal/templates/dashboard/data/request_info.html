@@ -17,6 +17,9 @@
     </style>
 {% endblock %}
 {% block content %}
+<div id="notification">
+    <p id="notificationMessage"></p>
+</div>
     <div class="container">
     <div id="to-export">
     <br>
@@ -40,72 +43,169 @@
     </div>
     <br>
     {% if can_edit_request %}
-    <a href="{% url 'edit_request' request_id=maintenance_request.id %}"><button class="button-17">Edit Request</button></a>
-    <button onclick="deleteRequest('{{maintenance_request.id}}')" class="button-17">Delete Request</button>
+    <!--<a href="{% url 'edit_request' request_id=maintenance_request.id %}"><button class="button-17">Edit Request</button></a>-->
     {% endif %}
-    <table class="table">
-        <thead>
-        </thead>
-    <tbody>
-        <tr>
-            <td>Submitted By</td>
-            <td><a href="/dashboard/users/{{maintenance_request.user_id.username}}">{{maintenance_request.user_id.username}}</a></td>
-        </tr>
-        <tr>
-            <td>Name</td>
-            <td>{{ maintenance_request.first_name }} {{ maintenance_request.last_name }}</td>
-        </tr>
-        <tr>
-            <td>Phone</td>
-            <td>{{ maintenance_request.phone }}</td>
-        </tr>
-        <tr>
-            <td>Building Name</td>
-            <td>{{ maintenance_request.building.building_name }}</td>
-        </tr>
-        <tr>
-            <td>Unit</td>
-            <td>{{ maintenance_request.unit }}</td>
-        </tr>
-        <tr>
-            <td>Status</td>
-            <td class="table-cell"><span class="status-badge {{ maintenance_request.status|lower|cut:' ' }}">{{ maintenance_request.status }}</span></td>
-        </tr>
-        <tr>
-            <td>Priority</td>
-            <td class="table-cell"><span class="status-badge {{ maintenance_request.priority|lower|cut:' ' }}">{{ maintenance_request.priority }}</span></td>
-        </tr>
-        <tr>
-            <td>Date Submitted</td>
-            <td>{{ maintenance_request.date_submitted }}</td>
-        </tr>
-        <tr>
-            <td>Date Completed</td>
-            <td>{{ maintenance_request.date_completed }}</td>
-        </tr>
-    </tbody>
-    </table>
-    <br>
-    <br>
-    <table class="table">
-        <thead>
-        </thead>
-    <tbody>
-        <tr>
-            <td>Title</td>
-            <td>{{ maintenance_request.title }}</td>
-        </tr>
-        <tr>
-            <td>Request</td>
-            <td><p>{{ maintenance_request.request |linebreaks }}</p></td>
-        </tr>
-        <tr>
-            <td>Entry Permission</td>
-            <td>{% if maintenance_request.entry_permission %}Yes{% else %}No{% endif %}</td>
-        </tr>
+    <div id="request-info">
+        <button id="edit-button" class="button-17">Edit Request</button>
+        <button onclick="deleteRequest('{{maintenance_request.id}}')" class="button-17">Delete Request</button>
+        <table class="table">
+            <thead>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Submitted By</td>
+                    <td><a href="/dashboard/users/{{maintenance_request.user_id.username}}">{{maintenance_request.user_id.username}}</a></td>
+                </tr>
+                <tr>
+                    <td>Name</td>
+                    <td><span id="first-name">{{ maintenance_request.first_name }}</span> <span id="last-name">{{ maintenance_request.last_name }}</span></td>
+                </tr>
+                <tr>
+                    <td>Phone</td>
+                    <td id="phone">{{ maintenance_request.phone }}</td>
+                </tr>
+                <tr>
+                    <td>Building</td>
+                    <td><a id="building" building_id="{{maintenance_request.building.id}}" href="/dashboard/buildings/{{maintenance_request.building.id}}">{{ maintenance_request.building.building_name }}</a></td>
+                </tr>
+                <tr>
+                    <td>Unit/Room</td>
+                    <td id="unit">{{ maintenance_request.unit }}</td>
+                </tr>
+                <tr>
+                    <td>Status</td>
+                    <td class="table-cell"><span id="status" class="status-badge {{ maintenance_request.status|lower|cut:' ' }}">{{ maintenance_request.status }}</span></td>
+                </tr>
+                <tr>
+                    <td>Priority</td>
+                    <td class="table-cell"><span id ="priority" class="status-badge {{ maintenance_request.priority|lower|cut:' ' }}">{{ maintenance_request.priority }}</span></td>
+                </tr>
+                <tr>
+                    <td>Date Submitted</td>
+                    <td>{{ maintenance_request.date_submitted }}</td>
+                </tr>
+                <tr>
+                    <td>Date Completed</td>
+                    <td>{{ maintenance_request.date_completed }}</td>
+                </tr>
+            </tbody>
+        </table>
+        <br>
+        <br>
+        <table class="table">
+            <thead>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Title</td>
+                    <td id="title">{{ maintenance_request.title }}</td>
+                </tr>
+                <tr>
+                    <td>Request</td>
+                    <td id="request">{{ maintenance_request.request|linebreaksbr }}</td>
+                </tr>
+                <tr>
+                    <td>Entry Permission</td>
+                    <td id="entry-permission">{% if maintenance_request.entry_permission %}Yes{% else %}No{% endif %}</td>
+                </tr>
 
-    </tbody>
-    </table>
+            </tbody>
+        </table>
+    </div>
+    <div id="edit-form" style="display:none;">
+        <button id="cancel-button" class="button-17">Cancel</button>
+        <button id="save-button" class="button-17">Save</button>
+        <table class="table">
+            <thead>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Submitted By</td>
+                    <td><a href="/dashboard/users/{{maintenance_request.user_id.username}}">{{maintenance_request.user_id.username}}</a></td>
+                </tr>
+                <tr>
+                    <td>Name</td>
+                    <td><input type="text" id="edit-first-name" required> <input type="text" id="edit-last-name" required></td>
+                </tr>
+                <tr>
+                    <td>Phone</td>
+                    <td><input type="text" id="edit-phone"></td>
+                </tr>
+                <tr>
+                    <td>Building</td>
+                    <td>
+                        <select id="edit-building" name="building" required>
+                            {% for building in buildings %}
+                            <option value="{{ building.id }}">{{ building.building_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Unit/Room</td>
+                    <td><input type="text" id="edit-unit" required></td>
+                </tr>
+                <tr>
+                    <td>Status</td>
+                    <td class="table-cell">
+                        <select id="edit-status" name="status" required>
+                            <option value="New">New</option>
+                            <option value="In Progress">In Progress</option>
+                            <option value="Pending">Pending</option>
+                            <option value="Resolved">Resolved</option>
+                            <option value="Completed">Completed</option>
+                            <option value="Closed">Closed</option>
+                            <option value="Cancelled">Cancelled</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Priority</td>
+                    <td class="table-cell">
+                        <select id="edit-priority" name="priority" required>
+                            <option value="Low">Low</option>
+                            <option value="Medium">Medium</option>
+                            <option value="High">High</option>
+                            <option value="Urgent">Urgent</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Date Submitted</td>
+                    <td>{{ maintenance_request.date_submitted }}</td>
+                </tr>
+                <tr>
+                    <td>Date Completed</td>
+                    <td>{{ maintenance_request.date_completed }}</td>
+                </tr>
+            </tbody>
+        </table>
+        <br>
+        <br>
+        <table class="table">
+            <thead>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Title</td>
+                    <td><input type="text" id="edit-title" required></td>
+                </tr>
+                <tr>
+                    <td>Request</td>
+                    <td><textarea id="edit-request" name="request" rows="4" required></textarea></td>
+                </tr>
+                <tr>
+                    <td>Entry Permission</td>
+                    <td><select id="edit-entry-permission" name="entry_permission">
+                        <option value="1">Yes</option>
+                        <option value="0">No</option>
+                      </select>
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+    </div>
     <br>
     <br>
     <!--

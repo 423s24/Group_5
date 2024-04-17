@@ -134,7 +134,6 @@ def dashboard(request):
 def admin_dashboard(request):
     users = UserAccount.objects.all()
     maintenance_requests = MaintenanceRequest.objects.order_by('-id')[:10]
-    buildings = Building.objects.all()
     per_page = 10
     paginator = Paginator(users, per_page)
     page = request.GET.get('page', 1)
@@ -270,7 +269,6 @@ def saved_requests(request):
 
     html = render_to_string('dashboard/data/requests_htmx.html', {'maintenance_requests': maintenance_requests})
     if request.headers.get('HX-Request'):
-        #time.sleep(2)
         return HttpResponse(html)
     else:
         return render(request, 'dashboard/pages/saved_requests.html')
@@ -302,7 +300,7 @@ def sort_requests(request):
 
 @login_required(login_url="/login")
 def maintenance(request):
-    buildings = Building.objects.all()
+    buildings = Building.objects.all().order_by("id")
     if request.method == 'POST':
         first_name = request.POST.get('first_name')
         last_name = request.POST.get('last_name')
@@ -372,7 +370,7 @@ def building_info(request, building_id):
 @login_required(login_url="/login")
 def edit_request(request, request_id):
     maintenance_request = get_object_or_404(MaintenanceRequest, pk=request_id)
-    buildings = Building.objects.all()
+    buildings = Building.objects.all().order_by("id")
     if request.method == 'POST':
         maintenance_request.first_name = request.POST.get('first_name', maintenance_request.first_name)
         maintenance_request.last_name = request.POST.get('last_name', maintenance_request.last_name)
@@ -429,10 +427,32 @@ def request_info(request, request_id):
     maintenance_request = get_object_or_404(MaintenanceRequest, pk=request_id)
     maintenance_files = MaintenanceFile.objects.filter(maintenanceRequestId=maintenance_request)
     if request.user.is_superuser or request.user.manager != None:
+        buildings = Building.objects.all().order_by("id")
+        if request.method == 'POST':
+            data = json.loads(request.body)
+            maintenance_request.first_name  = data.get('first_name')
+            maintenance_request.last_name = data.get('last_name')
+            maintenance_request.phone = data.get('phone')
+            maintenance_request.building = get_object_or_404(Building, pk=data.get('building'))
+            maintenance_request.unit = data.get('unit')
+            maintenance_request.status = data.get('status')
+            maintenance_request.priority = data.get('priority')
+            maintenance_request.title = data.get('title') 
+            maintenance_request.request = data.get('request')
+            maintenance_request.entry_permission = data.get('entry_permission')
+
+            try:
+                maintenance_request.full_clean()
+                maintenance_request.save()
+                return JsonResponse({'message': 'Profile updated successfully'})
+            except ValidationError as e:
+                # Handle the validation error, e.g., return an error response
+                return JsonResponse({'errors': e.message_dict}, status=400)
+
         can_edit_request = (request.user.is_superuser or request.user.manager)
         maintenance_notes = maintenance_request.maintenance_notes.all()
         saved = request_is_saved(request, request_id)
-        return render(request, 'dashboard/data/request_info.html', {'maintenance_request': maintenance_request, 'maintenance_files': maintenance_files,'can_edit_request': can_edit_request, 'maintenance_notes': maintenance_notes, 'saved': saved})
+        return render(request, 'dashboard/data/request_info.html', {'maintenance_request': maintenance_request, 'maintenance_files': maintenance_files, 'buildings': buildings,'can_edit_request': can_edit_request, 'maintenance_notes': maintenance_notes, 'saved': saved})
     elif request.user == maintenance_request.user_id:
         can_edit_request = (request.user.is_superuser or request.user.manager)
         maintenance_notes = maintenance_request.maintenance_notes.filter(tenant_viewable=True)
@@ -448,17 +468,11 @@ def view_user(request, username):
     if request.user.is_superuser:
         if request.method == 'POST':
             data = json.loads(request.body)
-            updated_first_name = data.get('first_name')
-            updated_last_name = data.get('last_name')
-            updated_username = data.get('username')
-            updated_email = data.get('email')
-            account_type = data.get('account_type')
-
-            u.first_name = updated_first_name
-            u.last_name = updated_last_name
-            u.username = updated_username
-            u.email = updated_email
-            u.setAccountType(account_type)
+            u.first_name = data.get('first_name')
+            u.last_name = data.get('last_name')
+            u.username = data.get('username')
+            u.email = data.get('email')
+            u.setAccountType(data.get('account_type'))
 
             try:
                 u.full_clean()  # This will run all validators on the model fields

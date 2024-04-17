@@ -275,3 +275,165 @@ confirmDelete2.onclick = function() {
     deleteFileModal.style.display = "none";
 }
 
+function showNotification(message, isSuccess) {
+    var notification = document.getElementById('notification');
+    var messageElement = document.getElementById('notificationMessage');
+
+    // Set the message and styles based on success or failure
+    messageElement.textContent = message;
+    notification.style.backgroundColor = isSuccess ? '#90ee90' : '#f08080'; // Green for success, red for failure
+    notification.style.display = 'block';
+
+    // Hide the notification after 3 seconds
+    setTimeout(function() {
+        notification.style.display = 'none';
+    }, 3000);
+}
+
+document.getElementById('cancel-button').addEventListener('click', function() {
+    document.getElementById('edit-form').style.display = 'none';
+    document.getElementById('request-info').style.display = 'block';
+});
+
+document.getElementById('edit-button').addEventListener('click', function() {
+    // Hide profile info, show edit form
+    document.getElementById('request-info').style.display = 'none';
+    document.getElementById('edit-form').style.display = 'block';
+    
+    // Populate edit fields with current info
+    document.getElementById('edit-first-name').value = document.getElementById('first-name').innerText;
+    document.getElementById('edit-last-name').value = document.getElementById('last-name').innerText;
+    document.getElementById('edit-phone').value = document.getElementById('phone').innerText;
+    var building = document.getElementById('building').getAttribute('building_id');
+    var options = document.getElementById('edit-building');
+    for (var i = 0; i < options.length; i++) {
+        if (options[i].value === building) {
+            options[i].selected = true;
+            break;
+        }
+    }
+    document.getElementById('edit-unit').value = document.getElementById('unit').innerText;
+    var status = document.getElementById('status').innerText;
+    var options = document.getElementById('edit-status');
+    for (var i = 0; i < options.length; i++) {
+        if (options[i].value === status) {
+            options[i].selected = true;
+            break;
+        }
+    }
+    var priority = document.getElementById('priority').innerText;
+    var options = document.getElementById('edit-priority');
+    for (var i = 0; i < options.length; i++) {
+        if (options[i].value === priority) {
+            options[i].selected = true;
+            break;
+        }
+    }
+
+    document.getElementById('edit-title').value = document.getElementById('title').innerText;
+    document.getElementById('edit-request').value = document.getElementById('request').innerText;
+    var entry_permission = document.getElementById('entry-permission').innerText;
+    var options = document.getElementById('edit-entry-permission');
+    for (var i = 0; i < options.length; i++) {
+        if (options[i].innerText === entry_permission) {
+            options[i].selected = true;
+            break;
+        }
+    }
+});
+
+document.getElementById('save-button').addEventListener('click', function() {
+    var allFields = document.querySelectorAll("#edit-form input");
+    var allFieldsFilled = true;
+    allFields.forEach(function(field) {
+        if (!field.checkValidity()) {
+            allFieldsFilled = false;
+            field.classList.add("required");
+        } else {
+            field.classList.remove("required");
+        }
+    });
+
+    // If any required field is empty, prevent saving and highlight the fields
+    if (!allFieldsFilled) {
+        showNotification('Please make fields are not blank and correct any errors.', false);
+        return; // Exit the function, do not proceed with saving
+    }
+
+    // Hide edit form, show profile info
+    submitChanges();
+    document.getElementById('edit-form').style.display = 'none';
+    document.getElementById('request-info').style.display = 'block';
+});
+
+function updateFields() {
+    document.getElementById('first-name').innerText = document.getElementById('edit-first-name').value;
+    document.getElementById('last-name').innerText = document.getElementById('edit-last-name').value;
+    document.getElementById('phone').innerText = document.getElementById('edit-phone').value;
+
+    var building = document.getElementById('building');
+    var edit_building = document.getElementById('edit-building');
+    building.innerText = edit_building.options[edit_building.selectedIndex].innerText;
+    building.building_id = edit_building.value;
+    building.href = '/dashboard/buildings/'+edit_building.value;
+
+    document.getElementById('unit').innerText = document.getElementById('edit-unit').value;
+
+    var status = document.getElementById('status');
+    status.classList.remove(status.innerText.toLowerCase().replace(/\s/g, ''));
+    status.innerText = document.getElementById('edit-status').value;
+    status.classList.add(status.innerText.toLowerCase().replace(/\s/g, ''));
+
+    var priority = document.getElementById('priority');
+    priority.classList.remove(priority.innerText.toLowerCase().replace(/\s/g, ''));
+    priority.innerText = document.getElementById('edit-priority').value;
+    priority.classList.add(priority.innerText.toLowerCase().replace(/\s/g, ''));
+
+    document.getElementById('title').innerText = document.getElementById('edit-title').value;
+    document.getElementById('request').innerText = document.getElementById('edit-request').value;
+    var edit_entry_permission = document.getElementById('edit-entry-permission');
+    document.getElementById('entry-permission').innerText = edit_entry_permission.options[edit_entry_permission.selectedIndex].innerText;
+}
+
+function submitChanges() {
+    var updatedProfileData = {
+        first_name: document.getElementById('edit-first-name').value,
+        last_name: document.getElementById('edit-last-name').value,
+        phone: document.getElementById('edit-phone').value,
+        building: document.getElementById('edit-building').value,
+        unit: document.getElementById('edit-unit').value,
+        status: document.getElementById('edit-status').value,
+        priority: document.getElementById('edit-priority').value,
+        title: document.getElementById('edit-title').value,
+        request: document.getElementById('edit-request').value,
+        entry_permission: document.getElementById('edit-entry-permission').value,
+    };
+
+    fetch(window.location.origin + window.location.pathname, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken') // Get CSRF token from cookie
+        },
+        credentials: 'same-origin', // Include cookies in the request
+        body: JSON.stringify(updatedProfileData) // Convert data to JSON format
+    })
+    .then(response => {
+        console.log(response.json());
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        // Handle successful response
+        console.log('Changes submitted successfully');
+        updateFields()
+        // Call this function to show a success notification
+        showNotification('Changes were successful.', true);
+
+    })
+    .catch(error => {
+        // Handle errors
+        console.error('Error submitting changes:', error);
+        // Call this function to show a failure notification
+        showNotification('Changes were not successful.', false);
+    });
+}

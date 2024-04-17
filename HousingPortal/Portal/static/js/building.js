@@ -33,19 +33,20 @@ document.getElementById('edit-button').addEventListener('click', function() {
 });
 
 document.getElementById('save-button').addEventListener('click', function() {
-    // Update profile info with edited values
+    // Hide edit form, show profile info
+    submitChanges();
+    document.getElementById('edit-form').style.display = 'none';
+    document.getElementById('building-info').style.display = 'block';
+});
+
+function updateFields() {
     document.getElementById('building-name').innerText = document.getElementById('edit-building-name').value;
     document.getElementById('building-address').innerText = document.getElementById('edit-building-address').value;
     document.getElementById('building-city').innerText = document.getElementById('edit-building-city').value;
     document.getElementById('building-state').innerText = document.getElementById('edit-building-state').value;
     document.getElementById('building-country').innerText = document.getElementById('edit-building-country').value;
     document.getElementById('building-zipcode').innerText = document.getElementById('edit-building-zipcode').value;
-    
-    // Hide edit form, show profile info
-    submitChanges();
-    document.getElementById('edit-form').style.display = 'none';
-    document.getElementById('building-info').style.display = 'block';
-});
+}
 
 function submitChanges() {
     var updatedProfileData = {
@@ -72,6 +73,7 @@ function submitChanges() {
         }
         // Handle successful response
         console.log('Changes submitted successfully');
+        updateFields()
         // Call this function to show a success notification
         showNotification('Changes were successful.', true);
 

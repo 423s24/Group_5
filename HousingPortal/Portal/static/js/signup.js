@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function enforceLowercase(event) {
         // Convert the input value to lowercase
-        event.target.value = event.target.value.toLowerCase();
+        event.target.value = event.target.value.replace(/\s/g, '').toLowerCase();
     }
 
     // Listen for the "input" event and enforce lowercase
@@ -45,23 +45,6 @@ document.addEventListener("DOMContentLoaded", function() {
     
     usernameInput.addEventListener("input", checkUsername);    
 });
-
-// Function to get CSRF token from cookie
-function getCookie(name) {
-    var cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-        var cookies = document.cookie.split(';');
-        for (var i = 0; i < cookies.length; i++) {
-            var cookie = cookies[i].trim();
-            // Check if the cookie name matches the desired name
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
-        }
-    }
-    return cookieValue;
-}
 
 async function check_username(username) {
     try {
@@ -87,4 +70,21 @@ async function check_username(username) {
         console.error('Error checking username:', error);
         throw error; // Re-throw the error to propagate it further
     }
+}
+
+// Function to get CSRF token from cookie
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i].trim();
+            // Check if the cookie name matches the desired name
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
 }

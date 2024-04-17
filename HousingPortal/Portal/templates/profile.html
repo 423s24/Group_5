@@ -7,39 +7,80 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/request.css' %}">
 {% endblock %}
 {% block content %}
+    <div id="notification">
+        <p id="notificationMessage"></p>
+    </div>
     <div class="container">
+        <br>
+        <h1>Your Profile</h1>
+        <hr>
         <div id="profile-info">
-            <br>
-            <h1>Your Profile</h1>
-            <hr>
-            <p>First Name: <span id="first-name">{{user.first_name}}</span></p>
-            <p>Last Name: <span id="last-name">{{user.last_name}}</span></p>
-            <p>Username: <span id="username">{{user.username}}</span></p>
-            <p>Email: <span id="email">{{user.email}}</span></p>
-            <p>Account Type: <span id="account-type">{{user.account_type}}</span></p>
-            <p>Date joined: <span id="date-joined">{{user.date_joined}}</span></p>
-            <button id="edit-button" class="button-17">Edit</button>
-            <br>
-            <br>
+            <button id="edit-button" class="button-17">Edit Profile</button>
             <button onclick="deleteUser('{{user.id}}')" class="button-17">Delete User</button>
-          </div>
+            <table class="table">
+                <thead>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>First Name:</td>
+                        <td id="first-name">{{user.first_name}}</td>
+                    </tr>
+                    <tr>
+                        <td>Last Name:</td>
+                        <td id="last-name">{{user.last_name}}</td>
+                    </tr>
+                    <tr>
+                        <td>Username:</td>
+                        <td id="username">{{user.username}}</td>
+                    </tr>
+                    <tr>
+                        <td>Email:</td>
+                        <td id="email">{{user.email}}</td>
+                    </tr>
+                    <tr>
+                        <td>Account Type:</td>
+                        <td id="account-type">{{user.account_type}}</td>
+                    </tr>
+                    <tr>
+                        <td>Date joined:</td>
+                        <td id="date-jointed">{{user.date_joined}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
         <div id="edit-form" style="display:none;">
-            <h1>Edit Profile</h1>
-            <label for="edit-first-name">First Name:</label>
-            <input type="text" id="edit-first-name"><br>
-            <br>
-            <label for="edit-last-name">Last Name:</label>
-            <input type="text" id="edit-last-name"><br>
-            <br>
-            <label for="edit-username">Username:</label>
-            <input type="text" id="edit-username"><br>
-            <br>
-            <label for="edit-email">Email:</label>
-            <input type="email" id="edit-email"><br>
-            <p>Account Type: <span id="account-type">{{user.account_type}}</span></p>
-            <p>Date joined: <span id="date-joined">{{user.date_joined}}</span></p>
             <button id="cancel-button" class="button-17">Cancel</button>
             <button id="save-button" class="button-17">Save</button>
+            <table class="table">
+                <thead>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>First Name:</td>
+                        <td><input type="text" id="edit-first-name" required></td>
+                    </tr>
+                    <tr>
+                        <td>Last Name:</td>
+                        <td><input type="text" id="edit-last-name" required><br></td>
+                    </tr>
+                    <tr>
+                        <td>Username:</td>
+                        <td><input type="text" id="edit-username" required></td>
+                    </tr>
+                    <tr>
+                        <td>Email:</td>
+                        <td> <input type="email" id="edit-email" required></td>
+                    </tr>
+                    <tr>
+                        <td>Account Type:</td>
+                        <td id="account-type">{{user.account_type}}</td>
+                    </tr>
+                    <tr>
+                        <td>Date joined:</td>
+                        <td id="date-jointed">{{user.date_joined}}</td>
+                    </tr>
+                </tbody>
+            </table>
           </div>
     </div>
     <div id="deleteUserModal" class="modal">
