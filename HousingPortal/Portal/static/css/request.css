@@ -17,28 +17,6 @@ a {
     text-decoration: none;
 }
 
-button {
-    color: #fff;
-    border: none;
-    padding: 5px 10px;
-    margin: 8px 0;
-    cursor: pointer;
-}
-
-.table-button {
-    display: block;
-    width: 90%;
-    color: #fff;
-    border: none;
-    padding: 5px 10px;
-    margin: auto;
-    cursor: pointer;
-}
-
-button:hover {
-    background-color: #48D1CC;
-}
-
 
 textarea {
     width: 100%;
@@ -63,19 +41,6 @@ textarea {
     background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
 }
 
-/* Modal Content/Box */
-.modal-content {
-    background-color: #fefefe;
-    margin: 15% auto; /* 15% from the top and centered */
-    padding: 20px;
-    border: 1px solid #888;
-    width: 60%; /* Could be more or less, depending on screen size */
-}
-
-#modal-buttons {
-    display: flex;
-    justify-content: space-between;
-}
 
 #notesTable {
     transition: opacity 0.5s;
