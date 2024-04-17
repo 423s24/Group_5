@@ -134,6 +134,7 @@ def dashboard(request):
 def admin_dashboard(request):
     users = UserAccount.objects.all()
     maintenance_requests = MaintenanceRequest.objects.order_by('-id')[:10]
+    buildings = Building.objects.all().order_by("id")
     per_page = 10
     paginator = Paginator(users, per_page)
     page = request.GET.get('page', 1)
