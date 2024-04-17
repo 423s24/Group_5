@@ -9,6 +9,8 @@ var deleteNoteModal = document.getElementById("deleteNoteModal");
 var confirmDelete = document.getElementById('confirmDelete');
 var cancelDelete = document.getElementById('cancelDelete');
 var noteToDelete;
+var fileIdToDelete;
+var deleteFileModal = document.getElementById('deleteFileModal')
 
 let csrftoken = getCookie('csrftoken');
 
@@ -248,4 +250,28 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 
+var confirmDelete2 = document.getElementById('confirmDelete2');
+var cancelDelete2 = document.getElementById('cancelDelete2');
+function confirmDeleteFile(fileId) {
+    // Store the ID of the file to be deleted in a variable
+    fileIdToDelete = fileId;
+
+    // Show the delete file confirmation modal
+    deleteFileModal.style.display = "block";
+}
+
+// Event listener for cancel delete file button
+cancelDelete2.onclick = function() {
+    // Hide the delete file confirmation modal
+    deleteFileModal.style.display = "none";
+}
+
+// Event listener for confirm delete file button
+confirmDelete2.onclick = function() {
+    // Call the removeImage function with the file ID to delete
+    removeImage(fileIdToDelete);
+
+    // Hide the delete file confirmation modal
+    deleteFileModal.style.display = "none";
+}
 
