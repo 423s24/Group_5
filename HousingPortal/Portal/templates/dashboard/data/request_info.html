@@ -219,7 +219,7 @@
         {% endfor %}
     </div> -->
     <h2>Files:</h2>
-    <table class="file-table">
+    <table class="file-table table">
         <thead>
             <tr>
                 <th>File</th>
@@ -246,11 +246,12 @@
             {% endfor %}
         </tbody>
     </table>
-
+    <br>
     <form id="uploadForm" method="post" enctype="multipart/form-data" action="{% url 'upload_image' %}">
         {% csrf_token %}
         <input type="hidden" name="request_id" value="{{ maintenance_request.id }}">
         <input type="file" name="images" id="imageInput" multiple>
+        <br>
         <button type="submit" class="button-17">Upload Image</button>
     </form>
 
@@ -369,7 +370,7 @@
         <p>Are you sure you want to delete this file?</p>
         <div id="modal-buttons">
             <button id="cancelDelete2" class="button-17">Cancel</button>
-            <button id="confirmDelete2" class="button-17">Delete Request</button>
+            <button id="confirmDelete2" class="button-17">Delete File</button>
         </div>
     </div>
 </div>
