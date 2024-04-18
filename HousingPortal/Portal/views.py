@@ -319,6 +319,12 @@ def maintenance(request):
 
         send_email_thread(building.building_name,unit,full_name,phone,entry_permission,title, req,"cs423robot@gmail.com","Maintenance Request")
         send_email_thread(building.building_name,unit,full_name,phone,entry_permission,title, req,request.user.email,"Maintenance Request Confirmation")
+
+        # Send to users with email notifications on
+        users_with_notifications = UserAccount.objects.filter(email_notifications=True)
+        for user in users_with_notifications:
+            send_email_thread(building.building_name,unit,full_name,phone,entry_permission,title, req,user.email,"Maintenance Request Confirmation")
+            
         maintenanceRequest = MaintenanceRequest.objects.create(user_id=request.user, first_name=first_name, last_name=last_name, unit=unit, request=req, phone=phone, building=building, priority=priority, entry_permission=entry_permission, title=title, date_submitted=date_submitted)
 
         for image in images:
@@ -522,20 +528,15 @@ def add_building(request):
 def profile(request):
     if request.method == 'POST':
         data = json.loads(request.body)
-        updated_first_name = data.get('first_name')
-        updated_last_name = data.get('last_name')
-        updated_username = data.get('username')
-        updated_email = data.get('email')
-
-        user = request.user
-        user.first_name = updated_first_name
-        user.last_name = updated_last_name
-        user.username = updated_username
-        user.email = updated_email
+        request.user.first_name = data.get('first_name')
+        request.user.last_name = data.get('last_name')
+        request.user.username = data.get('username')
+        request.user.email = data.get('email')
+        request.user.email_notifications = data.get('email_notifications')
 
         try:
-            user.full_clean()  # This will run all validators on the model fields
-            user.save()
+            request.user.full_clean()  # This will run all validators on the model fields
+            request.user.save()
             return JsonResponse({'message': 'Profile updated successfully'})
         except ValidationError as e:
             # Handle the validation error, e.g., return an error response

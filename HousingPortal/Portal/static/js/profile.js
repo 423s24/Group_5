@@ -50,6 +50,7 @@ document.getElementById('edit-button').addEventListener('click', function() {
     document.getElementById('edit-last-name').value = document.getElementById('last-name').innerText;
     document.getElementById('edit-username').value = document.getElementById('username').innerText;
     document.getElementById('edit-email').value = document.getElementById('email').innerText;
+    document.getElementById('edit-email-notifications').checked = (document.getElementById('email-notifications').innerText === 'True');
 });
 
 function updateFields() {
@@ -57,6 +58,11 @@ function updateFields() {
     document.getElementById('last-name').innerText = document.getElementById('edit-last-name').value;
     document.getElementById('username').innerText = document.getElementById('edit-username').value;
     document.getElementById('email').innerText = document.getElementById('edit-email').value;
+    if (document.getElementById('edit-email-notifications').checked) {
+        document.getElementById('email-notifications').innerText = 'True';
+    } else {
+        document.getElementById('email-notifications').innerText = 'False';
+    }
 
     document.getElementById('edit-form').style.display = 'none';
     document.getElementById('profile-info').style.display = 'block';
@@ -92,6 +98,7 @@ function submitProfileChanges() {
         last_name: document.getElementById('edit-last-name').value,
         username: document.getElementById('edit-username').value,
         email: document.getElementById('edit-email').value,
+        email_notifications: document.getElementById('edit-email-notifications').checked,
         // Add other fields as needed
     };
 

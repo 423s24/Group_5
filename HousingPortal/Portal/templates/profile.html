@@ -38,6 +38,10 @@
                         <td id="email">{{user.email}}</td>
                     </tr>
                     <tr>
+                        <td>Email Notifications:</td>
+                        <td id="email-notifications">{{user.email_notifications}}</td>
+                    </tr>
+                    <tr>
                         <td>Account Type:</td>
                         <td id="account-type">{{user.account_type}}</td>
                     </tr>
@@ -69,7 +73,11 @@
                     </tr>
                     <tr>
                         <td>Email:</td>
-                        <td> <input type="email" id="edit-email" required></td>
+                        <td><input type="email" id="edit-email" required></td>
+                    </tr>
+                    <tr>
+                        <td>Email Notifications:</td>
+                        <td><input type="checkbox" id="edit-email-notifications"></td>
                     </tr>
                     <tr>
                         <td>Account Type:</td>
@@ -82,6 +90,8 @@
                 </tbody>
             </table>
           </div>
+          <br>
+        <button onclick="window.location.href='/change_password/'" class="button-17">Change Password</button>
     </div>
     <div id="deleteUserModal" class="modal">
     <div class="modal-content">
