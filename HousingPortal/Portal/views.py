@@ -125,7 +125,7 @@ def support(request):
 def dashboard(request):
     if request.user.is_superuser:
         return admin_dashboard(request)
-    elif request.user.manager != None:
+    elif request.user.is_manager:
         return manager_dashboard(request)
     else:
         return tenant_dashboard(request)
@@ -154,6 +154,7 @@ def admin_dashboard(request):
 def manager_dashboard(request):
     users = UserAccount.objects.all().order_by('id')
     maintenance_requests = MaintenanceRequest.objects.order_by('-id')[:10]
+    buildings = Building.objects.all().order_by("id")
     per_page = 10
     paginator = Paginator(users, per_page)
     page = request.GET.get('page', 1)
@@ -164,8 +165,8 @@ def manager_dashboard(request):
     except EmptyPage:
         users = paginator.page(paginator.num_pages)
 
-    if request.user.manager != None:
-        return render(request, 'dashboard/manager_dashboard.html', {'users':users, 'maintenance_requests':maintenance_requests})
+    if request.user.is_manager:
+        return render(request, 'dashboard/manager_dashboard.html', {'users':users, 'maintenance_requests':maintenance_requests, 'buildings': buildings})
     else:
         return handler_403(request)
 
@@ -177,7 +178,7 @@ def tenant_dashboard(request):
     
 @login_required(login_url="/login")
 def users(request):
-    if request.user.is_superuser:
+    if request.user.is_superuser or request.user.is_manager:
         search_query = request.GET.get('search_query')
         if search_query:
             users = UserAccount.objects.filter(
@@ -199,7 +200,7 @@ def users(request):
 
 @login_required(login_url="/login")
 def buildings(request):
-    if request.user.is_superuser:
+    if request.user.is_superuser or request.user.is_manager:
         search_query = request.GET.get('search_query')
         if search_query:
             buildings = Building.objects.filter(
@@ -223,7 +224,7 @@ def buildings(request):
     
 @login_required(login_url="/login")
 def maintenance_requests(request):
-    if request.user.is_superuser or (request.user.manager != None):
+    if request.user.is_superuser or request.user.is_manager:
         search_query = request.GET.get('search_query')
         if search_query:
             maintenance_requests = MaintenanceRequest.objects.filter(
@@ -323,8 +324,9 @@ def maintenance(request):
         # Send to users with email notifications on
         users_with_notifications = UserAccount.objects.filter(email_notifications=True)
         for user in users_with_notifications:
-            send_email_thread(building.building_name,unit,full_name,phone,entry_permission,title, req,user.email,"Maintenance Request Confirmation")
-            
+            if user.is_superuser or user.is_manager:
+                send_email_thread(building.building_name,unit,full_name,phone,entry_permission,title, req,user.email,"Maintenance Request Confirmation")
+
         maintenanceRequest = MaintenanceRequest.objects.create(user_id=request.user, first_name=first_name, last_name=last_name, unit=unit, request=req, phone=phone, building=building, priority=priority, entry_permission=entry_permission, title=title, date_submitted=date_submitted)
 
         for image in images:
@@ -334,30 +336,18 @@ def maintenance(request):
 
     return render(request, 'forms/maintenance/maintenance.html', {'buildings': buildings})
 
-
-@login_required(login_url="/login")
-def user_profile(request, username):
-    return render(request, 'profile.html', {'user_profile' : username})
-
 @login_required(login_url="/login")
 def building_info(request, building_id):
-    if request.user.is_superuser or request.user.manager != None:
+    building = get_object_or_404(Building, pk=building_id)
+    if request.user.is_superuser or request.user.is_manager:
         if request.method == 'POST':
             data = json.loads(request.body)
-            updated_name = data.get('name')
-            updated_address = data.get('address')
-            updated_city = data.get('city')
-            updated_state = data.get('state')
-            updated_country = data.get('country')
-            updated_zipcode = data.get('zipcode')
-
-            building = Building.objects.get(id=building_id)
-            building.building_name = updated_name
-            building.address = updated_address
-            building.city = updated_city
-            building.state = updated_state
-            building.country = updated_country
-            building.zipcode = updated_zipcode
+            building.building_name = data.get('name')
+            building.address = data.get('address')
+            building.city = data.get('city')
+            building.state = data.get('state')
+            building.country = data.get('country')
+            building.zipcode = data.get('zipcode')
 
             try:
                 building.full_clean()  # This will run all validators on the model fields
@@ -367,7 +357,6 @@ def building_info(request, building_id):
                 # Handle the validation error, e.g., return an error response
                 return JsonResponse({'errors': e.message_dict}, status=400)
             
-        building = get_object_or_404(Building, pk=building_id)
         maintenance_requests = MaintenanceRequest.objects.filter(building=building)
         return render(request, 'dashboard/data/building_info.html', {'building': building, 'maintenance_requests': maintenance_requests})
     else:
@@ -393,7 +382,7 @@ def edit_request(request, request_id):
         building = get_object_or_404(Building, pk=building_id)
         maintenance_request.building = building
 
-        if request.user.is_superuser or request.user.manager:
+        if request.user.is_superuser or request.user.is_manager:
             if (maintenance_request.date_completed is not None):
                 maintenance_request.date_completed = None
 
@@ -433,7 +422,7 @@ def delete_note(request, note_id):
 def request_info(request, request_id):
     maintenance_request = get_object_or_404(MaintenanceRequest, pk=request_id)
     maintenance_files = MaintenanceFile.objects.filter(maintenanceRequestId=maintenance_request)
-    if request.user.is_superuser or request.user.manager != None:
+    if request.user.is_superuser or request.user.is_manager:
         buildings = Building.objects.all().order_by("id")
         if request.method == 'POST':
             data = json.loads(request.body)
@@ -456,12 +445,12 @@ def request_info(request, request_id):
                 # Handle the validation error, e.g., return an error response
                 return JsonResponse({'errors': e.message_dict}, status=400)
 
-        can_edit_request = (request.user.is_superuser or request.user.manager)
+        can_edit_request = (request.user.is_superuser or request.user.is_manager)
         maintenance_notes = maintenance_request.maintenance_notes.all()
         saved = request_is_saved(request, request_id)
         return render(request, 'dashboard/data/request_info.html', {'maintenance_request': maintenance_request, 'maintenance_files': maintenance_files, 'buildings': buildings,'can_edit_request': can_edit_request, 'maintenance_notes': maintenance_notes, 'saved': saved})
     elif request.user == maintenance_request.user_id:
-        can_edit_request = (request.user.is_superuser or request.user.manager)
+        can_edit_request = (request.user.is_superuser or request.user.is_manager)
         maintenance_notes = maintenance_request.maintenance_notes.filter(tenant_viewable=True)
         saved = request_is_saved(request, request_id)
         return render(request, 'dashboard/data/request_info.html',
@@ -472,7 +461,7 @@ def request_info(request, request_id):
 @login_required(login_url="/login")
 def view_user(request, username):
     u = get_object_or_404(UserAccount, username=username)
-    if request.user.is_superuser:
+    if request.user.is_superuser or request.user.is_manager:
         if request.method == 'POST':
             data = json.loads(request.body)
             u.first_name = data.get('first_name')
@@ -488,8 +477,8 @@ def view_user(request, username):
             except ValidationError as e:
                 # Handle the validation error, e.g., return an error response
                 return JsonResponse({'errors': e.message_dict}, status=400)
-            
-        return render(request, 'dashboard/pages/view_user.html', {'u': u})
+        maintenance_requests = MaintenanceRequest.objects.filter(user_id=u)
+        return render(request, 'dashboard/pages/view_user.html', {'u': u, 'maintenance_requests' :maintenance_requests})
     else:
         return handler_403(request)
 
@@ -497,7 +486,7 @@ def add_note(request, request_id):
     maintenance_request = get_object_or_404(MaintenanceRequest, pk=request_id)
     notes = request.POST.get('notes')
     is_tenant_viewable = 'is_tenant_viewable' in request.POST
-    if request.method == 'POST' and request.user.is_superuser or request.user.manager != None:
+    if request.method == 'POST' and request.user.is_superuser or request.user.is_manager:
         new_note = MaintenanceNotes(
             maintenanceRequestId = maintenance_request,
             user_id = request.user,
@@ -612,7 +601,7 @@ def check_username(request):
 def toggle_save(request, request_id):
     if request.method == 'POST':
         maintenance_request = MaintenanceRequest.objects.get(pk=request_id)
-        if (request.user.is_superuser or request.user.manager != None or request.user == maintenance_request.user_id):
+        if (request.user.is_superuser or request.user.is_manger or request.user == maintenance_request.user_id):
             try:
                 existing_relationship = UserAccountMaintenanceRequest.objects.get(
                     user_id=request.user, maintenanceRequest_id=maintenance_request

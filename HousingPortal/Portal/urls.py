@@ -15,7 +15,7 @@ urlpatterns = [
     path('dashboard/requests/', views.maintenance_requests, name='maintenance_requests'),
     path('dashboard/requests/saved', views.saved_requests, name='saved_requests'),
     path('dashboard/requests/<int:request_id>', views.request_info, name='request_info'),
-    path('dashboard/requests/create', views.maintenance, name='maintenance'),
+    path('dashboard/requests/create/', views.maintenance, name='maintenance'),
     path('dashboard/users/', views.users, name='users'),
     path('dashboard/users/<str:username>/', views.view_user, name='view_user'),
     #TODO dashboard/users/create

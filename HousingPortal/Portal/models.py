@@ -31,16 +31,19 @@ class UsernameField(models.CharField):
 class UserAccount(AbstractUser): 
     # AbstractUser has fields: id, password, last_login, is_superuser, username, first_name, last_name, email, is_staff, is_active, date_joined
     username = UsernameField(unique=True)
-    manager = models.OneToOneField('Manager', on_delete=models.SET_NULL, null=True, blank=True)
-    #is_manager = models.BooleanField(default=False)
+    is_manager = models.BooleanField(default=False)
     archived = models.BooleanField(default=False)
     email_notifications = models.BooleanField(default=False)
+    request_sort = models.CharField(max_length=100, default='id')
+    building_sort = models.CharField(max_length=100, default='id')
+    user_sort = models.CharField(max_length=100, default='id')
+    paging_count = models.IntegerField(default=25)
 
     @property
     def account_type(self):
         if (self.is_superuser):
             return 'admin'
-        elif (self.manager != None):
+        elif (self.is_manager):
             return 'manager'
         else:
             return 'tenant'
@@ -52,24 +55,16 @@ class UserAccount(AbstractUser):
             return
         
         if account_type == 'admin':
-            if self.manager != None:
-                Manager.objects.get(pk=self.manager.id).delete()
-                self.manager = None
+            self.is_manager = False
             self.is_superuser = True
             self.save()
         elif account_type == 'manager':
-            if self.is_superuser:
-                self.is_superuser = False
-            manager = Manager()
-            manager.save()
-            self.manager = manager
+            self.is_manager = True
+            self.is_superuser = False
             self.save()
         elif account_type == 'tenant':
-            if self.is_superuser:
-                self.is_superuser = False
-            elif self.manager != None:
-                Manager.objects.get(pk=self.manager.id).delete()
-                self.manager = None
+            self.is_manager = False
+            self.is_superuser = False
             self.save()
 
 class UserAccountMaintenanceRequest(models.Model):
@@ -78,14 +73,6 @@ class UserAccountMaintenanceRequest(models.Model):
 
     class Meta:
         unique_together = ('user_id', 'maintenanceRequest_id')
-
-class Manager(models.Model):
-    archived = models.BooleanField(default=False)
-    #managerBuilding = models.ManyToManyField('Building', through='ManagerBuilding')
-
-class ManagerBuilding(models.Model):
-    managerId = models.ForeignKey('Manager', on_delete=models.CASCADE)
-    buildingId = models.ForeignKey('Building', on_delete=models.CASCADE)
 
 class Building(models.Model):
     building_name = models.CharField(max_length=100, default="")

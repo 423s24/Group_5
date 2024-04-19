@@ -59,7 +59,7 @@
         </div>
         <ul>
             {% if user.is_authenticated %}
-            {% if user.is_superuser %}
+            {% if user.is_superuser or user.is_manager %}
             <li>
                 <a href="/search">
                     <i class="bi bi-search"></i>
@@ -76,7 +76,7 @@
                 <span class="tooltip">Dashboard</span>
             </li>
             <hr style="color: white;">
-            {% if user.is_superuser %}
+            {% if user.is_superuser or user.is_manager %}
             <li>
                 <a href="/dashboard/requests">
                     <i class="bi bi-tags"></i>
@@ -93,7 +93,7 @@
                 <span class="tooltip">Saved&nbsp;Requests</span>
             </li>
             <hr style="color: white;">
-            {% if user.is_superuser %}
+            {% if user.is_superuser or user.is_manager %}
             <li>
                 <a href="/dashboard/buildings">
                     <i class="bi bi-buildings"></i>

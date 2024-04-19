@@ -21,17 +21,19 @@
                 </button>
             </a>
         </div>
-<h2>User Accounts</h2>
-{% include 'dashboard/data/user.html' %}
-<br>
-<br>
-<h2>Maintenance Requests</h2>
+<h2>Latest Maintenance Requests</h2>
 {% include 'dashboard/data/requests.html' %}
-    <a href="{% url 'maintenance_requests' %}">View More</a>
+<a href="{% url 'maintenance_requests' %}">View More</a>
+<br>
+<br>
+<h2>Latest User Accounts</h2>
+{% include 'dashboard/data/user.html' %}
+<a href="{% url 'users' %}">View More</a>
 <br>
 <br>
 <h2>Buildings</h2>
 {% include 'dashboard/data/building.html' %}
+<a href="{% url 'buildings' %}">View More</a>
 <br>
 <br>
 </div>

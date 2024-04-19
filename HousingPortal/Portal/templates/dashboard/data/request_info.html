@@ -258,7 +258,7 @@
 
     <br>
     <br>
-    {% if request.user.is_superuser or request.user.manager %}
+    {% if request.user.is_superuser or request.user.is_manager %}
         <h3>Maintenance Notes:</h3>
         <div id="notesTable">
             <table class="table">
