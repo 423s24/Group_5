@@ -298,8 +298,6 @@ def sort_requests(request):
     html = render_to_string('dashboard/data/requests_htmx.html', {'maintenance_requests': maintenance_requests})
     return HttpResponse(html)
 
-
-
 @login_required(login_url="/login")
 def maintenance(request):
     buildings = Building.objects.all().order_by("id")
