@@ -46,7 +46,6 @@
     </div>
     <br>
     {% if can_edit_request %}
-    <!--<a href="{% url 'edit_request' request_id=maintenance_request.id %}"><button class="button-17">Edit Request</button></a>-->
     {% endif %}
     <div id="request-info">
         <button id="edit-button" class="button-17">Edit Request</button>
@@ -155,9 +154,7 @@
                             <option value="New">New</option>
                             <option value="In Progress">In Progress</option>
                             <option value="Pending">Pending</option>
-                            <option value="Resolved">Resolved</option>
                             <option value="Completed">Completed</option>
-                            <option value="Closed">Closed</option>
                             <option value="Cancelled">Cancelled</option>
                         </select>
                     </td>

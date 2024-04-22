@@ -37,12 +37,6 @@
     color: red;
 }
 
-.resolved {
-    background-color: rgba(144, 238, 144, var(--opacity-value)); /* slightly lighter green */
-    border-color: #90ee90;
-    color: #90ee90;
-}
-
 .new {
     background-color: rgba(0, 0, 255, var(--opacity-value)); /* blue */
     border-color: blue;
@@ -53,12 +47,6 @@
     background-color: rgba(255, 255, 0, var(--opacity-value)); /* yellow */
     border-color: darkgoldenrod;
     color: darkgoldenrod;
-}
-
-.closed {
-    background-color: rgba(176, 42, 55, var(--opacity-value)); /* custom color */
-    border-color: #b02a37;
-    color: #b02a37;
 }
 
 .low {

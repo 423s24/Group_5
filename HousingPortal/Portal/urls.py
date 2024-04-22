@@ -18,7 +18,6 @@ urlpatterns = [
     path('dashboard/requests/create/', views.maintenance, name='maintenance'),
     path('dashboard/users/', views.users, name='users'),
     path('dashboard/users/<str:username>/', views.view_user, name='view_user'),
-    #TODO dashboard/users/create
     path('dashboard/buildings/', views.buildings, name='buildings'),
     path('dashboard/buildings/<int:building_id>', views.building_info, name='building_info'),
     path('dashboard/buildings/create/', views.add_building, name='createbuilding'),
@@ -48,7 +47,6 @@ urlpatterns = [
     path('request/<int:request_id>/add_note', views.add_note, name='add_note'),
     path('request/edit_note/<int:note_id>/', views.edit_note, name='edit_note'),
     path('request/delete_note/<int:note_id>/', views.delete_note, name='delete_note'),
-    path('request/<int:request_id>/edit_request', views.edit_request, name='edit_request'),
 
 
     path('upload_image/', views.upload_image, name='upload_image'),
