@@ -96,7 +96,7 @@ class MaintenanceRequest(models.Model):
     priority = models.CharField(max_length=100, default='Low')
     title = models.CharField(max_length=100, default='')
     request = models.CharField(max_length=10000)
-    entry_permission = models.BooleanField(default=False)
+    entry_permission = models.CharField(max_length=10, default='N/A')
 
 class MaintenanceNotes(models.Model):
     maintenanceRequestId = models.ForeignKey('MaintenanceRequest', on_delete=models.CASCADE, related_name='maintenance_notes')
