@@ -15,6 +15,7 @@ from django.template.response import TemplateResponse
 from django.core.exceptions import ValidationError
 import json
 import threading
+from email.mime.image import MIMEImage
 
 import smtplib
 from email.mime.text import MIMEText
@@ -23,8 +24,10 @@ from datetime import date
 
 # Remove after testing
 import time
+import os
+import mimetypes
 
-def html_email(building_name,unit,name,phone,entry,title,request,recipient,subject):
+def html_email(building_name,unit,name,phone,entry,title,request,recipient,subject, images=None):
     sender_email = "cs423robot@gmail.com" 
     recipient_email = recipient
     #subject = "Maintenance Request"
@@ -40,6 +43,16 @@ def html_email(building_name,unit,name,phone,entry,title,request,recipient,subje
         enter = "Yes"
     else: 
         enter = "No"
+
+    if images:
+        for image_path in images:
+            with open(image_path, 'rb') as image_file:
+                img_data = image_file.read()
+                img_mime_type, _ = mimetypes.guess_type(image_path)
+                img_mime_subtype = img_mime_type.split('/')[-1] if img_mime_type else 'octet-stream'
+                img = MIMEImage(img_data, _subtype=img_mime_subtype)
+                img.add_header('Content-Disposition', 'attachment', filename=os.path.basename(image_path))
+                message.attach(img)
 
     # write the text/plain part
     text = """\
@@ -108,8 +121,8 @@ def html_email(building_name,unit,name,phone,entry,title,request,recipient,subje
         server.login(sender_email, "tjcm gvmf ilvq jnqy") 
         server.sendmail(sender_email, recipient_email, message.as_string())
 
-def send_email_thread(building_name, unit, full_name, phone, entry_permission, title, req, recipient_email, subject):
-    email_thread = threading.Thread(target=html_email, args=(building_name, unit, full_name, phone, entry_permission, title, req, recipient_email, subject))
+def send_email_thread(building_name, unit, full_name, phone, entry_permission, title, req, recipient_email, subject, images):
+    email_thread = threading.Thread(target=html_email, args=(building_name, unit, full_name, phone, entry_permission, title, req, recipient_email, subject, images))
     email_thread.start()
     
 # Create your views here.
@@ -316,19 +329,26 @@ def maintenance(request):
         entry_permission = request.POST.get('entry_permission') == '1'
         images = request.FILES.getlist('images')
 
-        send_email_thread(building.building_name,unit,full_name,phone,entry_permission,title, req,"cs423robot@gmail.com","Maintenance Request")
-        send_email_thread(building.building_name,unit,full_name,phone,entry_permission,title, req,request.user.email,"Maintenance Request Confirmation")
+        maintenanceRequest = MaintenanceRequest.objects.create(user_id=request.user, first_name=first_name,
+                                                               last_name=last_name, unit=unit, request=req, phone=phone,
+                                                               building=building, priority=priority,
+                                                               entry_permission=entry_permission, title=title,
+                                                               date_submitted=date_submitted)
+
+        image_paths = []
+
+        for image in images:
+            maintenance_file = MaintenanceFile.objects.create(maintenanceRequestId=maintenanceRequest, file=image)
+            image_paths.append(maintenance_file.file.path)
+
+        send_email_thread(building.building_name,unit,full_name,phone,entry_permission,title, req,"cs423robot@gmail.com","Maintenance Request", image_paths)
+        send_email_thread(building.building_name,unit,full_name,phone,entry_permission,title, req,request.user.email,"Maintenance Request Confirmation", image_paths)
 
         # Send to users with email notifications on
         users_with_notifications = UserAccount.objects.filter(email_notifications=True)
         for user in users_with_notifications:
             if (user.is_superuser or user.is_manager) and user != request.user:
                 send_email_thread(building.building_name,unit,full_name,phone,entry_permission,title, req,user.email,"Maintenance Request Notification")
-
-        maintenanceRequest = MaintenanceRequest.objects.create(user_id=request.user, first_name=first_name, last_name=last_name, unit=unit, request=req, phone=phone, building=building, priority=priority, entry_permission=entry_permission, title=title, date_submitted=date_submitted)
-
-        for image in images:
-            MaintenanceFile.objects.create(maintenanceRequestId = maintenanceRequest, file=image)
 
         return redirect('/request/' + str(maintenanceRequest.id))
 
