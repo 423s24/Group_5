@@ -359,7 +359,7 @@ def building_info(request, building_id):
                  return JsonResponse({'errors': 'Not authorized'}, status=403)
             
         maintenance_requests = MaintenanceRequest.objects.filter(building=building)
-        return render(request, 'dashboard/data/building_info.html', {'building': building, 'maintenance_requests': maintenance_requests})
+        return render(request, 'dashboard/info/building_info.html', {'building': building, 'maintenance_requests': maintenance_requests})
     else:
         return handler_403(request)
 
@@ -418,18 +418,18 @@ def request_info(request, request_id):
         can_edit_request = (request.user.is_superuser or request.user.is_manager)
         maintenance_notes = maintenance_request.maintenance_notes.all()
         saved = request_is_saved(request, request_id)
-        return render(request, 'dashboard/data/request_info.html', {'maintenance_request': maintenance_request, 'maintenance_files': maintenance_files, 'buildings': buildings,'can_edit_request': can_edit_request, 'maintenance_notes': maintenance_notes, 'saved': saved})
+        return render(request, 'dashboard/info/request_info.html', {'maintenance_request': maintenance_request, 'maintenance_files': maintenance_files, 'buildings': buildings,'can_edit_request': can_edit_request, 'maintenance_notes': maintenance_notes, 'saved': saved})
     elif request.user == maintenance_request.user_id:
         can_edit_request = (request.user.is_superuser or request.user.is_manager)
         maintenance_notes = maintenance_request.maintenance_notes.filter(tenant_viewable=True)
         saved = request_is_saved(request, request_id)
-        return render(request, 'dashboard/data/request_info.html',
+        return render(request, 'dashboard/info/request_info.html',
                       {'maintenance_request': maintenance_request, 'maintenance_files': maintenance_files, 'can_edit_request': can_edit_request,'maintenance_notes': maintenance_notes, 'saved': saved})
     else:
         return handler_403(request)
     
 @login_required(login_url="/login")
-def view_user(request, username):
+def user_info(request, username):
     u = get_object_or_404(UserAccount, username=username)
     if request.user.is_superuser or request.user.is_manager:
         if request.method == 'POST':
@@ -451,7 +451,7 @@ def view_user(request, username):
             else:
                 return JsonResponse({'errors': 'Not authorized'}, status=403)
         maintenance_requests = MaintenanceRequest.objects.filter(user_id=u)
-        return render(request, 'dashboard/pages/view_user.html', {'u': u, 'maintenance_requests' :maintenance_requests})
+        return render(request, 'dashboard/info/user_info.html', {'u': u, 'maintenance_requests' :maintenance_requests})
     else:
         return handler_403(request)
 

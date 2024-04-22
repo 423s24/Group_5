@@ -45,11 +45,11 @@
         </a>
     </div>
     <br>
-    {% if can_edit_request %}
-    {% endif %}
     <div id="request-info">
+        {% if user.is_superuser or user.is_manager %}
         <button id="edit-button" class="button-17">Edit Request</button>
         <button onclick="deleteRequest('{{maintenance_request.id}}')" class="button-17">Delete Request</button>
+        {% endif %}
         <table class="table">
             <thead>
             </thead>
@@ -114,6 +114,7 @@
             </tbody>
         </table>
     </div>
+    {% if user.is_superuser or user.is_manager %}
     <div id="edit-form" style="display:none;">
         <button id="cancel-button" class="button-17">Cancel</button>
         <button id="save-button" class="button-17">Save</button>
@@ -207,6 +208,7 @@
             </tbody>
         </table>
     </div>
+    {% endif %}
     <br>
     <br>
     <!--
