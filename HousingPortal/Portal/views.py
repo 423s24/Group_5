@@ -322,8 +322,8 @@ def maintenance(request):
         # Send to users with email notifications on
         users_with_notifications = UserAccount.objects.filter(email_notifications=True)
         for user in users_with_notifications:
-            if user.is_superuser or user.is_manager:
-                send_email_thread(building.building_name,unit,full_name,phone,entry_permission,title, req,user.email,"Maintenance Request Confirmation")
+            if (user.is_superuser or user.is_manager) and user != request.user:
+                send_email_thread(building.building_name,unit,full_name,phone,entry_permission,title, req,user.email,"Maintenance Request Notification")
 
         maintenanceRequest = MaintenanceRequest.objects.create(user_id=request.user, first_name=first_name, last_name=last_name, unit=unit, request=req, phone=phone, building=building, priority=priority, entry_permission=entry_permission, title=title, date_submitted=date_submitted)
 
