@@ -332,7 +332,7 @@ def maintenance(request):
 
         return redirect('/request/' + str(maintenanceRequest.id))
 
-    return render(request, 'forms/maintenance/maintenance.html', {'buildings': buildings})
+    return render(request, 'dashboard/create/maintenance.html', {'buildings': buildings})
 
 @login_required(login_url="/login")
 def building_info(request, building_id):
@@ -476,7 +476,7 @@ def add_building(request):
             if form.is_valid():
                 form.save()
                 return dashboard(request)
-        return render(request, 'dashboard/forms/create_building.html', {'form': form})
+        return render(request, 'dashboard/create/create_building.html', {'form': form})
     else:
         return handler_403(request)
     
