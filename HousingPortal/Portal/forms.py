@@ -12,7 +12,7 @@ class RegisterForm(UserCreationForm):
 
     class Meta:
         model = UserAccount
-        fields = ["first_name", "last_name", "username", "email", "password1", "password2"]
+        fields = ["username", "email", "password1", "password2", "first_name", "last_name"]
         help_texts = {
             'username': 'Required. 30 characters or fewer. Only lowercase letters, numbers, hyphen, underscore, and period are allowed.',
         }

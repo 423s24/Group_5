@@ -36,9 +36,6 @@ a {
     text-decoration: none;
 }
 
-a:visited {
-    color: blue;
-}
 
 td a {
     background-color: #fff;
