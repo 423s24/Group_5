@@ -2,7 +2,9 @@
 {% load static %}
 {% block title %}User Profile{% endblock %}
 {% block head %}
+    {% if user.is_superuser %}
     <script src="{% static 'js/view_user.js' %}" defer></script>
+    {% endif %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/global.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/request.css' %}">
 {% endblock %}
@@ -15,8 +17,10 @@
             <h1>Profile for {{u.username}}</h1>
             <hr>
             <div id="profile-info">
+                {% if user.is_superuser %}
                 <button id="edit-button" class="button-17">Edit Profile</button>
                 <button onclick="deleteUser('{{u.id}}')" class="button-17">Delete User</button>
+                {% endif %}
                 <table class="table">
                     <thead>
                     </thead>
@@ -48,6 +52,7 @@
                     </tbody>
                 </table>
             </div>
+            {% if user.is_superuser %}
             <div id="edit-form" style="display:none;">
                 <button id="cancel-button" class="button-17">Cancel</button>
                 <button id="save-button" class="button-17">Save</button>
@@ -88,6 +93,7 @@
                     </tbody>
                 </table>
               </div>
+              {% endif %}
               <br>
               <br>
               <h2>Maintenance Requests:</h2>

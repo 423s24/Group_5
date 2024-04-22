@@ -339,21 +339,24 @@ def building_info(request, building_id):
     building = get_object_or_404(Building, pk=building_id)
     if request.user.is_superuser or request.user.is_manager:
         if request.method == 'POST':
-            data = json.loads(request.body)
-            building.building_name = data.get('name')
-            building.address = data.get('address')
-            building.city = data.get('city')
-            building.state = data.get('state')
-            building.country = data.get('country')
-            building.zipcode = data.get('zipcode')
+            if request.user.is_superuser:
+                data = json.loads(request.body)
+                building.building_name = data.get('name')
+                building.address = data.get('address')
+                building.city = data.get('city')
+                building.state = data.get('state')
+                building.country = data.get('country')
+                building.zipcode = data.get('zipcode')
 
-            try:
-                building.full_clean()  # This will run all validators on the model fields
-                building.save()
-                return JsonResponse({'message': 'Profile updated successfully'})
-            except ValidationError as e:
-                # Handle the validation error, e.g., return an error response
-                return JsonResponse({'errors': e.message_dict}, status=400)
+                try:
+                    building.full_clean()  # This will run all validators on the model fields
+                    building.save()
+                    return JsonResponse({'message': 'Profile updated successfully'})
+                except ValidationError as e:
+                    # Handle the validation error, e.g., return an error response
+                    return JsonResponse({'errors': e.message_dict}, status=400)
+            else:
+                 return JsonResponse({'errors': 'Not authorized'}, status=403)
             
         maintenance_requests = MaintenanceRequest.objects.filter(building=building)
         return render(request, 'dashboard/data/building_info.html', {'building': building, 'maintenance_requests': maintenance_requests})
@@ -430,20 +433,23 @@ def view_user(request, username):
     u = get_object_or_404(UserAccount, username=username)
     if request.user.is_superuser or request.user.is_manager:
         if request.method == 'POST':
-            data = json.loads(request.body)
-            u.first_name = data.get('first_name')
-            u.last_name = data.get('last_name')
-            u.username = data.get('username')
-            u.email = data.get('email')
-            u.setAccountType(data.get('account_type'))
+            if request.user.is_superuser:
+                data = json.loads(request.body)
+                u.first_name = data.get('first_name')
+                u.last_name = data.get('last_name')
+                u.username = data.get('username')
+                u.email = data.get('email')
+                u.setAccountType(data.get('account_type'))
 
-            try:
-                u.full_clean()  # This will run all validators on the model fields
-                u.save()
-                return JsonResponse({'message': 'Profile updated successfully'})
-            except ValidationError as e:
-                # Handle the validation error, e.g., return an error response
-                return JsonResponse({'errors': e.message_dict}, status=400)
+                try:
+                    u.full_clean()  # This will run all validators on the model fields
+                    u.save()
+                    return JsonResponse({'message': 'Profile updated successfully'})
+                except ValidationError as e:
+                    # Handle the validation error, e.g., return an error response
+                    return JsonResponse({'errors': e.message_dict}, status=400)
+            else:
+                return JsonResponse({'errors': 'Not authorized'}, status=403)
         maintenance_requests = MaintenanceRequest.objects.filter(user_id=u)
         return render(request, 'dashboard/pages/view_user.html', {'u': u, 'maintenance_requests' :maintenance_requests})
     else:
@@ -602,7 +608,7 @@ def delete(request):
                     return JsonResponse({'success': False})
                 
         elif type == "MaintenanceRequest":
-            if request.user.is_superuser:
+            if request.user.is_superuser or request.user.is_manager:
                 try:
                     request = MaintenanceRequest.objects.get(pk=id_num)
                     request.delete()
@@ -623,7 +629,7 @@ def delete(request):
                 
 @login_required(login_url='/login')
 def advanced_search(request):
-    if request.user.is_superuser:
+    if request.user.is_superuser or request.user.is_manager:
         search_option = request.GET.get('search_option')
 
         if search_option == "user_accounts":

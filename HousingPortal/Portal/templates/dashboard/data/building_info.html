@@ -4,62 +4,10 @@
 {% block head %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/dashboard.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/global.css' %}">
-    <script>
-    window.onload = function() {
-            var deleteBuildingModal = document.getElementById("deleteBuildingModal");
-            var confirmDelete = document.getElementById('confirmDelete');
-            var cancelDelete = document.getElementById('cancelDelete');
-
-            window.deleteBuilding = function(id_str) {
-                id = parseInt(id_str)
-                deleteBuildingModal.style.display = "block";
-                var data = {'type': 'Building', 'id': id}
-                cancelDelete.onclick = function () {
-                    deleteBuildingModal.style.display = "none";
-                }
-
-                confirmDelete.onclick = function () {
-                    fetch('/delete/', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRFToken': getCookie('csrftoken')
-                        },
-                        credentials: 'same-origin',
-                        body: JSON.stringify(data)
-                    })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                window.location.replace("/dashboard");
-                            } else {
-                                alert("There was an error deleting the building.");
-                            }
-                        });
-                    deleteBuildingModal.style.display = "none";
-                }
-            }
-        }
-
-    </script>
-    <script>
-    function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-        let cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-            let cookie = cookies[i].trim();
-            // Does this cookie string begin with the name we want?
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
-        }
-    }
-    return cookieValue;
-}
-    </script>
-    <script src="{% static 'js/building.js' %}" defer></script>
+    {% if user.is_superuser %}
+     <script src="{% static 'js/building.js' %}" defer></script>
+    {% endif %}
+   
 {% endblock %}
 {% block content %}
     <div id="notification">
@@ -72,8 +20,10 @@
     <hr>
     <h2>Building Details:</h2>
     <div id="building-info">
+        {% if user.is_superuser %}
         <button id="edit-button" class="button-17">Edit Building</button>
         <button onclick="deleteBuilding('{{building.id}}')" class="button-17">Delete Building</button>
+        {% endif %}
         <table class="table">
             <thead>
             </thead>
@@ -105,6 +55,7 @@
             </tbody>
         </table>
     </div>
+    {% if user.is_superuser %}
     <div id="edit-form" style="display:none;">
         <button id="cancel-button" class="button-17">Cancel</button>
         <button id="save-button" class="button-17">Save</button>
@@ -139,6 +90,7 @@
             </tbody>
         </table>
     </div>
+    {% endif %}
     <br>
     <br>
 <h2>Maintenance Requests:</h2>

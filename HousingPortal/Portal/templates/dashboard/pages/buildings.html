@@ -98,10 +98,12 @@
             <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
         </span> 
         <br>
+        {% if user.is_superuser %}
         <a href="/dashboard/buildings/create" class="create-building-link">
             <i class="bi bi-building-add"></i>
             <span class="tooltip">Create Building</span>
         </a>
+        {% endif %}
         <table class="table table-hover" id="request-table">
             <thead>
                 <tr>

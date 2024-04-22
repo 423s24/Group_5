@@ -102,3 +102,39 @@ function getCookie(name) {
     }
     return cookieValue;
 }
+
+window.onload = function() {
+    var deleteBuildingModal = document.getElementById("deleteBuildingModal");
+    var confirmDelete = document.getElementById('confirmDelete');
+    var cancelDelete = document.getElementById('cancelDelete');
+
+    window.deleteBuilding = function(id_str) {
+        id = parseInt(id_str)
+        deleteBuildingModal.style.display = "block";
+        var data = {'type': 'Building', 'id': id}
+        cancelDelete.onclick = function () {
+            deleteBuildingModal.style.display = "none";
+        }
+
+        confirmDelete.onclick = function () {
+            fetch('/delete/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                credentials: 'same-origin',
+                body: JSON.stringify(data)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        window.location.replace("/dashboard");
+                    } else {
+                        alert("There was an error deleting the building.");
+                    }
+                });
+            deleteBuildingModal.style.display = "none";
+        }
+    }
+}
