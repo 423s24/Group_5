@@ -32,24 +32,17 @@ function getCookie(name) {
 
 document.getElementById("download").addEventListener("click", function() {
     var element = document.getElementById('to-export');
-    html2canvas(element).then(function(canvas) {
-        var imgData = canvas.toDataURL('image/png');
-        var doc = new jsPDF('p', 'mm', 'a4');
-        var pageWidth = doc.internal.pageSize.getWidth();
-        var pageHeight = doc.internal.pageSize.getHeight();
-        var imageWidth = canvas.width;
-        var imageHeight = canvas.height;
 
-        var widthRatio = pageWidth / imageWidth;
-        var newHeight = imageHeight * widthRatio;
-        var heightRatio = newHeight / pageHeight;
-
-        doc.addImage(imgData, 'PNG', 5, 5, pageWidth-10, newHeight-10);
-
-        // Open PDF in a new browser tab
-        window.open(URL.createObjectURL(doc.output("blob")));
-    });
+    // Use html2pdf to convert HTML to PDF
+    html2pdf().set({ html2canvas: { scale: 2 },
+        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' },
+        margin: [1, 1, 1, 1]
+    }).from(element).save('exported_document.pdf');
 });
+
+
+
+
 var save_button = document.getElementById("save");
 var request_id = save_button.getAttribute('request-id');
 save_button.addEventListener("click", function() {
@@ -243,10 +236,12 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    closeButton.addEventListener('click', function () {
-        modal.style.display = 'none';
-        document.getElementById("container").style.overflow = "auto";
-    });
+    if (closeButton) {
+        closeButton.addEventListener('click', function () {
+            modal.style.display = 'none';
+            document.getElementById("container").style.overflow = "auto";
+        });
+    }
 });
 
 
