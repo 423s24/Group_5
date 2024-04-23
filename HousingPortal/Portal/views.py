@@ -27,7 +27,7 @@ import time
 import os
 import mimetypes
 
-def html_email(building_name,unit,name,phone,entry,title,request,recipient,subject, images=None):
+def html_email(maintenance_request, recipient, subject, images=None):
     sender_email = "cs423robot@gmail.com" 
     recipient_email = recipient
     #subject = "Maintenance Request"
@@ -39,7 +39,7 @@ def html_email(building_name,unit,name,phone,entry,title,request,recipient,subje
     message['To'] = recipient_email
     message['Subject'] = subject
 
-    if(entry):
+    if(maintenance_request.entry_permission):
         enter = "Yes"
     else: 
         enter = "No"
@@ -57,12 +57,12 @@ def html_email(building_name,unit,name,phone,entry,title,request,recipient,subje
     # write the text/plain part
     text = """\
     Hello, a new maintenance request has been made on """ + today + """
-    Building: """ + building_name + """
-    Unit: """ + unit + """
-    Resident Name: """ + name + """
-    Phone: """ + phone + """
-    Request:""" + request + """
-    Can we enter without resident present: """ + enter 
+    Building: """ + maintenance_request.building.building_name + """
+    Unit: """ + maintenance_request.unit + """
+    Resident Name: """ + maintenance_request.first_name + " " + maintenance_request.last_name + """
+    Phone: """ + maintenance_request.phone + """
+    Request:""" + maintenance_request.request + """
+    Can we enter without resident present: """ + enter
 
     
     # write the HTML part
@@ -77,19 +77,19 @@ def html_email(building_name,unit,name,phone,entry,title,request,recipient,subje
 <table>
   <tr>
     <td>Building:</td>
-    <td><strong>""" + building_name + """</strong></td>
+    <td><strong>""" + maintenance_request.building.building_name + """</strong></td>
   </tr>
   <tr>
     <td>Unit:</td>
-    <td><strong>""" + unit + """</strong></td>
+    <td><strong>""" + maintenance_request.unit + """</strong></td>
   </tr>
   <tr>
     <td>Resident Name:</td>
-    <td><strong>""" + name + """</strong></td>
+    <td><strong>""" + maintenance_request.first_name + " " + maintenance_request.last_name + """</strong></td>
   </tr>
   <tr>
     <td>Phone:</td>
-    <td><strong>""" + phone + """</strong></td>
+    <td><strong>""" + maintenance_request.phone + """</strong></td>
   </tr>
   <tr>
     <td width:50px>Can we enter without<br> a resident present:</td>
@@ -97,11 +97,11 @@ def html_email(building_name,unit,name,phone,entry,title,request,recipient,subje
   </tr>
   <tr>
     <td>Title:</td>
-    <td><strong>""" + title + """</strong></td>
+    <td><strong>""" + maintenance_request.title + """</strong></td>
   </tr>
   <tr>
     <td>Request:</td>
-    <td><strong>""" + request + """</strong></td>
+    <td><strong>""" + maintenance_request.request + """</strong></td>
   </tr>
   
 </table>
@@ -121,8 +121,8 @@ def html_email(building_name,unit,name,phone,entry,title,request,recipient,subje
         server.login(sender_email, "tjcm gvmf ilvq jnqy") 
         server.sendmail(sender_email, recipient_email, message.as_string())
 
-def send_email_thread(building_name, unit, full_name, phone, entry_permission, title, req, recipient_email, subject, images):
-    email_thread = threading.Thread(target=html_email, args=(building_name, unit, full_name, phone, entry_permission, title, req, recipient_email, subject, images))
+def send_email_thread(maintenance_request, recipient_email, subject, images):
+    email_thread = threading.Thread(target=html_email, args=(maintenance_request, recipient_email, subject, images))
     email_thread.start()
     
 # Create your views here.
@@ -148,15 +148,6 @@ def admin_dashboard(request):
     users = UserAccount.objects.all()
     maintenance_requests = MaintenanceRequest.objects.order_by('-id')[:10]
     buildings = Building.objects.all().order_by("id")
-    per_page = 10
-    paginator = Paginator(users, per_page)
-    page = request.GET.get('page', 1)
-    try:
-        users = paginator.page(page)
-    except PageNotAnInteger:
-        users = paginator.page(1)
-    except EmptyPage:
-        users = paginator.page(paginator.num_pages)
     
     if request.user.is_superuser:
         return render(request, 'dashboard/admin_dashboard.html', {'users': users, 'maintenance_requests': maintenance_requests, 'buildings': buildings})
@@ -168,15 +159,6 @@ def manager_dashboard(request):
     users = UserAccount.objects.all().order_by('id')
     maintenance_requests = MaintenanceRequest.objects.order_by('-id')[:10]
     buildings = Building.objects.all().order_by("id")
-    per_page = 10
-    paginator = Paginator(users, per_page)
-    page = request.GET.get('page', 1)
-    try:
-        users = paginator.page(page)
-    except PageNotAnInteger:
-        users = paginator.page(1)
-    except EmptyPage:
-        users = paginator.page(paginator.num_pages)
 
     if request.user.is_manager:
         return render(request, 'dashboard/manager_dashboard.html', {'users':users, 'maintenance_requests':maintenance_requests, 'buildings': buildings})
@@ -192,19 +174,19 @@ def tenant_dashboard(request):
 @login_required(login_url="/login")
 def users(request):
     if request.user.is_superuser or request.user.is_manager:
-        search_query = request.GET.get('search_query')
-        if search_query:
-            users = UserAccount.objects.filter(
-                Q(username__icontains=search_query) |
-                Q(first_name__icontains=search_query) |
-                Q(last_name__icontains=search_query) |
-                Q(email__icontains=search_query)
-            ).order_by('id')
-        else:
-            users = UserAccount.objects.all().order_by('id')
-
-        html = render_to_string('dashboard/data/users_htmx.html', {'users': users})
         if request.headers.get('HX-Request'):
+            search_query = request.GET.get('search_query')
+            if search_query:
+                users = UserAccount.objects.filter(
+                    Q(username__icontains=search_query) |
+                    Q(first_name__icontains=search_query) |
+                    Q(last_name__icontains=search_query) |
+                    Q(email__icontains=search_query)
+                ).order_by('id')
+            else:
+                users = UserAccount.objects.all().order_by('id')
+
+            html = render_to_string('dashboard/data/users_htmx.html', {'users': users})
             return HttpResponse(html)
         else:
             return render(request, 'dashboard/pages/users.html')
@@ -214,21 +196,21 @@ def users(request):
 @login_required(login_url="/login")
 def buildings(request):
     if request.user.is_superuser or request.user.is_manager:
-        search_query = request.GET.get('search_query')
-        if search_query:
-            buildings = Building.objects.filter(
-                Q(building_name__icontains=search_query) |
-                Q(address__icontains=search_query) |
-                Q(city__icontains=search_query) |
-                Q(state__icontains=search_query) |
-                Q(country__icontains=search_query) |
-                Q(zipcode__icontains=search_query)
-            ).order_by('id')
-        else:
-            buildings = Building.objects.all().order_by('id')
-
-        html = render_to_string('dashboard/data/buildings_htmx.html', {'buildings': buildings})
         if request.headers.get('HX-Request'):
+            search_query = request.GET.get('search_query')
+            if search_query:
+                buildings = Building.objects.filter(
+                    Q(building_name__icontains=search_query) |
+                    Q(address__icontains=search_query) |
+                    Q(city__icontains=search_query) |
+                    Q(state__icontains=search_query) |
+                    Q(country__icontains=search_query) |
+                    Q(zipcode__icontains=search_query)
+                ).order_by('id')
+            else:
+                buildings = Building.objects.all().order_by('id')
+
+            html = render_to_string('dashboard/data/buildings_htmx.html', {'buildings': buildings})
             return HttpResponse(html)
         else:
             return render(request, 'dashboard/pages/buildings.html')
@@ -238,6 +220,33 @@ def buildings(request):
 @login_required(login_url="/login")
 def maintenance_requests(request):
     if request.user.is_superuser or request.user.is_manager:
+        if request.headers.get('HX-Request'):
+            search_query = request.GET.get('search_query')
+            if search_query:
+                maintenance_requests = MaintenanceRequest.objects.filter(
+                    Q(id__icontains=search_query) |
+                    Q(first_name__icontains=search_query) |
+                    Q(last_name__icontains=search_query) |
+                    Q(title__icontains=search_query) |
+                    Q(status__icontains=search_query) |
+                    Q(building__building_name__icontains=search_query) |
+                    Q(unit__icontains=search_query) |
+                    Q(entry_permission__icontains=search_query)
+                ).order_by('id')
+            else:
+                maintenance_requests = MaintenanceRequest.objects.all().order_by('id')
+
+            html = render_to_string('dashboard/data/requests_htmx.html', {'maintenance_requests': maintenance_requests})
+            #time.sleep(2)
+            return HttpResponse(html)
+        else:
+            return render(request, 'dashboard/pages/maintenance_requests.html')
+    else:
+        return handler_403(request)
+    
+@login_required(login_url="/login")
+def saved_requests(request):
+    if request.headers.get('HX-Request'):
         search_query = request.GET.get('search_query')
         if search_query:
             maintenance_requests = MaintenanceRequest.objects.filter(
@@ -248,42 +257,15 @@ def maintenance_requests(request):
                 Q(status__icontains=search_query) |
                 Q(building__building_name__icontains=search_query) |
                 Q(unit__icontains=search_query) |
-                Q(entry_permission__icontains=search_query)
+                Q(entry_permission__icontains=search_query),
+                useraccountmaintenancerequest__user_id=request.user
             ).order_by('id')
         else:
-            maintenance_requests = MaintenanceRequest.objects.all().order_by('id')
+            maintenance_requests = MaintenanceRequest.objects.filter(
+                useraccountmaintenancerequest__user_id=request.user
+            ).order_by('id')
 
         html = render_to_string('dashboard/data/requests_htmx.html', {'maintenance_requests': maintenance_requests})
-        if request.headers.get('HX-Request'):
-            #time.sleep(2)
-            return HttpResponse(html)
-        else:
-            return render(request, 'dashboard/pages/maintenance_requests.html')
-    else:
-        return handler_403(request)
-    
-@login_required(login_url="/login")
-def saved_requests(request):
-    search_query = request.GET.get('search_query')
-    if search_query:
-        maintenance_requests = MaintenanceRequest.objects.filter(
-            Q(id__icontains=search_query) |
-            Q(first_name__icontains=search_query) |
-            Q(last_name__icontains=search_query) |
-            Q(title__icontains=search_query) |
-            Q(status__icontains=search_query) |
-            Q(building__building_name__icontains=search_query) |
-            Q(unit__icontains=search_query) |
-            Q(entry_permission__icontains=search_query),
-            useraccountmaintenancerequest__user_id=request.user
-        ).order_by('id')
-    else:
-        maintenance_requests = MaintenanceRequest.objects.filter(
-            useraccountmaintenancerequest__user_id=request.user
-        ).order_by('id')
-
-    html = render_to_string('dashboard/data/requests_htmx.html', {'maintenance_requests': maintenance_requests})
-    if request.headers.get('HX-Request'):
         return HttpResponse(html)
     else:
         return render(request, 'dashboard/pages/saved_requests.html')
@@ -317,7 +299,6 @@ def maintenance(request):
     if request.method == 'POST':
         first_name = request.POST.get('first_name')
         last_name = request.POST.get('last_name')
-        full_name = first_name + " " + last_name
         unit = request.POST.get('unit')
         title = request.POST.get('title')
         req = request.POST.get('request')
@@ -329,7 +310,7 @@ def maintenance(request):
         entry_permission = request.POST.get('entry_permission') == '1'
         images = request.FILES.getlist('images')
 
-        maintenanceRequest = MaintenanceRequest.objects.create(user_id=request.user, first_name=first_name,
+        maintenance_request = MaintenanceRequest.objects.create(user_id=request.user, first_name=first_name,
                                                                last_name=last_name, unit=unit, request=req, phone=phone,
                                                                building=building, priority=priority,
                                                                entry_permission=entry_permission, title=title,
@@ -338,19 +319,19 @@ def maintenance(request):
         image_paths = []
 
         for image in images:
-            maintenance_file = MaintenanceFile.objects.create(maintenanceRequestId=maintenanceRequest, file=image)
+            maintenance_file = MaintenanceFile.objects.create(maintenanceRequestId=maintenance_request, file=image)
             image_paths.append(maintenance_file.file.path)
 
-        send_email_thread(building.building_name,unit,full_name,phone,entry_permission,title, req,"cs423robot@gmail.com","Maintenance Request", image_paths)
-        send_email_thread(building.building_name,unit,full_name,phone,entry_permission,title, req,request.user.email,"Maintenance Request Confirmation", image_paths)
+        send_email_thread(maintenance_request,"cs423robot@gmail.com","Maintenance Request", image_paths)
+        send_email_thread(maintenance_request, request.user.email,"Maintenance Request Confirmation", image_paths)
 
         # Send to users with email notifications on
         users_with_notifications = UserAccount.objects.filter(email_notifications=True)
         for user in users_with_notifications:
             if (user.is_superuser or user.is_manager) and user != request.user:
-                send_email_thread(building.building_name,unit,full_name,phone,entry_permission,title, req,user.email,"Maintenance Request Notification")
+                send_email_thread(maintenance_request, user.email,"Maintenance Request Notification", image_paths)
 
-        return redirect('/request/' + str(maintenanceRequest.id))
+        return redirect('/request/' + str(maintenance_request.id))
 
     return render(request, 'dashboard/create/maintenance.html', {'buildings': buildings})
 
@@ -493,7 +474,7 @@ def add_note(request, request_id):
         return handler_403(request)
 
 @login_required(login_url="/login")
-def add_building(request):
+def create_building(request):
     user = request.user
     if user.is_superuser:
         form = BuildingForm()
@@ -723,7 +704,6 @@ def search_maintenance_requests(request):
 @login_required(login_url='/login')
 def upload_image(request):
     if request.method == 'POST':
-        print("ITS A POST REQUIRE")
         maintenance_request_id = request.POST.get('request_id')
         maintenance_request = get_object_or_404(MaintenanceRequest, pk=maintenance_request_id)
         images = request.FILES.getlist('images')
