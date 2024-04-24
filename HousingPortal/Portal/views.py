@@ -366,7 +366,7 @@ def maintenance(request):
             if (user.is_superuser or user.is_manager) and user != request.user:
                 send_email_thread(maintenance_request, user.email,"Maintenance Request Notification", image_paths)
 
-        return redirect('/dashboard/request/' + str(maintenance_request.id))
+        return redirect('/dashboard/requests/' + str(maintenance_request.id))
 
     return render(request, 'dashboard/create/maintenance.html', {'buildings': buildings})
 
