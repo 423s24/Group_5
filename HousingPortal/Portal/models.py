@@ -1,21 +1,79 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager, PermissionsMixin
 from django.core.validators import MaxLengthValidator, MinLengthValidator, RegexValidator
+from django.core.exceptions import ValidationError
 
 ACCOUNT_TYPES = [
-    ('admin', 'admin'),
-    ('manager', 'manager'),
-    ('tenant', 'tenant'),
+    ('admin', 'Admin'),
+    ('manager', 'Manager'),
+    ('tenant', 'Tenant'),
 ]
 
 STATUS = [
-    ('new', 'new'),
-    ('pending', 'pending'),
+    ('New', 'New'),
+    ('In Progress', 'In Progress'),
+    ('Pending', 'Pending'),
+    ('Completed', 'Completed'),
+    ('Cancelled', 'Cancelled'),
 ]
 
 PRIORITY = [
-    ('low', 'low'),
-    ('high', 'high'),
+    ('Low', 'Low'),
+    ('Medium', 'Medium'),
+    ('High', 'High'),
+    ('Urgent', 'Urgent'),
+]
+
+REQUEST_SORT = [
+    ('id', 'ID'),
+    ('-id', 'ID (Descending)'),
+    ('last_name', 'Last Name'),
+    ('-last_name', 'Last Name (Descending)'),
+    ('title', 'Title'),
+    ('-title', 'Title (Descending)'),
+    ('status', 'Status'),
+    ('-status', 'Status (Descending)'),
+    ('priority', 'Priority'),
+    ('-priority', 'Priority (Descending)'),
+    ('building', 'Building'),
+    ('-building', 'Building (Descending)'),
+    ('unit', 'Unit'),
+    ('-unit', 'Unit (Descending)'),
+]
+
+BUILDING_SORT = [
+    ('building_name', 'Building Name'),
+    ('-building_name', 'Building Name (Descending)'),
+    ('address', 'Address'),
+    ('-address', 'Address (Descending)'),
+    ('city', 'City'),
+    ('-city', 'City (Descending)'),
+    ('state', 'State'),
+    ('-state', 'State (Descending)'),
+    ('country', 'Country'),
+    ('-country', 'Country (Descending)'),
+    ('zipcode', 'Zipcode'),
+    ('-zipcode', 'Zipcode (Descending)'),
+]
+
+USER_SORT = [
+    ('username', 'Username'),
+    ('-username', 'Username (Descending)'),
+    ('email', 'Email'),
+    ('-email', 'Email (Descending)'),
+    ('name', 'Name'),
+    ('-name', 'Name (Descending)'),
+    ('account_type', 'Account Type'),
+    ('-account_type', 'Account Type (Descending)'),
+    ('date_joined', 'Date Joined'),
+    ('-date_joined', 'Date Joined (Descending)'),
+]
+
+PAGING_COUNT = [
+    (10, '10 items per page'),
+    (25, '25 items per page'),
+    (50, '50 items per page'),
+    (100, '100 items per page'),
 ]
 
 class UsernameField(models.CharField):
@@ -34,19 +92,31 @@ class UserAccount(AbstractUser):
     is_manager = models.BooleanField(default=False)
     archived = models.BooleanField(default=False)
     email_notifications = models.BooleanField(default=False)
-    request_sort = models.CharField(max_length=100, default='id')
-    building_sort = models.CharField(max_length=100, default='id')
-    user_sort = models.CharField(max_length=100, default='id')
-    paging_count = models.IntegerField(default=25)
+    request_sort = models.CharField(max_length=20, choices=REQUEST_SORT, default='id')
+    building_sort = models.CharField(max_length=20, choices=BUILDING_SORT, default='building_name')
+    user_sort = models.CharField(max_length=20, choices=USER_SORT, default='date_joined')
+    paging_count = models.PositiveSmallIntegerField(choices=PAGING_COUNT, default=25)
 
-    @property
-    def account_type(self):
-        if (self.is_superuser):
-            return 'admin'
-        elif (self.is_manager):
-            return 'manager'
+    account_type = models.CharField(max_length=20, choices=ACCOUNT_TYPES, default='tenant')
+
+    # Override the save method to synchronize account_type with is_superuser and is_manager
+    def save(self, *args, **kwargs):
+        if self.is_superuser:
+            self.account_type = 'admin'
+        elif self.is_manager:
+            self.account_type = 'manager'
         else:
-            return 'tenant'
+            self.account_type = 'tenant'
+        super().save(*args, **kwargs)
+
+    # @property
+    # def account_type(self):
+    #     if (self.is_superuser):
+    #         return 'admin'
+    #     elif (self.is_manager):
+    #         return 'manager'
+    #     else:
+    #         return 'tenant'
         
     def setAccountType(self, account_type):
         if account_type not in dict(ACCOUNT_TYPES):
@@ -92,8 +162,8 @@ class MaintenanceRequest(models.Model):
     building = models.ForeignKey('Building', null=True, on_delete=models.SET_NULL)
     date_submitted = models.DateTimeField(null=True, blank=True)
     date_completed = models.DateTimeField(null=True, blank=True)
-    status = models.CharField(max_length=100, default='New')
-    priority = models.CharField(max_length=100, default='Low')
+    status = models.CharField(max_length=100, choices=STATUS, default='New')
+    priority = models.CharField(max_length=100, choices=PRIORITY, default='Low')
     title = models.CharField(max_length=100, default='')
     request = models.CharField(max_length=10000)
     entry_permission = models.CharField(max_length=10, default='N/A')

@@ -22,65 +22,6 @@
         });
     };
     </script>
-    <script>
-    var ascending = true; // Default sorting order is ascending
-
-    function sortTable(columnIndex) {
-        var table, rows, switching, i, x, y, shouldSwitch;
-        table = document.getElementById("request-table");
-        switching = true;
-
-        var icon = document.getElementById("sort-icon-" + columnIndex);
-        if(icon.classList.contains("bi-arrow-up")) {
-            ascending = false;
-        } else {
-            ascending = true;
-        }
-        for (var j = 0; j < 7; j++) {
-            icon = document.getElementById("sort-icon-" + j);
-            icon.classList.remove("bi-arrow-down", "bi-arrow-up");
-        }
-
-        // Show icon for the current column
-        icon = document.getElementById("sort-icon-" + columnIndex);
-        icon.classList.add(ascending ? "bi-arrow-up" : "bi-arrow-down");
-
-        while (switching) {
-            switching = false;
-            rows = table.rows;
-
-            for (i = 1; i < (rows.length - 1); i++) {
-                shouldSwitch = false;
-                x = rows[i].getElementsByTagName("TD")[columnIndex];
-                y = rows[i + 1].getElementsByTagName("TD")[columnIndex];
-
-                if (ascending) {
-                    if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
-                        shouldSwitch = true;
-                        break;
-                    }
-                } else {
-                    if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
-                        shouldSwitch = true;
-                        break;
-                    }
-                }
-            }
-
-            if (shouldSwitch) {
-                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-                switching = true;
-            } else {
-                if (ascending) {
-                    ascending = false; // Change sorting order to descending
-                } else {
-                    ascending = true; // Change sorting order to ascending
-                }
-            }
-        }
-    }
-</script>
-
     <style>
         .table td, .table th {
             text-align: center;
@@ -121,7 +62,7 @@
             <input type="search" name="search_query" placeholder="Search..." hx-get="/dashboard/requests/saved" hx-trigger="input changed delay:500ms, search" hx-target="#request-data" hx-indicator=".htmx-indicator" class="form-control">
         </div>
         <span class="htmx-indicator"> 
-            <strong>Searching..</strong>
+            <strong>Searching...</strong>
             <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
         </span> 
         <br>
@@ -138,13 +79,27 @@
         <table class="table table-hover" id="request-table">
             <thead>
                 <tr>
-                    <th onclick="sortTable(0)">ID<i id="sort-icon-0" class="bi"></i></th>
-                    <th onclick="sortTable(1)">Name<i id="sort-icon-1" class="bi"></i></th>
-                    <th onclick="sortTable(2)">Title<i id="sort-icon-2" class="bi"></i></th>
-                    <th onclick="sortTable(3)">Status<i id="sort-icon-3" class="bi"></i></th>
-                    <th onclick="sortTable(4)" class="hidden">Priority<i id="sort-icon-4" class="bi"></i></th>
-                    <th onclick="sortTable(5)" class="hidden">Building<i id="sort-icon-5" class="bi"></i></th>
-                    <th onclick="sortTable(6)" class="hidden">Unit<i id="sort-icon-6" class="bi"></i></th>
+                    <th onclick="sortRequestsTable('id', 0)">ID
+                        <i id="sort-icon-0" class="bi{% if user.request_sort == 'id' %} bi-arrow-up{% elif user.request_sort == '-id' %} bi-arrow-down{% endif %}"></i>
+                    </th>
+                    <th onclick="sortRequestsTable('last_name', 1)">Name
+                        <i id="sort-icon-1" class="bi{% if user.request_sort == 'last_name' %} bi-arrow-up{% elif user.request_sort == '-last_name' %} bi-arrow-down{% endif %}"></i>
+                    </th>
+                    <th onclick="sortRequestsTable('title', 2)">Title
+                        <i id="sort-icon-2" class="bi{% if user.request_sort == 'title' %} bi-arrow-up{% elif user.request_sort == '-title' %} bi-arrow-down{% endif %}"></i>
+                    </th>
+                    <th onclick="sortRequestsTable('status', 3)">Status
+                        <i id="sort-icon-3" class="bi{% if user.request_sort == 'status' %} bi-arrow-up{% elif user.request_sort == '-status' %} bi-arrow-down{% endif %}"></i>
+                    </th>
+                    <th onclick="sortRequestsTable('priority', 4)" class="hidden">Priority
+                        <i id="sort-icon-4" class="bi{% if user.request_sort == 'priority' %} bi-arrow-up{% elif user.request_sort == '-priority' %} bi-arrow-down{% endif %}"></i>
+                    </th>
+                    <th onclick="sortRequestsTable('building', 5)" class="hidden">Building
+                        <i id="sort-icon-5" class="bi{% if user.request_sort == 'building' %} bi-arrow-up{% elif user.request_sort == '-building' %} bi-arrow-down{% endif %}"></i>
+                    </th>
+                    <th onclick="sortRequestsTable('unit', 6)" class="hidden">Unit
+                        <i id="sort-icon-6" class="bi{% if user.request_sort == 'unit' %} bi-arrow-up{% elif user.request_sort == '-unit' %} bi-arrow-down{% endif %}"></i>
+                    </th>
                 </tr>
             </thead>
             <tbody id="request-data" hx-trigger="load delay:200ms" hx-get="/dashboard/requests/saved" hx-swap="innerHTML">

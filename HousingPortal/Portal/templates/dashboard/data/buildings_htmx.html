@@ -7,4 +7,28 @@
     <td class="hidden">{{ building.country }}</td>
     <td class="hidden">{{ building.zipcode }}</td>
 </tr>
+{% empty %}
+<tr>
+    <td colspan="6" style="text-align:center;">No results found!</td>
+</tr>
 {% endfor %}
+<tr id="pagination-controls">
+    <td colspan="6"> 
+        <select style="float: left;" id="paging-count-dropdown" onchange="changePagingCount(this.value)">
+            <option value="10" {% if user.paging_count == 10 %}selected{% endif %}>10</option>
+            <option value="25" {% if user.paging_count == 25 %}selected{% endif %}>25</option>
+            <option value="50" {% if user.paging_count == 50 %}selected{% endif %}>50</option>
+            <option value="100" {% if user.paging_count == 100 %}selected{% endif %}>100</option>
+        </select>
+        {% if buildings.has_previous %}
+            <a hx-get="?page={{buildings.previous_page_number}}" hx-target="#request-data">&lt;</a>
+        {% endif %}
+        {% for num in buildings.paginator.page_range %}
+            <a hx-get="?page={{num}}" hx-target="#request-data">{{ num }}</a>
+        {% endfor %}
+        {% if buildings.has_next %}
+            <a hx-get="?page={{buildings.next_page_number}}" hx-target="#request-data">&gt;</a>
+        {% endif %}
+        <span style="float: right;">Total: {{total}}</span>
+    </td>
+</tr>

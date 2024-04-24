@@ -106,21 +106,24 @@ cancelDelete.onclick = function() {
 }
 
 confirmDelete.onclick = function() {
-    fetch('/request/delete_note/' + noteToDelete + '/', {
+    var data = {'type': 'MaintenanceNotes', 'id': noteToDelete}
+    fetch('/delete/', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'X-CSRFToken': csrftoken,
-        }
+            'X-CSRFToken': getCookie('csrftoken')
+        },
+        credentials: 'same-origin',
+        body: JSON.stringify(data)
     })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            window.location.reload();
-        } else {
-            alert("There was an error deleting the note.");
-        }
-    });
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                window.location.reload();
+            } else {
+                alert("There was an error deleting the note.");
+            }
+        });
     deleteNoteModal.style.display = "none";
 }
 

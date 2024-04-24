@@ -4,6 +4,30 @@
     <td class="hidden">{{ u.email }}</td>
     <td>{{u.first_name}} {{u.last_name}}</td>
     <td class="hidden">{{ u.account_type }}</td>
-    <td class="hidden">{{ u.archived }}</td>
+    <td class="hidden">{{ u.date_joined }}</td>
+</tr>
+{% empty %}
+<tr>
+    <td colspan="5" style="text-align:center;">No results found!</td>
 </tr>
 {% endfor %}
+<tr id="pagination-controls">
+    <td colspan="5"> 
+        <select style="float: left;" id="paging-count-dropdown" onchange="changePagingCount(this.value)">
+            <option value="10" {% if user.paging_count == 10 %}selected{% endif %}>10</option>
+            <option value="25" {% if user.paging_count == 25 %}selected{% endif %}>25</option>
+            <option value="50" {% if user.paging_count == 50 %}selected{% endif %}>50</option>
+            <option value="100" {% if user.paging_count == 100 %}selected{% endif %}>100</option>
+        </select>
+        {% if users.has_previous %}
+            <a hx-get="?page={{maintenance_requests.previous_page_number}}" hx-target="#request-data">&lt;</a>
+        {% endif %}
+        {% for num in users.paginator.page_range %}
+            <a hx-get="?page={{num}}" hx-target="#request-data">{{ num }}</a>
+        {% endfor %}
+        {% if users.has_next %}
+            <a hx-get="?page={{maintenance_requests.next_page_number}}" hx-target="#request-data">&gt;</a>
+        {% endif %}
+        <span style="float: right;">Total: {{total}}</span>
+    </td>
+</tr>

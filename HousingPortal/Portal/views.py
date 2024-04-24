@@ -136,6 +136,7 @@ def support(request):
 
 @login_required(login_url="/login")
 def dashboard(request):
+    reset_users_to_defaults()
     if request.user.is_superuser:
         return admin_dashboard(request)
     elif request.user.is_manager:
@@ -181,12 +182,16 @@ def users(request):
                     Q(username__icontains=search_query) |
                     Q(first_name__icontains=search_query) |
                     Q(last_name__icontains=search_query) |
-                    Q(email__icontains=search_query)
-                ).order_by('id')
+                    Q(email__icontains=search_query) |
+                    Q(account_type__icontains=search_query)
+                ).order_by(request.user.user_sort)
             else:
-                users = UserAccount.objects.all().order_by('id')
+                users = UserAccount.objects.all().order_by(request.user.user_sort)
 
-            html = render_to_string('dashboard/data/users_htmx.html', {'users': users})
+            paginator = Paginator(users, request.user.paging_count)
+            page_number = request.GET.get('page')
+            page_obj = paginator.get_page(page_number)
+            html = render_to_string('dashboard/data/users_htmx.html', {'users': page_obj, 'user': request.user, 'total': users.count()})
             return HttpResponse(html)
         else:
             return render(request, 'dashboard/pages/users.html')
@@ -206,11 +211,14 @@ def buildings(request):
                     Q(state__icontains=search_query) |
                     Q(country__icontains=search_query) |
                     Q(zipcode__icontains=search_query)
-                ).order_by('id')
+                ).order_by(request.user.building_sort)
             else:
-                buildings = Building.objects.all().order_by('id')
+                buildings = Building.objects.all().order_by(request.user.building_sort)
 
-            html = render_to_string('dashboard/data/buildings_htmx.html', {'buildings': buildings})
+            paginator = Paginator(buildings, request.user.paging_count)
+            page_number = request.GET.get('page')
+            page_obj = paginator.get_page(page_number)
+            html = render_to_string('dashboard/data/buildings_htmx.html', {'buildings': page_obj, 'user': request.user, 'total': buildings.count()})
             return HttpResponse(html)
         else:
             return render(request, 'dashboard/pages/buildings.html')
@@ -232,11 +240,14 @@ def maintenance_requests(request):
                     Q(building__building_name__icontains=search_query) |
                     Q(unit__icontains=search_query) |
                     Q(entry_permission__icontains=search_query)
-                ).order_by('id')
+                ).order_by(request.user.request_sort)
             else:
-                maintenance_requests = MaintenanceRequest.objects.all().order_by('id')
+                maintenance_requests = MaintenanceRequest.objects.all().order_by(request.user.request_sort)
 
-            html = render_to_string('dashboard/data/requests_htmx.html', {'maintenance_requests': maintenance_requests})
+            paginator = Paginator(maintenance_requests, request.user.paging_count)
+            page_number = request.GET.get('page')
+            page_obj = paginator.get_page(page_number)
+            html = render_to_string('dashboard/data/requests_htmx.html', {'maintenance_requests': page_obj, 'user': request.user, 'total': maintenance_requests.count()})
             #time.sleep(2)
             return HttpResponse(html)
         else:
@@ -259,13 +270,16 @@ def saved_requests(request):
                 Q(unit__icontains=search_query) |
                 Q(entry_permission__icontains=search_query),
                 useraccountmaintenancerequest__user_id=request.user
-            ).order_by('id')
+            ).order_by(request.user.request_sort)
         else:
             maintenance_requests = MaintenanceRequest.objects.filter(
                 useraccountmaintenancerequest__user_id=request.user
-            ).order_by('id')
+            ).order_by(request.user.request_sort)
 
-        html = render_to_string('dashboard/data/requests_htmx.html', {'maintenance_requests': maintenance_requests})
+        paginator = Paginator(maintenance_requests, request.user.paging_count)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+        html = render_to_string('dashboard/data/requests_htmx.html', {'maintenance_requests': page_obj, 'user': request.user, 'total': maintenance_requests.count()})
         return HttpResponse(html)
     else:
         return render(request, 'dashboard/pages/saved_requests.html')
@@ -380,15 +394,6 @@ def edit_note(request, note_id):
         return handler_403(request)
 
 
-def delete_note(request, note_id):
-    if request.method == 'POST':
-        note_to_delete = get_object_or_404(MaintenanceNotes, id=note_id)
-        note_to_delete.delete()
-        return JsonResponse({'success': True})
-    else:
-        return handler_403(request)
-
-
 @login_required(login_url="/login")
 def request_info(request, request_id):
     maintenance_request = get_object_or_404(MaintenanceRequest, pk=request_id)
@@ -416,16 +421,15 @@ def request_info(request, request_id):
                 # Handle the validation error, e.g., return an error response
                 return JsonResponse({'errors': e.message_dict}, status=400)
 
-        can_edit_request = (request.user.is_superuser or request.user.is_manager)
         maintenance_notes = maintenance_request.maintenance_notes.all()
         saved = request_is_saved(request, request_id)
-        return render(request, 'dashboard/info/request_info.html', {'maintenance_request': maintenance_request, 'maintenance_files': maintenance_files, 'buildings': buildings,'can_edit_request': can_edit_request, 'maintenance_notes': maintenance_notes, 'saved': saved})
+        return render(request, 'dashboard/info/request_info.html', 
+                      {'maintenance_request': maintenance_request, 'maintenance_files': maintenance_files, 'buildings': buildings, 'maintenance_notes': maintenance_notes, 'saved': saved})
     elif request.user == maintenance_request.user_id:
-        can_edit_request = (request.user.is_superuser or request.user.is_manager)
         maintenance_notes = maintenance_request.maintenance_notes.filter(tenant_viewable=True)
         saved = request_is_saved(request, request_id)
         return render(request, 'dashboard/info/request_info.html',
-                      {'maintenance_request': maintenance_request, 'maintenance_files': maintenance_files, 'can_edit_request': can_edit_request,'maintenance_notes': maintenance_notes, 'saved': saved})
+                      {'maintenance_request': maintenance_request, 'maintenance_files': maintenance_files,'maintenance_notes': maintenance_notes, 'saved': saved})
     else:
         return handler_403(request)
     
@@ -447,6 +451,7 @@ def user_info(request, username):
                     u.save()
                     return JsonResponse({'message': 'Profile updated successfully'})
                 except ValidationError as e:
+                    print(e.message_dict)
                     # Handle the validation error, e.g., return an error response
                     return JsonResponse({'errors': e.message_dict}, status=400)
             else:
@@ -482,7 +487,7 @@ def create_building(request):
             form = BuildingForm(request.POST)
             if form.is_valid():
                 form.save()
-                return dashboard(request)
+                return redirect('/dashboard/buildings')
         return render(request, 'dashboard/create/create_building.html', {'form': form})
     else:
         return handler_403(request)
@@ -590,6 +595,34 @@ def toggle_save(request, request_id):
                 return JsonResponse({'saved': True})
     else:
         return handler_404(request, None)
+    
+@login_required(login_url="/login")
+def change_preferences(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        request_sort = data.get('request_sort')
+        building_sort = data.get('building_sort')
+        user_sort = data.get('user_sort')
+        paging_count = data.get('paging_count')
+
+        if request_sort:
+            request.user.request_sort = request_sort
+        if building_sort:
+            request.user.building_sort = building_sort
+        if user_sort:
+            request.user.user_sort = user_sort
+        if paging_count:
+            request.user.paging_count = paging_count
+
+        try:
+            request.user.full_clean()  # This will run all validators on the model fields
+            request.user.save()
+            return JsonResponse({'success': True})
+        except ValidationError as e:
+            # Handle the validation error, e.g., return an error response
+            return JsonResponse({'errors': e.message_dict}, status=400)
+    
+
 
 # Views for handling deleting
 @login_required(login_url="/login")
@@ -615,6 +648,15 @@ def delete(request):
                     request.delete()
                     return JsonResponse({'success': True})
                 except MaintenanceRequest.DoesNotExist:
+                    return JsonResponse({'success': False})
+                
+        elif type == "MaintenanceNotes":
+            if request.user.is_superuser or request.user.is_manager:
+                try:
+                    request_note = MaintenanceNotes.objects.get(pk=id_num)
+                    request_note.delete()
+                    return JsonResponse({'success': True})
+                except MaintenanceNotes.DoesNotExist:
                     return JsonResponse({'success': False})
                 
         elif type == "Building":
@@ -726,6 +768,17 @@ def remove_image(request, image_id):
             pass
     return JsonResponse({'success': False})
 
+def reset_users_to_defaults():
+    # Get all user objects
+    users = UserAccount.objects.all()
+
+    # Iterate over each user and reset to default values
+    for user in users:
+        user.request_sort = 'id'
+        user.building_sort = 'building_name'
+        user.user_sort = 'date_joined'
+        user.paging_count = 25
+        user.save()
 
 # Views for errors
 def handler_403(request, exception=None):

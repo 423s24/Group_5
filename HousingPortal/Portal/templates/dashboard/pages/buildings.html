@@ -5,65 +5,6 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/skeleton_loader.css' %}">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js"></script>
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.js"></script>
-
-    <script>
-    var ascending = true; // Default sorting order is ascending
-
-    function sortTable(columnIndex) {
-        var table, rows, switching, i, x, y, shouldSwitch;
-        table = document.getElementById("request-table");
-        switching = true;
-
-        var icon = document.getElementById("sort-icon-" + columnIndex);
-        if(icon.classList.contains("bi-arrow-up")) {
-            ascending = false;
-        } else {
-            ascending = true;
-        }
-        for (var j = 0; j < 6; j++) {
-            icon = document.getElementById("sort-icon-" + j);
-            icon.classList.remove("bi-arrow-down", "bi-arrow-up");
-        }
-
-        // Show icon for the current column
-        icon = document.getElementById("sort-icon-" + columnIndex);
-        icon.classList.add(ascending ? "bi-arrow-up" : "bi-arrow-down");
-
-        while (switching) {
-            switching = false;
-            rows = table.rows;
-
-            for (i = 1; i < (rows.length - 1); i++) {
-                shouldSwitch = false;
-                x = rows[i].getElementsByTagName("TD")[columnIndex];
-                y = rows[i + 1].getElementsByTagName("TD")[columnIndex];
-
-                if (ascending) {
-                    if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
-                        shouldSwitch = true;
-                        break;
-                    }
-                } else {
-                    if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
-                        shouldSwitch = true;
-                        break;
-                    }
-                }
-            }
-
-            if (shouldSwitch) {
-                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-                switching = true;
-            } else {
-                if (ascending) {
-                    ascending = false; // Change sorting order to descending
-                } else {
-                    ascending = true; // Change sorting order to ascending
-                }
-            }
-        }
-    }
-    </script>
     <style>
         .table td, .table th {
             width: 12.5%;
@@ -94,7 +35,7 @@
             <input type="search" name="search_query" placeholder="Search..." hx-get="." hx-trigger="input changed delay:500ms, search" hx-target="#request-data" hx-indicator=".htmx-indicator" class="form-control">
         </div>
         <span class="htmx-indicator"> 
-            <strong>Searching..</strong>
+            <strong>Searching...</strong>
             <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
         </span> 
         <br>
@@ -107,12 +48,31 @@
         <table class="table table-hover" id="request-table">
             <thead>
                 <tr>
-                    <th onclick="sortTable(0)">Building Name<i id="sort-icon-0" class="bi"></i></th>
-                    <th onclick="sortTable(1)">Address<i id="sort-icon-1" class="bi"></i></th>
-                    <th class="hidden" onclick="sortTable(2)">City<i id="sort-icon-2" class="bi"></i></th>
-                    <th class="hidden" onclick="sortTable(3)">State<i id="sort-icon-3" class="bi"></i></th>
-                    <th class="hidden" onclick="sortTable(4)">Country<i id="sort-icon-4" class="bi"></i></th>
-                    <th class="hidden" onclick="sortTable(5)">Zipcode<i id="sort-icon-5" class="bi"></i></th>
+                    <th onclick="sortBuildingsTable('building_name', 0)">
+                        Building Name
+                        <i id="sort-icon-0" class="bi{% if user.building_sort == 'building_name' %} bi-arrow-up{% elif user.building_sort == '-building_name' %} bi-arrow-down{% endif %}"></i>
+                    </th>
+                    <th onclick="sortBuildingsTable('address', 1)">
+                        Address
+                        <i id="sort-icon-1" class="bi{% if user.building_sort == 'address' %} bi-arrow-up{% elif user.building_sort == '-address' %} bi-arrow-down{% endif %}"></i>
+                    </th>
+                    <th class="hidden" onclick="sortBuildingsTable('city', 2)">
+                        City
+                        <i id="sort-icon-2" class="bi{% if user.building_sort == 'city' %} bi-arrow-up{% elif user.building_sort == '-city' %} bi-arrow-down{% endif %}"></i>
+                    </th>
+                    <th class="hidden" onclick="sortBuildingsTable('state', 3)">
+                        State
+                        <i id="sort-icon-3" class="bi{% if user.building_sort == 'state' %} bi-arrow-up{% elif user.building_sort == '-state' %} bi-arrow-down{% endif %}"></i>
+                    </th>
+                    <th class="hidden" onclick="sortBuildingsTable('country', 4)">
+                        Country
+                        <i id="sort-icon-4" class="bi{% if user.building_sort == 'country' %} bi-arrow-up{% elif user.building_sort == '-country' %} bi-arrow-down{% endif %}"></i>
+                    </th>
+                    <th class="hidden" onclick="sortBuildingsTable('zipcode', 5)">
+                        Zipcode
+                        <i id="sort-icon-5" class="bi{% if user.building_sort == 'zipcode' %} bi-arrow-up{% elif user.building_sort == '-zipcode' %} bi-arrow-down{% endif %}"></i>
+                    </th>
+                    
                 </tr>
             </thead>
             <tbody id="request-data" hx-trigger="load delay:200ms" hx-get="." hx-swap="innerHTML">

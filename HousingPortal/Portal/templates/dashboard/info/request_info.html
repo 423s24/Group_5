@@ -305,36 +305,6 @@
             <textarea id="notes" name="notes" rows="4" cols="50"></textarea>
             <button type="submit" class="button-17">Add Note</button>
         </form>
-    {% else %}
-        <h3>Maintenance Notes:</h3>
-        <div id="notesTable">
-            <table class="table">
-                <thead>
-                    <tr class="header-row">
-                        <th>User</th>
-                        <th>Notes</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% if maintenance_notes %}
-                        {% for notes in maintenance_notes %}
-                            <tr>
-                                <td>{{ notes.user_id }}</td>
-                                <td id="note_{{ notes.id }}">
-                                    <p>{{notes.notes}}</p>
-                                    <span class="date">{{notes.date_submitted}}</span>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    {% else %}
-                        <tr>
-                            <td colspan="5">No maintenance notes available.</td>
-                        </tr>
-                    {% endif %}
-                </tbody>
-            </table>
-        </div>
-        <br>
     {% endif %}
 </div>
     <div id="editNoteModal" class="modal">
