@@ -23,7 +23,7 @@
             <a hx-get="?page={{users.previous_page_number}}" hx-target="#request-data">&lt;</a>
         {% endif %}
         {% for num in users.paginator.page_range %}
-            <a hx-get="?page={{num}}" hx-target="#request-data">{{ num }}</a>
+            <a hx-get="?page={{num}}" hx-target="#request-data" {% if num == users.number %}id="active_page"{% endif %}>{{ num }}</a>
         {% endfor %}
         {% if users.has_next %}
             <a hx-get="?page={{users.next_page_number}}" hx-target="#request-data">&gt;</a>
