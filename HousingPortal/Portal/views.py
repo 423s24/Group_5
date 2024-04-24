@@ -255,6 +255,7 @@ def maintenance_requests(request):
                             Q(first_name__icontains=search_query) |
                             Q(last_name__icontains=search_query) |
                             Q(title__icontains=search_query) |
+                            Q(status__icontains=search_query) |
                             Q(building__building_name__icontains=search_query) |
                             Q(unit__icontains=search_query) |
                             Q(entry_permission__icontains=search_query)
