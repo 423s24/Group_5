@@ -81,7 +81,7 @@ function sortRequestsTable(sort_by, columnIndex) {
             i.classList.remove("bi-arrow-down", "bi-arrow-up");
         }
         icon.classList.add(ascending ? "bi-arrow-up" : "bi-arrow-down");
-        htmx.ajax('GET', '.', '#request-data');
+        htmx.ajax('GET', '', '#request-data');
     })
     .catch(error => {
         console.error('Error:', error);
@@ -123,7 +123,7 @@ function sortUsersTable(sort_by, columnIndex) {
             i.classList.remove("bi-arrow-down", "bi-arrow-up");
         }
         icon.classList.add(ascending ? "bi-arrow-up" : "bi-arrow-down");
-        htmx.ajax('GET', '.', '#request-data');
+        htmx.ajax('GET', '', '#request-data');
     })
     .catch(error => {
         console.error('Error:', error);
@@ -165,7 +165,7 @@ function sortBuildingsTable(sort_by, columnIndex) {
             i.classList.remove("bi-arrow-down", "bi-arrow-up");
         }
         icon.classList.add(ascending ? "bi-arrow-up" : "bi-arrow-down");
-        htmx.ajax('GET', '.', '#request-data');
+        htmx.ajax('GET', '', '#request-data');
     })
     .catch(error => {
         console.error('Error:', error);
