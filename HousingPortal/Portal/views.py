@@ -136,7 +136,6 @@ def support(request):
 
 @login_required(login_url="/login")
 def dashboard(request):
-    reset_users_to_defaults()
     if request.user.is_superuser:
         return admin_dashboard(request)
     elif request.user.is_manager:
@@ -767,18 +766,6 @@ def remove_image(request, image_id):
         except MaintenanceFile.DoesNotExist:
             pass
     return JsonResponse({'success': False})
-
-def reset_users_to_defaults():
-    # Get all user objects
-    users = UserAccount.objects.all()
-
-    # Iterate over each user and reset to default values
-    for user in users:
-        user.request_sort = 'id'
-        user.building_sort = 'building_name'
-        user.user_sort = 'date_joined'
-        user.paging_count = 25
-        user.save()
 
 # Views for errors
 def handler_403(request, exception=None):
