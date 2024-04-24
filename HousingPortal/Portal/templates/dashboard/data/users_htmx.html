@@ -20,13 +20,13 @@
             <option value="100" {% if user.paging_count == 100 %}selected{% endif %}>100</option>
         </select>
         {% if users.has_previous %}
-            <a hx-get="?page={{maintenance_requests.previous_page_number}}" hx-target="#request-data">&lt;</a>
+            <a hx-get="?page={{users.previous_page_number}}" hx-target="#request-data">&lt;</a>
         {% endif %}
         {% for num in users.paginator.page_range %}
             <a hx-get="?page={{num}}" hx-target="#request-data">{{ num }}</a>
         {% endfor %}
         {% if users.has_next %}
-            <a hx-get="?page={{maintenance_requests.next_page_number}}" hx-target="#request-data">&gt;</a>
+            <a hx-get="?page={{users.next_page_number}}" hx-target="#request-data">&gt;</a>
         {% endif %}
         <span style="float: right;">Total: {{total}}</span>
     </td>
