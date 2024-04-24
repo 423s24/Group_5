@@ -1,4 +1,3 @@
-
 {% for maintenance_request in maintenance_requests %}
 <tr onclick="window.location='/dashboard/requests/{{maintenance_request.id}}'" style="cursor: pointer;">
     <td>{{ maintenance_request.id }}</td>
@@ -23,13 +22,13 @@
             <option value="100" {% if user.paging_count == 100 %}selected{% endif %}>100</option>
         </select>
         {% if maintenance_requests.has_previous %}
-            <a hx-get="?page={{maintenance_requests.previous_page_number}}" hx-target="#request-data">&lt;</a>
+            <a hx-get="?page={{maintenance_requests.previous_page_number}}&amp;{% if request.GET.show_closed %}&amp;show_closed={{ request.GET.show_closed }}{% endif %}" hx-target="#request-data">&lt;</a>
         {% endif %}
         {% for num in maintenance_requests.paginator.page_range %}
-            <a hx-get="?page={{num}}" hx-target="#request-data">{{ num }}</a>
+            <a hx-get="?page={{num}}&amp;{% if request.GET.show_closed %}&amp;show_closed={{ request.GET.show_closed }}{% endif %}" hx-target="#request-data">{{ num }}</a>
         {% endfor %}
         {% if maintenance_requests.has_next %}
-            <a hx-get="?page={{maintenance_requests.next_page_number}}" hx-target="#request-data">&gt;</a>
+            <a hx-get="?page={{maintenance_requests.next_page_number}}&amp;{% if request.GET.show_closed %}&amp;show_closed={{ request.GET.show_closed }}{% endif %}" hx-target="#request-data">&gt;</a>
         {% endif %}
         <span style="float: right;">Total: {{total}}</span>
     </td>

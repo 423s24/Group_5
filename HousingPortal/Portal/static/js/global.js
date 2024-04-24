@@ -172,3 +172,44 @@ function sortBuildingsTable(sort_by, columnIndex) {
         // Handle error
     });
 }
+
+// Function to toggle show_closed parameter and update button text
+function toggleShowClosed() {
+    // Get the current URL
+    var url = new URL(window.location.href);
+    
+    // Toggle the show_closed parameter
+    var showClosed = url.searchParams.get('show_closed');
+    if (showClosed === 'true') {
+        url.searchParams.delete('show_closed');
+        document.getElementById('toggleClosedButton').innerText = 'Show Closed';
+    } else {
+        url.searchParams.set('show_closed', 'true');
+        document.getElementById('toggleClosedButton').innerText = 'Hide Closed';
+    }
+    
+    // Redirect to the updated URL
+    window.location.href = url.toString();
+}
+
+// Function to set button text based on show_closed parameter in URL
+function setButtonTextFromUrl() {
+    // Get the current URL
+    var url = new URL(window.location.href);
+    
+    // Get the value of show_closed parameter
+    var showClosed = url.searchParams.get('show_closed');
+    console.log("fukc");
+    
+    // Update button text based on the value of show_closed parameter
+    if (showClosed === 'true') {
+        document.getElementById('toggleClosedButton').innerText = 'Hide Closed';
+    } else {
+        document.getElementById('toggleClosedButton').innerText = 'Show Closed';
+    }
+}
+
+// Call setButtonTextFromUrl function when the page loads
+document.addEventListener('DOMContentLoaded', function () {
+    setButtonTextFromUrl();
+});

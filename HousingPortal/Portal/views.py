@@ -230,7 +230,7 @@ def maintenance_requests(request):
         if request.headers.get('HX-Request'):
             search_query = request.GET.get('search_query')
             show_closed = request.GET.get('show_closed')
-            if show_closed == 'True':
+            if show_closed == 'true':
                 # Show closed requests along with open requests
                 if search_query:
                     maintenance_requests = MaintenanceRequest.objects.filter(
@@ -268,7 +268,7 @@ def maintenance_requests(request):
             paginator = Paginator(maintenance_requests, request.user.paging_count)
             page_number = request.GET.get('page')
             page_obj = paginator.get_page(page_number)
-            html = render_to_string('dashboard/data/requests_htmx.html', {'maintenance_requests': page_obj, 'user': request.user, 'total': maintenance_requests.count()})
+            html = render_to_string('dashboard/data/requests_htmx.html', {'request': request, 'maintenance_requests': page_obj, 'user': request.user, 'total': maintenance_requests.count()})
             #time.sleep(2)
             return HttpResponse(html)
         else:
