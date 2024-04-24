@@ -229,19 +229,41 @@ def maintenance_requests(request):
     if request.user.is_superuser or request.user.is_manager:
         if request.headers.get('HX-Request'):
             search_query = request.GET.get('search_query')
-            if search_query:
-                maintenance_requests = MaintenanceRequest.objects.filter(
-                    Q(id__icontains=search_query) |
-                    Q(first_name__icontains=search_query) |
-                    Q(last_name__icontains=search_query) |
-                    Q(title__icontains=search_query) |
-                    Q(status__icontains=search_query) |
-                    Q(building__building_name__icontains=search_query) |
-                    Q(unit__icontains=search_query) |
-                    Q(entry_permission__icontains=search_query)
-                ).order_by(request.user.request_sort)
+            show_closed = request.GET.get('show_closed')
+            if show_closed == 'True':
+                # Show closed requests along with open requests
+                if search_query:
+                    maintenance_requests = MaintenanceRequest.objects.filter(
+                        Q(id__icontains=search_query) |
+                        Q(first_name__icontains=search_query) |
+                        Q(last_name__icontains=search_query) |
+                        Q(title__icontains=search_query) |
+                        Q(status__icontains=search_query) |
+                        Q(building__building_name__icontains=search_query) |
+                        Q(unit__icontains=search_query) |
+                        Q(entry_permission__icontains=search_query)
+                    ).order_by(request.user.request_sort)
+                else:
+                    maintenance_requests = MaintenanceRequest.objects.all().order_by(request.user.request_sort)
             else:
-                maintenance_requests = MaintenanceRequest.objects.all().order_by(request.user.request_sort)
+                # Show only open requests
+                if search_query:
+                    maintenance_requests = MaintenanceRequest.objects.filter(
+                        Q(status__in=['New', 'In Progress', 'Pending']) &
+                        (
+                            Q(id__icontains=search_query) |
+                            Q(first_name__icontains=search_query) |
+                            Q(last_name__icontains=search_query) |
+                            Q(title__icontains=search_query) |
+                            Q(building__building_name__icontains=search_query) |
+                            Q(unit__icontains=search_query) |
+                            Q(entry_permission__icontains=search_query)
+                        )
+                    ).order_by(request.user.request_sort)
+                else:
+                    maintenance_requests = MaintenanceRequest.objects.filter(
+                        status__in=['New', 'In Progress', 'Pending']
+                    ).order_by(request.user.request_sort)
 
             paginator = Paginator(maintenance_requests, request.user.paging_count)
             page_number = request.GET.get('page')
@@ -344,7 +366,7 @@ def maintenance(request):
             if (user.is_superuser or user.is_manager) and user != request.user:
                 send_email_thread(maintenance_request, user.email,"Maintenance Request Notification", image_paths)
 
-        return redirect('/request/' + str(maintenance_request.id))
+        return redirect('/dashboard/request/' + str(maintenance_request.id))
 
     return render(request, 'dashboard/create/maintenance.html', {'buildings': buildings})
 
