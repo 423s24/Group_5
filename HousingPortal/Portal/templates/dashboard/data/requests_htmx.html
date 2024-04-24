@@ -25,7 +25,7 @@
             <a hx-get="?page={{maintenance_requests.previous_page_number}}&amp;{% if request.GET.show_closed %}&amp;show_closed={{ request.GET.show_closed }}{% endif %}" hx-target="#request-data">&lt;</a>
         {% endif %}
         {% for num in maintenance_requests.paginator.page_range %}
-            <a hx-get="?page={{num}}&amp;{% if request.GET.show_closed %}&amp;show_closed={{ request.GET.show_closed }}{% endif %}" hx-target="#request-data">{{ num }}</a>
+            <a hx-get="?page={{num}}&amp;{% if request.GET.show_closed %}&amp;show_closed={{ request.GET.show_closed }}{% endif %}" hx-target="#request-data"  {% if num == maintenance_requests.number %}id="active_page"{% endif %}>{{ num }}</a>
         {% endfor %}
         {% if maintenance_requests.has_next %}
             <a hx-get="?page={{maintenance_requests.next_page_number}}&amp;{% if request.GET.show_closed %}&amp;show_closed={{ request.GET.show_closed }}{% endif %}" hx-target="#request-data">&gt;</a>

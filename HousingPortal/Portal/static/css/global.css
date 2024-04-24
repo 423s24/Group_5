@@ -22,6 +22,18 @@
 
 #pagination-controls a {
     font-size: 20px;
+
+    width: 40px;
+    height: 40px;
+    border-radius: 50%; /* Make it circular */
+    border: 2px solid #000; /* Border */
+    margin: 0 5px; /* Adjust spacing between circles */
+    display: inline-block;
+    text-decoration: none; /* Remove default link underline */
+}
+
+#pagination-controls a#active_page {
+    background-color: lightgray;
 }
 
 #pagination-controls a:hover {
