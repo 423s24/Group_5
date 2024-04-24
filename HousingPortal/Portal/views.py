@@ -137,40 +137,19 @@ def support(request):
 @login_required(login_url="/login")
 def dashboard(request):
     if request.user.is_superuser:
-        return admin_dashboard(request)
-    elif request.user.is_manager:
-        return manager_dashboard(request)
-    else:
-        return tenant_dashboard(request)
-    
-@login_required(login_url="/login")
-def admin_dashboard(request):
-    users = UserAccount.objects.all()
-    maintenance_requests = MaintenanceRequest.objects.order_by('-id')[:10]
-    buildings = Building.objects.all().order_by("id")
-    
-    if request.user.is_superuser:
+        users = UserAccount.objects.all().order_by('id')
+        maintenance_requests = MaintenanceRequest.objects.order_by('-id')[:10]
+        buildings = Building.objects.all().order_by("id")
         return render(request, 'dashboard/admin_dashboard.html', {'users': users, 'maintenance_requests': maintenance_requests, 'buildings': buildings})
-    else:
-        return handler_403(request)
-
-@login_required(login_url="/login")
-def manager_dashboard(request):
-    users = UserAccount.objects.all().order_by('id')
-    maintenance_requests = MaintenanceRequest.objects.order_by('-id')[:10]
-    buildings = Building.objects.all().order_by("id")
-
-    if request.user.is_manager:
+    elif request.user.is_manager:
+        users = UserAccount.objects.all().order_by('id')
+        maintenance_requests = MaintenanceRequest.objects.order_by('-id')[:10]
+        buildings = Building.objects.all().order_by("id")
         return render(request, 'dashboard/manager_dashboard.html', {'users':users, 'maintenance_requests':maintenance_requests, 'buildings': buildings})
     else:
-        return handler_403(request)
+        maintenance_requests = MaintenanceRequest.objects.filter(user_id=request.user.id)
+        return render(request, 'dashboard/tenant_dashboard.html', {'maintenance_requests':maintenance_requests})
 
-@login_required(login_url="/login")
-def tenant_dashboard(request):
-    maintenance_requests = MaintenanceRequest.objects.filter(user_id=request.user.id)
-
-    return render(request, 'dashboard/tenant_dashboard.html', {'maintenance_requests':maintenance_requests})
-    
 @login_required(login_url="/login")
 def users(request):
     if request.user.is_superuser or request.user.is_manager:
@@ -270,7 +249,6 @@ def maintenance_requests(request):
             page_number = request.GET.get('page')
             page_obj = paginator.get_page(page_number)
             html = render_to_string('dashboard/data/requests_htmx.html', {'request': request, 'maintenance_requests': page_obj, 'user': request.user, 'total': maintenance_requests.count()})
-            #time.sleep(2)
             return HttpResponse(html)
         else:
             return render(request, 'dashboard/pages/maintenance_requests.html')
@@ -305,29 +283,6 @@ def saved_requests(request):
         return HttpResponse(html)
     else:
         return render(request, 'dashboard/pages/saved_requests.html')
-    
-
-
-@login_required(login_url="/login")
-def sort_requests(request):
-    search_query = request.GET.get('search_query')
-    sort_by = request.GET.get('sort_by', 'id')  # Default sorting is by 'id'
-    if search_query:
-        maintenance_requests = MaintenanceRequest.objects.filter(
-            Q(id__icontains=search_query) |
-            Q(first_name__icontains=search_query) |
-            Q(last_name__icontains=search_query) |
-            Q(title__icontains=search_query) |
-            Q(status__icontains=search_query) |
-            Q(building__building_name__icontains=search_query) |
-            Q(unit__icontains=search_query) |
-            Q(entry_permission__icontains=search_query)
-        ).order_by(sort_by)
-    else:
-        maintenance_requests = MaintenanceRequest.objects.all().order_by(sort_by)
-
-    html = render_to_string('dashboard/data/requests_htmx.html', {'maintenance_requests': maintenance_requests})
-    return HttpResponse(html)
 
 @login_required(login_url="/login")
 def maintenance(request):
@@ -373,8 +328,8 @@ def maintenance(request):
 
 @login_required(login_url="/login")
 def building_info(request, building_id):
-    building = get_object_or_404(Building, pk=building_id)
     if request.user.is_superuser or request.user.is_manager:
+        building = get_object_or_404(Building, pk=building_id)
         if request.method == 'POST':
             if request.user.is_superuser:
                 data = json.loads(request.body)

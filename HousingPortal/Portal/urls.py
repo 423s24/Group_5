@@ -26,7 +26,7 @@ urlpatterns = [
     path('search/buildings', views.search_buildings, name='search_buildings'),
     path('search/maintenance_requests', views.search_maintenance_requests, name='search_maintenance_requests'),
 
-    # Authenticaiton URLs
+    # Registration URLs
     path('signup/', views.signup_view, name='signup'),
     path('login/', views.login_view, name='login'),
     path('logout/', views.logout_view, name='logout'),
@@ -42,13 +42,12 @@ urlpatterns = [
     path('toggle_save/<int:request_id>', views.toggle_save, name='toggle_save'),
     path('check_username/', views.check_username, name='check_username'),
     path('change_preferences/', views.change_preferences, name='change_preferences'),
+    path('upload_image/', views.upload_image, name='upload_image'),
+    path('remove_image/<int:image_id>/', views.remove_image, name='remove_image'),
     
     # TODO Change urls below to new site structure
     path('request/<int:request_id>/add_note', views.add_note, name='add_note'),
     path('request/edit_note/<int:note_id>/', views.edit_note, name='edit_note'),
-
-    path('upload_image/', views.upload_image, name='upload_image'),
-    path('remove_image/<int:image_id>/', views.remove_image, name='remove_image'),
 ]
 
 if settings.DEBUG:
