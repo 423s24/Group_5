@@ -24,7 +24,7 @@
             <a hx-get="?page={{buildings.previous_page_number}}" hx-target="#request-data">&lt;</a>
         {% endif %}
         {% for num in buildings.paginator.page_range %}
-            <a hx-get="?page={{num}}" hx-target="#request-data">{{ num }}</a>
+            <a hx-get="?page={{num}}" hx-target="#request-data" {% if num == buildings.number %}id="active_page"{% endif %}>{{ num }}</a>
         {% endfor %}
         {% if buildings.has_next %}
             <a hx-get="?page={{buildings.next_page_number}}" hx-target="#request-data">&gt;</a>

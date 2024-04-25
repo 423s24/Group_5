@@ -380,7 +380,7 @@ textarea {
 
     .sidebar-button {
         position: fixed;
-        background-color: black;
+        background-color: var(--primary-color);
         border: 1.5px solid white;
         left: 60px;
         top: 50px;
@@ -388,7 +388,15 @@ textarea {
         width: 35px;
         height: 35px;
         border-radius: 100px;
-        transition: all 0.5s ease;
+        transition: transform 0.5s ease;
+    }
+
+    .sidebar-button:hover {
+        background-color: white;
+    }
+
+    .sidebar-button:hover i {
+        color: black;
     }
 
     .sidebar-button i {
