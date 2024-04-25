@@ -666,7 +666,15 @@ def delete(request):
             if request.user.is_superuser or request.user.is_manager:
                 try:
                     request = MaintenanceRequest.objects.get(pk=id_num)
+
+                    maintenance_files = MaintenanceFile.objects.filter(maintenanceRequestId=request)
+
+                    for file in maintenance_files:
+                        file.file.delete()
+                        file.delete()
+
                     request.delete()
+
                     return JsonResponse({'success': True})
                 except MaintenanceRequest.DoesNotExist:
                     return JsonResponse({'success': False})
