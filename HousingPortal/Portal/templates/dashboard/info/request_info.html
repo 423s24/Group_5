@@ -274,16 +274,29 @@
                 <tbody>
                     {% if maintenance_request.maintenance_notes.all %}
                         {% for notes in maintenance_request.maintenance_notes.all %}
-                            <tr>
+                            <tr id="viewNote{{ notes.id }}">
                                 <td><a href="/dashboard/users/{{notes.user_id}}">{{ notes.user_id }}</a></td>
-                                <td id="note_{{ notes.id }}">
-                                    <p>{{notes.notes|linebreaks }}</p>
+                                <td>
+                                    <p id="note_{{ notes.id }}">{{notes.notes|linebreaksbr }}</p>
                                     <span class="date">{{notes.date_submitted}}</span>
                                 </td>
                                 <td>
                                     <div class="button-container">
                                         <button class="button-17" onclick="editNote('{{ notes.id }}')">Edit</button>
                                         <button class="button-17" onclick="deleteNote('{{ notes.id }}')">Delete</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr style="display:none;" id="editNote{{ notes.id }}">
+                                <td><a href="/dashboard/users/{{notes.user_id}}">{{ notes.user_id }}</a></td>
+                                <td>
+                                    <textarea id="noteText{{ notes.id }}"></textarea>
+                                    <span class="date">{{notes.date_submitted}}</span>
+                                </td>
+                                <td>
+                                    <div class="button-container">
+                                        <button class="button-17" onclick="cancelNote('{{ notes.id }}')">Cancel</button>
+                                        <button class="button-17" onclick="saveNote('{{ notes.id }}')">Save</button>
                                     </div>
                                 </td>
                             </tr>
@@ -307,7 +320,7 @@
         </form>
     {% endif %}
 </div>
-    <div id="editNoteModal" class="modal">
+    <!--<div id="editNoteModal" class="modal">
     <div class="modal-content">
         <p>Edit note</p>
         <textarea id="noteText"></textarea>
@@ -316,7 +329,7 @@
             <button id="saveNote" class="button-17">Save</button>
         </div>
     </div>
-</div>
+</div>-->
 
 <div id="deleteNoteModal" class="modal">
     <div class="modal-content">

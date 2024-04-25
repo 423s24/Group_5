@@ -1,7 +1,5 @@
 var modal = document.getElementById("editNoteModal");
 var noteText = document.getElementById('noteText');
-var saveNote = document.getElementById('saveNote');
-var cancelNote = document.getElementById('cancelNote');
 var currentNoteId;
 var optionsMenuModal = document.getElementById("optionsMenuModal")
 
@@ -50,16 +48,16 @@ save_button.addEventListener("click", function() {
 });
 
 
-cancelNote.onclick = function() {
-    modal.style.display = "none";
+function cancelNote(noteId) {
+    document.getElementById("editNote"+noteId).style.display = "none";
+    document.getElementById("viewNote"+noteId).style.display = "table-row";
 }
 
 function editNote(noteId) {
-    currentNoteId = noteId;
-    noteText.value = document.getElementById('note_' + noteId).innerText;
-    modal.style.display = "block";
+    document.getElementById('noteText'+noteId).value = document.getElementById('note_' + noteId).innerText;
+    document.getElementById("editNote"+noteId).style.display = "table-row";
+    document.getElementById("viewNote"+noteId).style.display = "none";
 }
-
 
 window.onclick = function(event) {
     if (event.target == modal) {
@@ -67,32 +65,35 @@ window.onclick = function(event) {
     }
 }
 
-saveNote.onclick = function() {
-    let newNoteText = noteText.value;
+function saveNote(noteId) {
+    let newNoteText = document.getElementById('noteText'+noteId).value;
     if (newNoteText == null || newNoteText == "") {
-        alert("You must enter a note!");
+        showNotification('You must enter a note.', false);
     } else {
-        fetch('/request/edit_note/' + currentNoteId + '/', {
+        fetch('/request/edit_note/' + noteId + '/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'X-CSRFToken': csrftoken
             },
             body: JSON.stringify({
-                'note_id': currentNoteId,
+                'note_id': noteId,
                 'note_text': newNoteText,
             })
         })
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                document.getElementById('note_' + currentNoteId).innerText = newNoteText;
+                document.getElementById('note_' + noteId).innerText = newNoteText;
+                document.getElementById("editNote"+noteId).style.display = "none";
+                document.getElementById("viewNote"+noteId).style.display = "table-row";
+                showNotification('Note was changed successfully.', true);
             } else {
                 alert("There was an error editing the note.");
+                showNotification('Note could not be changed.', false);
             }
         });
     }
-    modal.style.display = "none";
 }
 
 
@@ -395,7 +396,7 @@ function updateFields() {
 }
 
 function submitChanges() {
-    var updatedProfileData = {
+    var updatedData = {
         first_name: document.getElementById('edit-first-name').value,
         last_name: document.getElementById('edit-last-name').value,
         phone: document.getElementById('edit-phone').value,
@@ -415,7 +416,7 @@ function submitChanges() {
             'X-CSRFToken': getCookie('csrftoken') // Get CSRF token from cookie
         },
         credentials: 'same-origin', // Include cookies in the request
-        body: JSON.stringify(updatedProfileData) // Convert data to JSON format
+        body: JSON.stringify(updatedData) // Convert data to JSON format
     })
     .then(response => {
         console.log(response.json());

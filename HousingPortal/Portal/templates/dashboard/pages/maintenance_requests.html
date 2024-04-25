@@ -83,7 +83,7 @@
             <i class="bi bi-box-arrow-up"></i>
             <span class="tooltip">Export Table</span>
         </a>
-        <button id="toggleClosedButton" class="button-17" onclick="toggleShowClosed()">Show Closed</button>
+        <button id="toggleClosedButton" class="button-17" onclick="toggleShowClosed()">{% if request.GET.show_closed == 'true' %}Hide Closed{% else %}Show Closed{% endif %}</button>
         </div>
         <table class="table table-hover" id="request-table">
             <thead>

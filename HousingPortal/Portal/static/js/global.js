@@ -15,6 +15,21 @@ function getCookie(name) {
     return cookieValue;
 }
 
+function showNotification(message, isSuccess) {
+    var notification = document.getElementById('notification');
+    var messageElement = document.getElementById('notificationMessage');
+
+    // Set the message and styles based on success or failure
+    messageElement.textContent = message;
+    notification.style.backgroundColor = isSuccess ? '#90ee90' : '#f08080'; // Green for success, red for failure
+    notification.style.display = 'block';
+
+    // Hide the notification after 3 seconds
+    setTimeout(function() {
+        notification.style.display = 'none';
+    }, 3000);
+}
+
 function changePagingCount(selectedValue) {
     const preferences = {
         paging_count: selectedValue
@@ -192,24 +207,3 @@ function toggleShowClosed() {
     window.location.href = url.toString();
 }
 
-// Function to set button text based on show_closed parameter in URL
-function setButtonTextFromUrl() {
-    // Get the current URL
-    var url = new URL(window.location.href);
-    
-    // Get the value of show_closed parameter
-    var showClosed = url.searchParams.get('show_closed');
-    console.log("fukc");
-    
-    // Update button text based on the value of show_closed parameter
-    if (showClosed === 'true') {
-        document.getElementById('toggleClosedButton').innerText = 'Hide Closed';
-    } else {
-        document.getElementById('toggleClosedButton').innerText = 'Show Closed';
-    }
-}
-
-// Call setButtonTextFromUrl function when the page loads
-document.addEventListener('DOMContentLoaded', function () {
-    setButtonTextFromUrl();
-});

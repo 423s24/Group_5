@@ -36,7 +36,6 @@ textarea {
 }
 
 body {
-    font-size: large;
     background-color: #f0f0f0;
     color: #333;
 }
@@ -47,11 +46,6 @@ h1, h2 {
 
 p {
     line-height: 1.8;
-}
-
-a {
-    color: darkcyan;
-    text-decoration: none;
 }
 
 

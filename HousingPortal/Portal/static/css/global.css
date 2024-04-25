@@ -3,7 +3,7 @@
 #notification {
     display: none;
     position: fixed;
-    top: 10px;
+    top: 40px;
     left: 50%;
     transform: translateX(-50%);
     padding: 15px;
@@ -85,6 +85,7 @@ textarea {
     border: 2px solid #ccc;
     border-radius: 4px;
     resize: vertical;
+    height: 150px;
 }
 
 .dropdown-menu {
