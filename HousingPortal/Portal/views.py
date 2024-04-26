@@ -27,6 +27,37 @@ import time
 import os
 import mimetypes
 
+def support_email(recipient, name, user_email, req):
+    sender_email = "cs423robot@gmail.com" 
+    recipient_email = recipient
+    today = str(date.today())
+    
+    message = MIMEMultipart("alternative")
+    message['From'] = sender_email
+    message['To'] = recipient_email
+    message['Subject'] = "Support Request"
+
+
+    # write the text/plain part
+    text = """\
+    Hello, a support request has been made """ + today + "\n" +"""
+    By: """ + name + " email: " + user_email + "\n" + """ 
+    Message: """ + req
+  
+
+    # convert both parts to MIMEText objects and add them to the MIMEMultipart message
+    part1 = MIMEText(text, "plain")
+    #part2 = MIMEText(html, "html")
+    message.attach(part1)
+    #message.attach(part2)       
+
+
+    with smtplib.SMTP('smtp.gmail.com', 587) as server:
+        server.starttls()
+        server.login(sender_email, "tjcm gvmf ilvq jnqy") 
+        server.sendmail(sender_email, recipient_email, message.as_string())
+
+
 def html_email(maintenance_request, recipient, subject, images=None):
     sender_email = "cs423robot@gmail.com" 
     recipient_email = recipient
@@ -132,6 +163,20 @@ def home(request):
     return render(request, 'home.html')
 
 def support(request):
+    if request.method == 'POST':
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+        name = first_name +" "+ last_name
+        req = request.POST.get('request')
+
+        support_email("cs423robot@gmail.com" , name, request.user.email, req)
+
+        users_with_notifications = UserAccount.objects.filter(email_notifications=True)
+        for user in users_with_notifications:
+            if (user.is_superuser or user.is_manager) and user != request.user:
+                support_email(user.email, name, request.user.email, req)
+
+
     return render(request, 'support.html')
 
 @login_required(login_url="/login")
