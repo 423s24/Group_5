@@ -41,7 +41,7 @@ def support_email(recipient, name, user_email, req):
     # write the text/plain part
     text = """\
     Hello, a support request has been made """ + today + "\n" +"""
-    By: """ + name + " email: " + user_email + "\n" + """ 
+    By: """ + name + "\temail: " + user_email + "\n" + """ 
     Message: """ + req
   
 
