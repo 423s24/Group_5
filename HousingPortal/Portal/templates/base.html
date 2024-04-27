@@ -7,13 +7,17 @@
     <title>{% block title %}HRDC Housing Portal{% endblock %}</title>
     <link rel="icon" type="image/png" href="{% static 'images/logos/hrdc-favicon.png' %}">
 
-    <script src="https://unpkg.com/@popperjs/core@2"></script>
-    <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+    <!--<script src="https://unpkg.com/@popperjs/core@2"></script>-->
+    <!--<script src="https://unpkg.com/htmx.org"></script>-->
+    
     <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'bootstrap/icons/font/bootstrap-icons.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/global.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/dashboard.css' %}">
 
-    <script src="https://unpkg.com/htmx.org"></script>
-
+    <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'htmx/htmx.min.js' %}"></script>
+    <script src="{% static 'js/global.js' %}"></script>
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
@@ -31,11 +35,6 @@
             });
         });
     </script>
-
-    <link rel="stylesheet" type="text/css" href="{% static 'css/global.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'css/dashboard.css' %}">
-    <script src="{% static 'js/global.js' %}"></script>
-
     {% block head %}
     {% endblock %}
 </head>
