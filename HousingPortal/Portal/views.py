@@ -331,7 +331,6 @@ def saved_requests(request):
 
 @login_required(login_url="/login")
 def maintenance(request):
-    buildings = Building.objects.all().order_by("id")
     if request.method == 'POST':
         first_name = request.POST.get('first_name')
         last_name = request.POST.get('last_name')
@@ -368,7 +367,8 @@ def maintenance(request):
                 send_email_thread(maintenance_request, user.email,"Maintenance Request Notification", image_paths)
 
         return redirect('/dashboard/requests/' + str(maintenance_request.id))
-
+    
+    buildings = Building.objects.all().order_by("building_name")
     return render(request, 'dashboard/create/maintenance.html', {'buildings': buildings})
 
 @login_required(login_url="/login")
@@ -428,7 +428,6 @@ def request_info(request, request_id):
     maintenance_request = get_object_or_404(MaintenanceRequest, pk=request_id)
     maintenance_files = MaintenanceFile.objects.filter(maintenanceRequestId=maintenance_request)
     if request.user.is_superuser or request.user.is_manager:
-        buildings = Building.objects.all().order_by("id")
         if request.method == 'POST':
             data = json.loads(request.body)
             maintenance_request.first_name  = data.get('first_name')
@@ -450,6 +449,7 @@ def request_info(request, request_id):
                 # Handle the validation error, e.g., return an error response
                 return JsonResponse({'errors': e.message_dict}, status=400)
 
+        buildings = Building.objects.all().order_by("building_name")
         maintenance_notes = maintenance_request.maintenance_notes.all()
         saved = request_is_saved(request, request_id)
         return render(request, 'dashboard/info/request_info.html', 
