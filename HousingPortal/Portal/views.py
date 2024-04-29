@@ -617,7 +617,7 @@ def check_username(request):
 def toggle_save(request, request_id):
     if request.method == 'POST':
         maintenance_request = MaintenanceRequest.objects.get(pk=request_id)
-        if (request.user.is_superuser or request.user.is_manger or request.user == maintenance_request.user_id):
+        if (request.user.is_superuser or request.user.is_manager or request.user == maintenance_request.user_id):
             try:
                 existing_relationship = UserAccountMaintenanceRequest.objects.get(
                     user_id=request.user, maintenanceRequest_id=maintenance_request
