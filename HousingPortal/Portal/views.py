@@ -803,15 +803,16 @@ def upload_image(request):
 
 @login_required(login_url='/login')
 def remove_image(request, image_id):
-    if request.method == 'DELETE':
-        try:
-            maintenance_file = MaintenanceFile.objects.get(pk=image_id)
-            maintenance_file.file.delete()
-            maintenance_file.delete()
-            return JsonResponse({'success': True})
-        except MaintenanceFile.DoesNotExist:
-            pass
-    return JsonResponse({'success': False})
+    if request.user.is_superuser or request.user.is_manager:
+        if request.method == 'DELETE':
+            try:
+                maintenance_file = MaintenanceFile.objects.get(pk=image_id)
+                maintenance_file.file.delete()
+                maintenance_file.delete()
+                return JsonResponse({'success': True})
+            except MaintenanceFile.DoesNotExist:
+                pass
+        return JsonResponse({'success': False})
 
 # Views for errors
 def handler_403(request, exception=None):

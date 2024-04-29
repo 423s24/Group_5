@@ -53,10 +53,12 @@
             <thead>
             </thead>
             <tbody>
+                {% if user.is_superuser or user.is_manager %}
                 <tr>
                     <td>Submitted By</td>
                     <td><a href="/dashboard/users/{{maintenance_request.user_id.username}}">{{maintenance_request.user_id.username}}</a></td>
                 </tr>
+                {% endif %}
                 <tr>
                     <td>Name</td>
                     <td><span id="first-name">{{ maintenance_request.first_name }}</span> <span id="last-name">{{ maintenance_request.last_name }}</span></td>
@@ -67,7 +69,11 @@
                 </tr>
                 <tr>
                     <td>Building</td>
+                    {% if user.is_superuser or user.is_manager %}
                     <td><a id="building" building_id="{{maintenance_request.building.id}}" href="/dashboard/buildings/{{maintenance_request.building.id}}">{{ maintenance_request.building.building_name }}</a></td>
+                    {% else %}
+                    <td id="building" building_id="{{maintenance_request.building.id}}">{{ maintenance_request.building.building_name }}</td>
+                    {% endif %}
                 </tr>
                 <tr>
                     <td>Unit/Room</td>
@@ -242,13 +248,16 @@
                     </div>
                 </td>
                 <td>
+                    {% if user.is_superuser or user.is_manager %}
                     <button onclick="confirmDeleteFile('{{ maintenance_file.id }}')" class="button-17">Remove</button>
+                    {% endif %}
                 </td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
     <br>
+    {% if user.is_superuser or user.is_manager %}
     <form id="uploadForm" method="post" enctype="multipart/form-data" action="{% url 'upload_image' %}">
         {% csrf_token %}
         <input type="hidden" name="request_id" value="{{ maintenance_request.id }}">
@@ -256,6 +265,7 @@
         <br>
         <button type="submit" class="button-17">Upload Image</button>
     </form>
+    {% endif %}
 
     <br>
     <br>
