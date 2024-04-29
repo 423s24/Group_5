@@ -3,7 +3,6 @@
 {% block title %}Housing Dashboard{% endblock %}
 {% block head %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/dashboard.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'css/global.css' %}">
     {% if user.is_superuser %}
      <script src="{% static 'js/building.js' %}" defer></script>
     {% endif %}
@@ -94,7 +93,7 @@
     <br>
     <br>
 <h2>Maintenance Requests:</h2>
-{% include 'dashboard/data/requests.html' %}
+{% include 'dashboard/data/requests_table.html' %}
     <br>
     <br>
     </div>

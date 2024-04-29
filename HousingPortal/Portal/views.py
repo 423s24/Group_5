@@ -182,17 +182,17 @@ def support(request):
 @login_required(login_url="/login")
 def dashboard(request):
     if request.user.is_superuser:
-        users = UserAccount.objects.all().order_by('id')
+        users = UserAccount.objects.all().order_by('-id')[:10]
         maintenance_requests = MaintenanceRequest.objects.order_by('-id')[:10]
         buildings = Building.objects.all().order_by("id")
         return render(request, 'dashboard/admin_dashboard.html', {'users': users, 'maintenance_requests': maintenance_requests, 'buildings': buildings})
     elif request.user.is_manager:
-        users = UserAccount.objects.all().order_by('id')
+        users = UserAccount.objects.all().order_by('-id')[:10]
         maintenance_requests = MaintenanceRequest.objects.order_by('-id')[:10]
         buildings = Building.objects.all().order_by("id")
         return render(request, 'dashboard/manager_dashboard.html', {'users':users, 'maintenance_requests':maintenance_requests, 'buildings': buildings})
     else:
-        maintenance_requests = MaintenanceRequest.objects.filter(user_id=request.user.id)
+        maintenance_requests = MaintenanceRequest.objects.filter(user_id=request.user.id).order_by("id")
         return render(request, 'dashboard/tenant_dashboard.html', {'maintenance_requests':maintenance_requests})
 
 @login_required(login_url="/login")
@@ -394,9 +394,16 @@ def building_info(request, building_id):
                     return JsonResponse({'errors': e.message_dict}, status=400)
             else:
                  return JsonResponse({'errors': 'Not authorized'}, status=403)
-            
-        maintenance_requests = MaintenanceRequest.objects.filter(building=building)
-        return render(request, 'dashboard/info/building_info.html', {'building': building, 'maintenance_requests': maintenance_requests})
+        elif request.headers.get('HX-Request'):
+            maintenance_requests = MaintenanceRequest.objects.filter(building=building).order_by(request.user.request_sort)
+
+            paginator = Paginator(maintenance_requests, request.user.paging_count)
+            page_number = request.GET.get('page')
+            page_obj = paginator.get_page(page_number)
+            html = render_to_string('dashboard/data/requests_htmx.html', {'maintenance_requests': page_obj, 'user': request.user, 'total': maintenance_requests.count()})
+            return HttpResponse(html)
+        else:
+            return render(request, 'dashboard/info/building_info.html', {'building': building})
     else:
         return handler_403(request)
 
@@ -478,8 +485,16 @@ def user_info(request, username):
                     return JsonResponse({'errors': e.message_dict}, status=400)
             else:
                 return JsonResponse({'errors': 'Not authorized'}, status=403)
-        maintenance_requests = MaintenanceRequest.objects.filter(user_id=u)
-        return render(request, 'dashboard/info/user_info.html', {'u': u, 'maintenance_requests' :maintenance_requests})
+        elif request.headers.get('HX-Request'):
+            maintenance_requests = MaintenanceRequest.objects.filter(user_id=u).order_by(request.user.request_sort)
+
+            paginator = Paginator(maintenance_requests, request.user.paging_count)
+            page_number = request.GET.get('page')
+            page_obj = paginator.get_page(page_number)
+            html = render_to_string('dashboard/data/requests_htmx.html', {'maintenance_requests': page_obj, 'user': request.user, 'total': maintenance_requests.count()})
+            return HttpResponse(html)
+        else:
+            return render(request, 'dashboard/info/user_info.html', {'u': u})
     else:
         return handler_403(request)
 

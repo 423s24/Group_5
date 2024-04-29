@@ -191,10 +191,10 @@ document.addEventListener("DOMContentLoaded", function() {
                 // Change style of username input field based on whether the username exists
                 if (usernameExists) {
                     usernameInput.style.borderColor = "red";
-                    usernameInput.style.background = "red";
+                    usernameInput.style.background = "#FF474C";
                 } else {
                     usernameInput.style.borderColor = "green"; // Reset to default
-                    usernameInput.style.background = "";
+                    usernameInput.style.background = "#D1FFBD";
                 }
             } catch (error) {
                 console.error('Error checking username:', error);

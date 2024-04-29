@@ -37,10 +37,12 @@
                         <td>Email:</td>
                         <td id="email">{{user.email}}</td>
                     </tr>
+                    {% if user.is_superuser or user.is_manager %}
                     <tr>
                         <td>Email Notifications:</td>
                         <td id="email-notifications">{{user.email_notifications}}</td>
                     </tr>
+                    {% endif %}
                     <tr>
                         <td>Account Type:</td>
                         <td id="account-type">{{user.account_type}}</td>

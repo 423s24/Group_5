@@ -2,7 +2,6 @@
 {% load static %}
 {% block title %}Housing Dashboard{% endblock %}
 {% block head %}
-    <link rel="stylesheet" type="text/css" href="{% static 'css/global.css' %}">
 <link rel="stylesheet" type="text/css" href="{% static 'css/dashboard.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/request.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/status.css' %}">
@@ -266,7 +265,7 @@
             <table class="table">
                 <thead>
                     <tr class="header-row">
-                        <th>User</th>
+                        <th class="hidden">User</th>
                         <th>Notes</th>
                         <th></th>
                     </tr>
@@ -275,8 +274,9 @@
                     {% if maintenance_request.maintenance_notes.all %}
                         {% for notes in maintenance_request.maintenance_notes.all %}
                             <tr id="viewNote{{ notes.id }}">
-                                <td><a href="/dashboard/users/{{notes.user_id}}">{{ notes.user_id }}</a></td>
+                                <td class="hidden"><a href="/dashboard/users/{{notes.user_id}}">{{ notes.user_id }}</a></td>
                                 <td>
+                                    <p class="hidden-desktop"><a href="/dashboard/users/{{notes.user_id}}">{{ notes.user_id }}</a></p>
                                     <p id="note_{{ notes.id }}">{{notes.notes|linebreaksbr }}</p>
                                     <span class="date">{{notes.date_submitted}}</span>
                                 </td>
@@ -288,8 +288,9 @@
                                 </td>
                             </tr>
                             <tr style="display:none;" id="editNote{{ notes.id }}">
-                                <td><a href="/dashboard/users/{{notes.user_id}}">{{ notes.user_id }}</a></td>
+                                <td class="hidden"><a href="/dashboard/users/{{notes.user_id}}">{{ notes.user_id }}</a></td>
                                 <td>
+                                    <p class="hidden-desktop"><a href="/dashboard/users/{{notes.user_id}}">{{ notes.user_id }}</a></p>
                                     <textarea id="noteText{{ notes.id }}"></textarea>
                                     <span class="date">{{notes.date_submitted}}</span>
                                 </td>

@@ -5,8 +5,8 @@
     {% if user.is_superuser %}
     <script src="{% static 'js/view_user.js' %}" defer></script>
     {% endif %}
-    <link rel="stylesheet" type="text/css" href="{% static 'css/global.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/request.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/dashboard.css' %}">
 {% endblock %}
 {% block content %}
     <div id="notification">
@@ -97,7 +97,7 @@
               <br>
               <br>
               <h2>Maintenance Requests:</h2>
-            {% include 'dashboard/data/requests.html' %}
+            {% include 'dashboard/data/requests_table.html' %}
         </div>
     <div id="deleteUserModal" class="modal">
     <div class="modal-content">

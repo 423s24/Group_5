@@ -1,0 +1,43 @@
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/skeleton_loader.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/status.css' %}">
+<table class="table table-hover" id="request-table">
+    <thead>
+        <tr>
+            <th onclick="sortRequestsTable('id', 0)">ID
+                <i id="sort-icon-0" class="bi{% if user.request_sort == 'id' %} bi-arrow-up{% elif user.request_sort == '-id' %} bi-arrow-down{% endif %}"></i>
+            </th>
+            <th onclick="sortRequestsTable('last_name', 1)">Name
+                <i id="sort-icon-1" class="bi{% if user.request_sort == 'last_name' %} bi-arrow-up{% elif user.request_sort == '-last_name' %} bi-arrow-down{% endif %}"></i>
+            </th>
+            <th onclick="sortRequestsTable('title', 2)">Title
+                <i id="sort-icon-2" class="bi{% if user.request_sort == 'title' %} bi-arrow-up{% elif user.request_sort == '-title' %} bi-arrow-down{% endif %}"></i>
+            </th>
+            <th onclick="sortRequestsTable('status', 3)">Status
+                <i id="sort-icon-3" class="bi{% if user.request_sort == 'status' %} bi-arrow-up{% elif user.request_sort == '-status' %} bi-arrow-down{% endif %}"></i>
+            </th>
+            <th onclick="sortRequestsTable('priority', 4)" class="hidden">Priority
+                <i id="sort-icon-4" class="bi{% if user.request_sort == 'priority' %} bi-arrow-up{% elif user.request_sort == '-priority' %} bi-arrow-down{% endif %}"></i>
+            </th>
+            <th onclick="sortRequestsTable('building', 5)" class="hidden">Building
+                <i id="sort-icon-5" class="bi{% if user.request_sort == 'building' %} bi-arrow-up{% elif user.request_sort == '-building' %} bi-arrow-down{% endif %}"></i>
+            </th>
+            <th onclick="sortRequestsTable('unit', 6)" class="hidden">Unit
+                <i id="sort-icon-6" class="bi{% if user.request_sort == 'unit' %} bi-arrow-up{% elif user.request_sort == '-unit' %} bi-arrow-down{% endif %}"></i>
+            </th>
+        </tr>
+    </thead>
+    <tbody id="request-data" hx-trigger="load delay:200ms" hx-get="" hx-swap="innerHTML">
+        {% for _ in "12345678" %}
+        <tr class="skeleton-row">
+            <td><span class="skeleton-loader"></span></td>
+            <td><span class="skeleton-loader"></span></td>
+            <td><span class="skeleton-loader"></span></td>
+            <td><span class="skeleton-loader"></span></td>
+            <td class="hidden"><span class="skeleton-loader"></span></td>
+            <td class="hidden"><span class="skeleton-loader"></span></td>
+            <td class="hidden"><span class="skeleton-loader"></span></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
