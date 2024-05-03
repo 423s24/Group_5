@@ -37,12 +37,10 @@
                         <td>Email:</td>
                         <td id="email">{{user.email}}</td>
                     </tr>
-                    {% if user.is_superuser or user.is_manager %}
-                    <tr>
+                    <tr style="display: none;">
                         <td>Email Notifications:</td>
                         <td id="email-notifications">{{user.email_notifications}}</td>
                     </tr>
-                    {% endif %}
                     <tr>
                         <td>Account Type:</td>
                         <td id="account-type">{{user.account_type}}</td>
@@ -77,7 +75,7 @@
                         <td>Email:</td>
                         <td><input type="email" id="edit-email" required></td>
                     </tr>
-                    <tr>
+                    <tr style="display: none;">
                         <td>Email Notifications:</td>
                         <td><input type="checkbox" id="edit-email-notifications"></td>
                     </tr>
